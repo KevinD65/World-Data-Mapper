@@ -1,7 +1,7 @@
 import React, { useState, useEffect } 	from 'react';
 import Logo 							from '../navbar/Logo';
 import NavbarOptions 					from '../navbar/NavbarOptions';
-import MapContents 					from '../main/MapContents';
+//import MapContents 					from '../main/MapContents';
 import Login 							from '../modals/Login';
 import DeleteMap 							from '../modals/DeleteMap';
 import CreateAccount 					from '../modals/CreateAccount';
@@ -10,21 +10,22 @@ import * as mutations 					from '../../cache/mutations';
 import { useMutation, useQuery } 		from '@apollo/client';
 import { WNavbar, WSidebar, WNavItem } 	from 'wt-frontend';
 import { WLayout, WLHeader, WLMain, WLSide } from 'wt-frontend';
-import { UpdateListField_Transaction, 
+/*import { UpdateListField_Transaction, 
 	UpdateListItems_Transaction, 
 	ReorderItems_Transaction, 
 	EditItem_Transaction } 				from '../../utils/jsTPS';
-import WInput from 'wt-frontend/build/components/winput/WInput';
+import WInput from 'wt-frontend/build/components/winput/WInput';*/
 import { BrowserRouter, Switch, Route, } from 'react-router-dom';
 
 
 const Welcome = (props) => {
 
 	let todolists 							= [];
-	const [activeList, setActiveList] 		= useState({});
+	//const [activeList, setActiveList] 		= useState({});
 	const [showDelete, toggleShowDelete] 	= useState(false);
 	const [showLogin, toggleShowLogin] 		= useState(false);
 	const [showCreate, toggleShowCreate] 	= useState(false);
+	const [showUpdate, toggleShowUpdate]	= useState(false);
 
 	const [ReorderTodoItems] 		= useMutation(mutations.REORDER_ITEMS);
 	const [UpdateTodoItemField] 	= useMutation(mutations.UPDATE_ITEM_FIELD);
@@ -43,7 +44,8 @@ const Welcome = (props) => {
 	if(data) { todolists = data.getAllTodos; }
 
 	const auth = props.user === null ? false : true;
-
+	//console.log(props.user + auth + "hello");
+/*
 	const refetchTodos = async (refetch) => {
 		const { loading, error, data } = await refetch();
 		if (data) {
@@ -163,7 +165,15 @@ const Welcome = (props) => {
 		const todo = todolists.find(todo => todo.id === id || todo._id === id);
 		setActiveList(todo);
 	};
-
+*/
+	const getUserName = () => {
+		if(auth) {
+			return props.user.name;
+		}
+		else{
+			return "";
+		}
+	}
 	
 	/*
 		Since we only have 3 modals, this sort of hardcoding isnt an issue, if there
@@ -181,6 +191,13 @@ const Welcome = (props) => {
 		toggleShowLogin(false);
 		toggleShowCreate(!showCreate);
 	};
+
+	const setShowUpdate = () => {
+		toggleShowDelete(false);
+		toggleShowLogin(false);
+		toggleShowCreate(false);
+		toggleShowUpdate(!showUpdate);
+	}
 
 	const setShowDelete = () => {
 		toggleShowCreate(false);
@@ -214,14 +231,15 @@ const Welcome = (props) => {
 						<NavbarOptions
 							fetchUser={props.fetchUser} auth={auth} 
 							setShowCreate={setShowCreate} setShowLogin={setShowLogin}
-							refetchTodos={refetch} setActiveList={setActiveList}
+							refetchTodos={refetch} toggleMapSelectScreen={toggleMapSelectScreen}
+							userName={getUserName} setShowUpdate={setShowUpdate}
 						/>
 					</ul>
 				</WNavbar>
 			</WLHeader>
 
 			<WLMain>
-				{!mapSelectScreen ? 
+				{!auth ? 
 					<>
 						<div className="container-secondary">
 							
@@ -233,7 +251,7 @@ const Welcome = (props) => {
 						 	World Data Mapper
 						</div>
 						{
-						showDelete && (<DeleteMap deleteList={deleteList} activeid={activeList._id} setShowDelete={setShowDelete} />)
+							showDelete && (<DeleteMap setShowDelete={setShowDelete} />)
 						}
 
 						{
@@ -244,7 +262,32 @@ const Welcome = (props) => {
 							showLogin && (<Login fetchUser={props.fetchUser} refetchTodos={refetch}setShowLogin={setShowLogin} toggleMapSelectScreen={toggleMapSelectScreen}/>)
 						}
 					</>
-				:<></>}
+					:
+					<BrowserRouter>
+						<Switch>
+							<Route
+								path="/mapSelect"
+								name="mapSelect"
+								render={() =>
+									<MapSelect/>
+								}
+							/>
+						</Switch>
+					</BrowserRouter>
+					/*<WLayout wLayout = "header-rside" className = "mapSelectBox">
+						<WLHeader className = "mapSelect-header">
+							<div className = "mapSelectBox-blackbar">
+							Your Maps
+							</div>
+						</WLHeader>
+						<WLMain className = "mapSelection">
+							<MapContents />
+						</WLMain>
+						<WLSide className = "mapSelect-rside">
+
+						</WLSide>
+					</WLayout>*/
+					}
 			</WLMain>
 		</WLayout>
 		</>

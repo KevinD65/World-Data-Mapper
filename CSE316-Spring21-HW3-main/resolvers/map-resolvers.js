@@ -1,5 +1,5 @@
 const ObjectId = require('mongoose').Types.ObjectId;
-const Todolist = require('../models/map-model');
+const Map = require('../models/map-model');
 
 // The underscore param, "_", is a wildcard that can represent any value;
 // here it is a stand-in for the parent parameter, which can be read about in
@@ -11,49 +11,49 @@ module.exports = {
 		 	@param 	 {object} req - the request object containing a user id
 			@returns {array} an array of todolist objects on success, and an empty array on failure
 		**/
-		getAllTodos: async (_, __, { req }) => {
+		getAllMaps: async (_, __, { req }) => {
 			const _id = new ObjectId(req.userId);
 			if(!_id) { return([])};
-			const todolists = await Todolist.find({owner: _id});
-			if(todolists) return (todolists);
+			const maps = await Map.find({owner: _id});
+			if(maps) return (maps);
 
 		},
 		/** 
-		 	@param 	 {object} args - a todolist id
-			@returns {object} a todolist on success and an empty object on failure
+		 	@param 	 {object} args - a map id
+			@returns {object} a map on success and an empty object on failure
 		**/
-		getTodoById: async (_, args) => {
+		getMapById: async (_, args) => {
 			const { _id } = args;
 			const objectId = new ObjectId(_id);
-			const todolist = await Todolist.findOne({_id: objectId});
-			if(todolist) return todolist;
+			const map = await Map.findOne({_id: objectId});
+			if(map) return map;
 			else return ({});
 		},
 	},
 	Mutation: {
 		/** 
-		 	@param 	 {object} args - a todolist id and an empty item object
-			@returns {string} the objectID of the item or an error message
+		 	@param 	 {object} args - a map id and an empty region object
+			@returns {string} the objectID of the region or an error message
 		**/
-		addItem: async(_, args) => {
-			const { _id, item, index } = args;
-			const listId = new ObjectId(_id);
+		addRegion: async(_, args) => {
+			const { _id, region, index } = args;
+			const mapId = new ObjectId(_id);
 			const objectId = new ObjectId();
-			const found = await Todolist.findOne({_id: listId});
-			if(!found) return ('Todolist not found');
-			if(item._id === '') item._id = objectId;
-			let listItems = found.items;
-		        if(index < 0) listItems.push(item);
-			else listItems.splice(index, 0, item);
+			const found = await Map.findOne({_id: mapId});
+			if(!found) return ('Map not found');
+			if(region._id === '') region._id = objectId;
+			let mapRegions = found.subregions;
+		        if(index < 0) mapRegions.push(region._id);
+			else mapRegions.splice(index, 0, region._id);
 			
-			const updated = await Todolist.updateOne({_id: listId}, { items: listItems });
+			const updated = await Map.updateOne({_id: mapId}, { subregions: mapRegions });
 
-			if(updated) return (item._id);
-			else return ('Could not add item');
+			if(updated) return (region._id);
+			else return ('Could not add region');
 		},
 		/** 
-		 	@param 	 {object} args - an empty todolist object
-			@returns {string} the objectID of the todolist or an error message
+		 	@param 	 {object} args - an empty map object
+			@returns {string} the objectID of the map or an error message
 		**/
 		addTodolist: async (_, args) => {
 			const { todolist } = args;

@@ -1,5 +1,5 @@
 const { model, Schema, ObjectId } = require('mongoose');
-const Item = require('./item-model').schema;
+const Region = require('./region-model').schema;
 
 const mapSchema = new Schema(
 	{
@@ -19,7 +19,7 @@ const mapSchema = new Schema(
 			type: String,
 			required: true
 		},
-		items: [Item],
+		subregions: [ObjectId],
 	},
 	{ timestamps: true }
 );

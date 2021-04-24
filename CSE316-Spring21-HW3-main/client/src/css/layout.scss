@@ -206,7 +206,28 @@ html {
     padding-bottom: 25%;
 }
 
-WInput {
-    height: 25px;
-    border-radius: 0px;
+.mapSelectBox {
+    padding-top: 10%;
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+.mapSelectBox-blackbar {
+    padding-bottom: 4%;
+    background-color: black;
+    text-align: center;
+    font-weight: bold;
+    color: white;
+}
+
+.mapSelect-header {
+    padding-top: 1%; 
+}
+
+.mapSelection {
+    width: 75%;
+}
+
+.mapSelect-rside {
+    width: 100%;
 }
