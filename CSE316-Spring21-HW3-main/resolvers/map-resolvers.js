@@ -55,20 +55,20 @@ module.exports = {
 		 	@param 	 {object} args - an empty map object
 			@returns {string} the objectID of the map or an error message
 		**/
-		addTodolist: async (_, args) => {
-			const { todolist } = args;
+		addMap: async (_, args) => {
+			const { map } = args;
 			const objectId = new ObjectId();
-			const { id, name, owner, items } = todolist;
-			const newList = new Todolist({
+			const { id, name, owner, subregions } = map;
+			const newMap = new Map({
 				_id: objectId,
 				id: id,
 				name: name,
 				owner: owner,
-				items: items
+				subregions: subregions
 			});
-			const updated = await newList.save();
+			const updated = await newMap.save();
 			if(updated) return objectId;
-			else return ('Could not add todolist');
+			else return ('Could not add map');
 		},
 		/** 
 		 	@param 	 {object} args - a todolist objectID and item objectID
