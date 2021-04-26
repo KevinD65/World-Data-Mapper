@@ -3,11 +3,13 @@ import { useMutation, useQuery } 		from '@apollo/client';
 import { GET_DB_MAPS } 				    from '../../cache/queries';
 
 import DeleteMap 						from '../modals/DeleteMap';
+import { WButton, WRow, WCol } from 'wt-frontend';
 import WLayout from 'wt-frontend/build/components/wlayout/WLayout';
-import WCHeader from 'wt-frontend/build/components/wcard/WCHeader';
 import WLMain from 'wt-frontend/build/components/wlayout/WLMain';
-//import all mutations and queries here
+import WLHeader from 'wt-frontend/build/components/wlayout/WLHeader';
 
+import MapContents 				from '../MapData/MapContents';
+//import all mutations and queries here
 
 const MapSelect = (props) => {
 
@@ -105,7 +107,7 @@ const MapSelect = (props) => {
 	};
 */
 /*
-    const createNewMap = async () => { //helper function to create a new map
+    const createNewMap = async () => { //creates and adds a new map
 		const length = todolists.length
 		const id = length >= 1 ? todolists[length - 1].id + Math.floor((Math.random() * 100) + 1) : 1;
 		let list = {
@@ -136,13 +138,57 @@ const MapSelect = (props) => {
 		setActiveList(todo);
 	};
 */
-    return(<>
-        <WLayout wLayout = "header">
-            <WCHeader className = "mapSelect-header">
-                HERE
-            </WCHeader>
-            
-        </WLayout>
-    </>);
+/*
+<WRow className = "mapSelect-button-header"> //for spreadsheet
+				<i className="material-icons addRegion" /*onClick = {addRegion}>add</i>
+				</WRow>
+				<WCHeader className = "mapSelect-header">
+					<WRow>
+						<WCol size="2">
+							<WButton className='spreadsheet-header-section' wType="texted" span="true">Name<i className="material-icons spreadsheetHeaderIcon">south</i></WButton> 
+						</WCol>
+	
+						<WCol size="3">
+							<WButton className='spreadsheet-header-section' wType="texted" span="true">Capital</WButton>
+						</WCol>
+	
+						<WCol size="2">
+							<WButton className='spreadsheet-header-section' wType="texted" span="true">Leader</WButton>
+						</WCol>
+						<WCol size="1">
+							<WButton className='spreadsheet-header-section' wType="texted" span="true">Flag</WButton>
+						</WCol>
+						<WCol size="4">
+							<WButton className='spreadsheet-header-section' wType="texted" span="true">Landmarks</WButton>
+						</WCol>
+					</WRow>
+				</WCHeader>
+				<WMMain>
+	
+				</WMMain> //className = "mapSelect-header" className = "mapSelect-body"
+
+*/
+    return(
+		<>
+			<div className = "mapSelect-spacing"></div>
+			<WLayout wLayout = "header">
+				<WLHeader>
+					<WRow className = "mapSelect-redbar"></WRow>
+					<div className = "mapSelect-blackbar">Your Maps</div>
+				</WLHeader>
+				<WLMain>
+					<div className = "mapSelectionBox"> 
+						<MapContents
+							maps={maps} activeMap={activeMap}
+						/>
+					</div>
+					<div className = "globeBox"> 
+						<div className = "mapSelect-globe"></div>
+						<WButton className = "createNewMap-button" span = "true" /*onClick = {createNewMap}*/>Create New Map</WButton>
+					</div>
+				</WLMain>
+			</WLayout>
+		</>
+    );
 };
 export default MapSelect;

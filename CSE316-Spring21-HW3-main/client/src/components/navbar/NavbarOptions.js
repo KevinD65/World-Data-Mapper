@@ -9,11 +9,14 @@ const LoggedIn = (props) => {
 
     const handleLogout = async (e) => {
         Logout();
+        //console.log("LOGOUTTTTT");
         const { data } = await props.fetchUser();
-        console.log(data.name + " hi");
+        //console.log(data.name + " hi");
         if (data) {
-            let reset = await client.resetStore();
+            console.log("LOGOUTTTTT")
+            let reset = await client.resetStore(); //THIS IS GETTING TRIGGERED AND CAUSES ERROR
             if (reset) props.toggleMapSelectScreen(false);
+            //console.log("LOGOUTTTTT");
         }
     };
 
@@ -64,7 +67,7 @@ const NavbarOptions = (props) => {
         <>
             {
                 props.auth === false ? <LoggedOut setShowLogin={props.setShowLogin} setShowCreate={props.setShowCreate} />
-                : <LoggedIn fetchUser={props.fetchUser} logout={props.logout} toggleMapSelectScreen={props.toggleMapSelectScreen}/>
+                : <LoggedIn fetchUser={props.fetchUser} /*logout={props.logout}*/ toggleMapSelectScreen={props.toggleMapSelectScreen}/>
             }
         </>
 

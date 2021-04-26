@@ -23,7 +23,7 @@ html {
     scrollbar-width: thin;
 }
 
-.list-text {
+.map-text {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -60,7 +60,7 @@ html {
     margin-right: 32px;
 }
 
-.table-header-section {
+.spreadsheet-header-section {
     width: 100%;
     height: 100%;
     padding: 0;
@@ -123,6 +123,7 @@ html {
 
 .modal-input-field {
     height: 30px;
+    flex-basis: auto;
     margin-left: 5px;
     float: left;
 }
@@ -134,9 +135,14 @@ html {
 }
 
 .login-modal {
+    height: 30%;
     width: 700px;
     display: block;
     z-index: 1;
+}
+
+.login-modal-wrapper {
+    height: 100%;
 }
 
 .signup-modal {
@@ -150,6 +156,10 @@ html {
 }
 
 .modal-button {
+    justify-content: space-evenly;
+    margin-left: 10px;
+    float: left;
+    width: 50px;
     text-transform: uppercase;
     font-weight: bold;
     letter-spacing: 1px;
@@ -178,11 +188,11 @@ html {
     display: inline-block;
 }
 
-.list-item-edit, .table-input, .table-select {
+.map-edit, .table-input, .table-select {
     width: 100%;
 }
 
-.list-item-edit-input {
+.map-edit-input {
     padding: 23px 24px 24px 24px !important;
 }
 
@@ -206,28 +216,59 @@ html {
     padding-bottom: 25%;
 }
 
-.mapSelectBox {
-    padding-top: 10%;
-    padding-left: 10%;
-    padding-right: 10%;
+.mapSelect-redbar {
+    height: 5px;
+    width: 1500px;
+    margin-left: 10%;
+    margin-right: 10%;
 }
 
-.mapSelectBox-blackbar {
-    padding-bottom: 4%;
-    background-color: black;
-    text-align: center;
-    font-weight: bold;
-    color: white;
+.mapSelect-blackbar {
+    height: 60px;
+    width: 1500px;
+    margin-left: 10%;
+    margin-right: 10%;
 }
 
-.mapSelect-header {
-    padding-top: 1%; 
+.mapSelect-spacing {
+    height: 100px;
 }
 
-.mapSelection {
-    width: 75%;
+.mapSelectionBox {
+    float: left;
+    height: 750px;
+    width: 750px;
+    margin-left: 10%;
 }
 
-.mapSelect-rside {
-    width: 100%;
+.globeBox {
+    float: left;
+    height: 750px;
+    width: 750px;
+    margin-right: 10%;
+    position: relative;
+}
+
+.createNewMap-button {
+    height: 60px;
+    width: 750px;
+    position: absolute;
+    bottom: 0;
+}
+
+.mapSelect-button-header {
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+/*
+The following CSS is for icons
+*/
+
+.addRegion {
+    margin-top: 5.5%;
+}
+
+.spreadsheetHeaderIcon {
+    margin-left: 10px;
 }

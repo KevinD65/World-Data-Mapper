@@ -54,23 +54,7 @@ html, body {
     background-color: $background-color;
 }
 
-.complete-task {
-    color: var(--light-blue);
-}
-
-.incomplete-task {
-    color: $primary-color;
-}
-
-.list-item-active {
-    background-color: var(--deep-blue);
-}
-
-.list-item {
-    cursor: pointer;
-}
-
-.list-item-edit-input, .table-input {
+.map-edit-input, .table-input {
     font-size: 1.125rem !important;
 }
 
@@ -99,15 +83,8 @@ html, body {
     background-color: white;
 }
 
-.sidebar-header {
-    border-bottom: 2px dotted;
-}
-
-.sidebar-header-name {
-    font-size: 1.375rem;
-    font-weight: bold;
-    padding: 0;
-    color: $text-color;
+.spreadsheet-header-section {
+    color: white;
 }
 
 .table-entries {
@@ -220,10 +197,61 @@ html, body {
     color: rgb(178,80,124);
 }
 
-.mapSelect-header {
-    background-color: rgb(215, 55, 55);
-    
+/*
+The following CSS is for icons
+*/
+
+.addRegion {
+    color: rgb(67,192,33);
+    font-size: 50px;
+    font-weight: bold;
 }
+
+.spreadsheetHeader {
+    color: white;
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+/*
+No longer for icons
+*/
+
+.mapSelect-redbar {
+    background-color: red;
+}
+
+.mapSelect-blackbar {
+    background-color: black;
+    color: white;
+    text-align: center;
+}
+
+.mapSelectionBox {
+    background-color: rgb(212,160,160);
+}
+
+.globeBox {
+    background-color: white;
+}
+
+.createNewMap-button {
+    color: white;
+    background-color: red;
+    font-weight: bold;
+}
+
+.spreadsheet-header-section {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    padding-top: 24px;
+    padding-bottom: 12px;
+    text-align: center;
+    font-size: medium;
+    font-weight: bold;
+} 
 
 .mapSelection {
     background-color: rgb(212,160,160);

@@ -37,6 +37,7 @@ const Login = (props) => {
 
 	return (
 		<WModal className="login-modal">
+		<div className = "login-modal-wrapper">
 			<div className="modal-header" onClose={() => props.setShowLogin(false)}>
 				Login To Your Account
 			</div>
@@ -46,18 +47,20 @@ const Login = (props) => {
 				loading ? <div />
 					: <div>
 						<WRow className="modal-col-gap login-modal">
-						<div className = "modal-input-label" >Email: </div>
 							<WCol size = "6">
+								<div className = "modal-input-label" >Email: </div>
 								<WInput 
 									className="modal-input-field" onBlur={updateInput} name="email" labelAnimation="up" 
-									barAnimation="solid" labelText="*Enter Email Here*" wType="outlined" inputType="text" 
+									barAnimation="solid" labelText="*Enter Email Here*" wType="outlined" inputType="text"
+									outlined = "disabled"
+									 
 								/>
 							</WCol>
 						</WRow>
-						<WRow className="modal-col-gap login-modal">
 						<div className="modal-spacer">&nbsp;</div>
-						<div className = "modal-input-label" >Password: </div>
+						<WRow className="modal-col-gap login-modal">
 							<WCol size = "6">
+								<div className = "modal-input-label" >Password: </div>
 								<WInput 
 									className="modal-input-field" onBlur={updateInput} name="password" labelAnimation="up" 
 									barAnimation="solid" labelText="*Enter Password Here*" wType="outlined" inputType="password" 
@@ -66,12 +69,13 @@ const Login = (props) => {
 						</WRow>
 					</div>
 			}
-			<WButton className="modal-button" onClick={handleLogin} span clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded" color="primary">
+			<WButton className="modal-button" onClick={handleLogin} clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded" color="primary">
 				Login
 			</WButton>
-			<WButton className="modal-button" onClick={() => props.setShowLogin(false)} span clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded" color="primary">
+			<WButton className="modal-button" onClick={() => props.setShowLogin(false)} clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded" color="primary">
 				Cancel
 			</WButton>
+		</div>
 		</WModal>
 		/*
 		<WModal className="login-modal">

@@ -14,9 +14,8 @@ import { WLayout, WLHeader, WLMain, WLSide } from 'wt-frontend';
 	ReorderItems_Transaction, 
 	EditItem_Transaction } 				from '../../utils/jsTPS';
 import WInput from 'wt-frontend/build/components/winput/WInput';*/
-import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Redirect, Link} from 'react-router-dom';
 import MapSelect from '../mapSelectScreen/MapSelect';
-
 
 const Welcome = (props) => {
 
@@ -89,7 +88,7 @@ const Welcome = (props) => {
 		<>
 		<BrowserRouter>
 			<Switch>
-				<Route path = "/welcome">
+				<Route exact path = "/welcome">
 					<WLayout wLayout="header">
 						<WLHeader>
 							<WNavbar color="colored">
@@ -130,15 +129,55 @@ const Welcome = (props) => {
 										showLogin && (<Login fetchUser={props.fetchUser} /*refetchTodos={refetch}*/ setShowLogin={setShowLogin} toggleMapSelectScreen={toggleMapSelectScreen}/>)
 									}
 								</>
-								:<Redirect exact from="/welcome" to={ {pathname: "/welcome/mapSelect"} } />
+								:<Redirect exact from="/welcome" to="/mapSelect" /*{ {pathname: "/welcome/mapSelect"} }*/ />
 							}
 						</WLMain>
 					</WLayout>
 				</Route>
-				<Route path = "/welcome/mapSelect" 
-					path = "/welcome/mapSelect" 
-					name = "/mapSelect"
-					render = {() => <MapSelect/>}/>
+
+				<Route 
+					path = "/mapSelect" 
+					name = "/mapSelect">
+						{console.log("MAPPP" + auth)}
+					{auth ?
+					<WLayout wLayout="header">
+						<WLHeader>
+							<WNavbar color="colored">
+								<ul>
+									<WNavItem>
+										<Logo className='logo' />
+									</WNavItem>
+								</ul>
+								<ul>
+									<NavbarOptions
+										fetchUser={props.fetchUser} auth={auth} 
+										setShowCreate={setShowCreate} setShowLogin={setShowLogin}
+										toggleMapSelectScreen={toggleMapSelectScreen}
+										userName={getUserName} setShowUpdate={setShowUpdate}
+									/>
+								</ul>
+							</WNavbar>
+						</WLHeader>
+						<WLMain>
+						{/* {!auth  */}
+							{/* ?<Redirect exact from="/welcome/mapSelect" to="/welcome"/> */}
+							<>
+								{
+									showCreate && (<CreateAccount fetchUser={props.fetchUser} setShowCreate={setShowCreate} />)
+								}
+
+								{
+									showLogin && (<Login fetchUser={props.fetchUser} /*refetchTodos={refetch}*/ setShowLogin={setShowLogin} toggleMapSelectScreen={toggleMapSelectScreen}/>)
+								}
+								<MapSelect /*send props here*/
+									auth={auth} fetchUser={props.fetchUser}
+								/>
+							</>
+						{/* } */}
+						</WLMain>
+					</WLayout>
+					: <Redirect exact from="/welcome/mapSelect" to="/welcome"/>}
+				</Route>
 
 				<Route path = "/regionViewer">
 					
