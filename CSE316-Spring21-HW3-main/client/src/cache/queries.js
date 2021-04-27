@@ -17,14 +17,19 @@ export const GET_DB_MAPS = gql`
 			id
 			name
 			owner
-			items {
-				_id
-				id
-				description
-				due_date
-				assigned_to
-				completed
-			}
+			subregions
+		}
+	}
+`;
+
+export const GET_MAP_BY_ID = gql`
+	query getMapByID ($_id: String!) {
+		getMapById (_id: $_id) {
+			_id
+			id
+			name
+			owner
+			subregions
 		}
 	}
 `;

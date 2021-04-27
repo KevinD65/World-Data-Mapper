@@ -37,7 +37,9 @@ const Login = (props) => {
 
 	return (
 		<WModal className="login-modal">
-		<div className = "login-modal-wrapper">
+		<WMHeader></WMHeader>
+		{/* <div className = "login-modal-wrapper"> */}
+		<WMMain>
 			<div className="modal-header" onClose={() => props.setShowLogin(false)}>
 				Login To Your Account
 			</div>
@@ -46,19 +48,19 @@ const Login = (props) => {
 			{
 				loading ? <div />
 					: <div>
-						<WRow className="modal-col-gap login-modal">
+						<WRow className="modal-col-gap">
 							<WCol size = "6">
 								<div className = "modal-input-label" >Email: </div>
 								<WInput 
 									className="modal-input-field" onBlur={updateInput} name="email" labelAnimation="up" 
-									barAnimation="solid" labelText="*Enter Email Here*" wType="outlined" inputType="text"
+									barAnimation="solid" placeholderText="*Enter Email Here*" wType="outlined" inputType="text"
 									outlined = "disabled"
 									 
 								/>
 							</WCol>
 						</WRow>
 						<div className="modal-spacer">&nbsp;</div>
-						<WRow className="modal-col-gap login-modal">
+						<WRow className="modal-col-gap">
 							<WCol size = "6">
 								<div className = "modal-input-label" >Password: </div>
 								<WInput 
@@ -69,13 +71,18 @@ const Login = (props) => {
 						</WRow>
 					</div>
 			}
-			<WButton className="modal-button" onClick={handleLogin} clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded" color="primary">
-				Login
-			</WButton>
-			<WButton className="modal-button" onClick={() => props.setShowLogin(false)} clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded" color="primary">
-				Cancel
-			</WButton>
-		</div>
+			
+			{/* <WMFooter> */}
+				HERE
+				<WButton className="modal-button" onClick={handleLogin} clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded" color="primary">
+					Login
+				</WButton>
+				<WButton className="modal-button" onClick={() => props.setShowLogin(false)} clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded" color="primary">
+					Cancel
+				</WButton>
+			{/* </WMFooter> */}
+			</WMMain>
+		{/* </div> */}
 		</WModal>
 		/*
 		<WModal className="login-modal">

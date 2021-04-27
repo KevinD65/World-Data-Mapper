@@ -53,7 +53,11 @@ const Welcome = (props) => {
 			return "";
 		}
 	}
-	
+/*
+	const resetAuth = () => {
+		auth = false;
+	}
+*/
 	/*
 		Since we only have 3 modals, this sort of hardcoding isnt an issue, if there
 		were more it would probably make sense to make a general modal component, and
@@ -88,6 +92,10 @@ const Welcome = (props) => {
 		<>
 		<BrowserRouter>
 			<Switch>
+				<Route exact path="/"> 
+					{/* {if(auth !== null)} SIMULATE A LOGOUT*/}
+					<Redirect exact from="/" to="/welcome"/>
+				</Route>
 				<Route exact path = "/welcome">
 					<WLayout wLayout="header">
 						<WLHeader>
@@ -171,6 +179,7 @@ const Welcome = (props) => {
 								}
 								<MapSelect /*send props here*/
 									auth={auth} fetchUser={props.fetchUser}
+									user={props.user}
 								/>
 							</>
 						{/* } */}

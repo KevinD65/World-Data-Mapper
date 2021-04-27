@@ -9,14 +9,13 @@ module.exports = {
 	Query: {
 		/** 
 		 	@param 	 {object} req - the request object containing a user id
-			@returns {array} an array of todolist objects on success, and an empty array on failure
+			@returns {array} an array of map objects on success, and an empty array on failure
 		**/
 		getAllMaps: async (_, __, { req }) => {
 			const _id = new ObjectId(req.userId);
 			if(!_id) { return([])};
-			const maps = await Map.find({owner: _id});
+			const maps = await Map.find({owner: _id}); //hawuiodhiwuanmfoiuanfnaw
 			if(maps) return (maps);
-
 		},
 		/** 
 		 	@param 	 {object} args - a map id
@@ -56,6 +55,7 @@ module.exports = {
 			@returns {string} the objectID of the map or an error message
 		**/
 		addMap: async (_, args) => {
+			//console.log("MADE IT HERE");
 			const { map } = args;
 			const objectId = new ObjectId();
 			const { id, name, owner, subregions } = map;

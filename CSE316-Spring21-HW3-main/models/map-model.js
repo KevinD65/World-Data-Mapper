@@ -19,7 +19,7 @@ const mapSchema = new Schema(
 			type: String,
 			required: true
 		},
-		subregions: [ObjectId],
+		subregions: [String],
 	},
 	{ timestamps: true }
 );

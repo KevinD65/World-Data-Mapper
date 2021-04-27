@@ -82,9 +82,9 @@ export const REORDER_ITEMS = gql`
 	}
 `;
 
-export const ADD_TODOLIST = gql`
-	mutation AddTodolist($todolist: TodoInput!) {
-		addTodolist(todolist: $todolist) 
+export const ADD_MAP = gql`
+	mutation AddMap($map: MapInput!) {
+		addMap(map: $map)
 	}
 `;
 

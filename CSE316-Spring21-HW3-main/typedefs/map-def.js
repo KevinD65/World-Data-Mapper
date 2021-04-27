@@ -16,7 +16,7 @@ const typeDefs = gql `
 		capital: String!
 		leader: String!
 		flag: String!
-		landmarks: [Landmark]
+		landmarks: [Landmark]!
 		position: Int!
 		parent: String!
 		subregions: [String]!

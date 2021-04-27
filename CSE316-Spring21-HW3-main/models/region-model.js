@@ -36,7 +36,7 @@ const regionSchema = new Schema(
 			type: String,
 			required: true
 		},
-		subregions: [ObjectId],
+		subregions: [String],
 		path: [ObjectId]
 	}
 );

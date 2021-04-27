@@ -1,21 +1,27 @@
 import React, { useState, useEffect } 	from 'react';
 import { useMutation, useQuery } 		from '@apollo/client';
+import * as mutations 					from '../../cache/mutations';
 import { GET_DB_MAPS } 				    from '../../cache/queries';
+//import { GET_MAP_BY_ID } 				    from '../../cache/queries';
+//import { ADD_MAP }						from '../../cache/mutations';
 
 import DeleteMap 						from '../modals/DeleteMap';
 import { WButton, WRow, WCol } from 'wt-frontend';
 import WLayout from 'wt-frontend/build/components/wlayout/WLayout';
 import WLMain from 'wt-frontend/build/components/wlayout/WLMain';
 import WLHeader from 'wt-frontend/build/components/wlayout/WLHeader';
-
 import MapContents 				from '../MapData/MapContents';
-//import all mutations and queries here
 
 const MapSelect = (props) => {
 
+	console.log(props.user.name + "me");
     let maps = [];
     const [activeMap, setActiveMap] = useState({});
     const [showDeleteMap, toggleShowDeleteMap] = useState(false);
+
+	//import all mutations and queries here
+	const [AddMap] = useMutation(mutations.ADD_MAP);
+	//const {GetMap} = useQuery(GET_MAP_BY_ID);
 
     const { loading, error, data, refetch } = useQuery(GET_DB_MAPS);
 	if(loading) { console.log(loading, 'loading'); }
@@ -25,10 +31,11 @@ const MapSelect = (props) => {
 
     const refetchMaps = async (refetch) => {
 		const { loading, error, data } = await refetch();
+		//console.log(data + "FACE");
 		if (data) {
-			maps = data.getAllTodos;
+			maps = data.getAllMaps; //MAPS ARRAY HAS 0 ELEMENTS
 			if (activeMap._id) {
-				let tempID = activeMap._id;
+				let tempID = activeMap._id; 
 				let map = maps.find(map => map._id === tempID);
 				setActiveMap(map);
 			}
@@ -106,25 +113,28 @@ const MapSelect = (props) => {
 
 	};
 */
-/*
+
     const createNewMap = async () => { //creates and adds a new map
-		const length = todolists.length
-		const id = length >= 1 ? todolists[length - 1].id + Math.floor((Math.random() * 100) + 1) : 1;
-		let list = {
+		const length = maps.length
+		const id = length >= 1 ? maps[length - 1].id + Math.floor((Math.random() * 100) + 1) : 1;
+		let map = {
 			_id: '',
 			id: id,
 			name: 'Untitled',
-			owner: props.user._id,
-			items: [],
+			owner: props.user.name,
+			subregions: [],
 		}
-		const { data } = await AddTodolist({ variables: { todolist: list }, refetchQueries: [{ query: GET_DB_TODOS }] });
-		await refetchTodos(refetch);
+		const { data } = await AddMap({ variables: { map: map }, refetchQueries: [{ query: GET_DB_MAPS }] });
+		//console.log("HAIRCUT");
+		await refetchMaps(refetch);
+		console.log(maps);
+		/*
 		if(data) {
-			let _id = data.addTodolist;
+			let _id = data.addMap;
 			handleSetActive(_id);
-		}
+		}*/
 	};
-*/
+
 /*
     const deleteMap = async (_id) => { //deleting a map will delete all of its subregions from the database as well (perhaps everytime a new region is added, it's _id is appended to the root's array of subregions)
 		DeleteTodolist({ variables: { _id: _id }, refetchQueries: [{ query: GET_DB_TODOS }] });
@@ -132,12 +142,12 @@ const MapSelect = (props) => {
 		setActiveList({});
 	};
 */
-/*
+
     const handleSetActive = (id) => {
-		const todo = todolists.find(todo => todo.id === id || todo._id === id);
-		setActiveList(todo);
+		const map = maps.find(map => map.id === id || map._id === id);
+		setActiveMap(map);
 	};
-*/
+
 /*
 <WRow className = "mapSelect-button-header"> //for spreadsheet
 				<i className="material-icons addRegion" /*onClick = {addRegion}>add</i>
@@ -184,7 +194,7 @@ const MapSelect = (props) => {
 					</div>
 					<div className = "globeBox"> 
 						<div className = "mapSelect-globe"></div>
-						<WButton className = "createNewMap-button" span = "true" /*onClick = {createNewMap}*/>Create New Map</WButton>
+						<WButton className = "createNewMap-button" span = "true" onClick = {createNewMap}>Create New Map</WButton>
 					</div>
 				</WLMain>
 			</WLayout>
