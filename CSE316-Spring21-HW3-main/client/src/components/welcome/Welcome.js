@@ -52,7 +52,7 @@ const Welcome = (props) => {
 		const { loading, error, data } = await refetch();
 		if (data) {
 			maps = data.getAllMaps;
-			if (activeMap._id) {
+			if (activeMap) {
 				let tempID = activeMap._id; 
 				let map = maps.find(map => map._id === tempID);
 				setActiveMap(map);
@@ -105,11 +105,11 @@ const Welcome = (props) => {
 	};
 
 	const deleteMap = async (_id) => { //deleting a map will delete all of its subregions from the database as well (perhaps everytime a new region is added, it's _id is appended to the root's array of subregions)
-		/*console.log("what is my id? " + _id);
-		//DeleteMap({ variables: { _id: _id }, refetchQueries: [{ query: GET_DB_MAPS }] });
+		console.log("what is my id? " + _id);
+		DeleteMap({ variables: { _id: _id }, refetchQueries: [{ query: queries.GET_DB_MAPS }] });
 		await refetchMaps(refetch);
 		console.log("DELETE WORKED");
-		//refetch();*/
+		//refetch();
 	};
 
 	/*
