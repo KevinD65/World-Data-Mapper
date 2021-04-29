@@ -8,34 +8,35 @@ const SpreadsheetHeader = (props) => {
     const clickDisabled = () => { };
 
     return (
-        <WRow className="table-header">
-            <WCol size="4">
-                <WButton className='table-header-section' wType="texted" >Task</WButton>
-            </WCol>
+        <div className = "">
+            <WRow className = "spreadsheet-header">
+				<i className="material-icons addRegion" onClick = {addRegion}>add</i>
+			</WRow>
+            <WCHeader className = "spreadsheet-header">
+                <WRow>
+                    <WCol size="2">
+                        <WButton className='spreadsheet-header-section' wType="texted" span="true">Name<i className="material-icons spreadsheetHeaderIcon">south</i></WButton> 
+                    </WCol>
 
-            <WCol size="3">
-                <WButton className='table-header-section' wType="texted">Due Date</WButton>
-            </WCol>
+                    <WCol size="3">
+                        <WButton className='spreadsheet-header-section' wType="texted" span="true">Capital</WButton>
+                    </WCol>
 
-            <WCol size="2">
-                <WButton className='table-header-section' wType="texted" >Status</WButton>
-            </WCol>
+                    <WCol size="2">
+                        <WButton className='spreadsheet-header-section' wType="texted" span="true">Leader</WButton>
+                    </WCol>
+                    <WCol size="1">
+                        <WButton className='spreadsheet-header-section' wType="texted" span="true">Flag</WButton>
+                    </WCol>
+                    <WCol size="4">
+                        <WButton className='spreadsheet-header-section' wType="texted" span="true">Landmarks</WButton>
+                    </WCol>
+                </WRow>
+            </WCHeader>
+            <WMMain>
 
-            <WCol size="3">
-                <div className="table-header-buttons">
-                    <WButton onClick={props.disabled ? clickDisabled : props.addItem} wType="texted" className={`${buttonStyle}`}>
-                        <i className="material-icons">add_box</i>
-                    </WButton>
-                    <WButton onClick={props.disabled ? clickDisabled : props.setShowDelete} wType="texted" className={`${buttonStyle}`}>
-                        <i className="material-icons">delete_outline</i>
-                    </WButton>
-                    <WButton onClick={props.disabled ? clickDisabled : () => props.setActiveList({})} wType="texted" className={`${buttonStyle}`}>
-                        <i className="material-icons">close</i>
-                    </WButton>
-                </div>
-            </WCol>
-
-        </WRow>
+            </WMMain>
+        </div>
     );
 };
 

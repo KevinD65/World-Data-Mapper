@@ -14,7 +14,7 @@ const LoggedIn = (props) => {
         //console.log(data.name + " hi");
         if (data) {
             console.log("LOGOUTTTTT")
-            let reset = await client.resetStore(); //THIS IS GETTING TRIGGERED AND CAUSES ERROR
+            let reset = await client.resetStore();
             if (reset) props.toggleMapSelectScreen(false);
             //console.log("LOGOUTTTTT");
         }
@@ -31,7 +31,7 @@ const LoggedIn = (props) => {
         //add user's name here for updateaccount option
         <>
             <WNavItem hoverAnimation="lighten">
-                <WButton className="navbar-options" onClick={() => props.setShowUpdate} wType="texted" hoverAnimation="text-primary">
+                <WButton className="navbar-options" onClick={props.setShowUpdate} wType="texted" hoverAnimation="text-primary">
                     *NAME HERE*
                 </WButton>
             </WNavItem >
@@ -66,8 +66,8 @@ const NavbarOptions = (props) => {
     return (
         <>
             {
-                props.auth === false ? <LoggedOut setShowLogin={props.setShowLogin} setShowCreate={props.setShowCreate} />
-                : <LoggedIn fetchUser={props.fetchUser} /*logout={props.logout}*/ toggleMapSelectScreen={props.toggleMapSelectScreen}/>
+                props.auth === false ? <LoggedOut setShowLogin={props.setShowLogin} setShowCreate={props.setShowCreate}/>
+                : <LoggedIn fetchUser={props.fetchUser} /*logout={props.logout}*/ toggleMapSelectScreen={props.toggleMapSelectScreen} setShowUpdate={props.setShowUpdate}/>
             }
         </>
 

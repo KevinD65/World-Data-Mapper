@@ -1,22 +1,24 @@
 import React from 'react';
-
 import { WModal, WMHeader, WMMain, WButton } from 'wt-frontend';
 
-const DeleteMap = (props) => {
+const DeleteMapModal = (props) => {
 
     const handleDelete = async () => {
-        props.deleteList(props.activeid);
-        props.setShowDelete(false);
+        console.log("myID " + props.activeMap_id);
+        props.deleteMap(props.activeMap_id);
+        props.setShowDeleteMap(false);
     }
 
+    //console.log("HERE SAFE");
+
     return (
-        <div className="delete-modal">
-            <div className="modal-header" onClose={() => props.setShowDelete(false)}>
+        <WModal className="delete-modal">
+            <div className="modal-header" onClose={() => props.setShowDeleteMap(false)}>
                 Delete List?
 			</div>
 
             <div>
-                <WButton className="modal-button cancel-button" onClick={() => props.setShowDelete(false)} wType="texted">
+                <WButton className="modal-button cancel-button" onClick={() => props.setShowDeleteMap(false)} wType="texted">
                     Cancel
 				</WButton>
                 <label className="col-spacer">&nbsp;</label>
@@ -24,9 +26,8 @@ const DeleteMap = (props) => {
                     Delete
 				</WButton>
             </div>
-
-        </div>
+        </WModal>
     );
 }
 
-export default DeleteMap;
+export default DeleteMapModal;

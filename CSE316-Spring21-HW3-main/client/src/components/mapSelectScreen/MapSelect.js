@@ -1,39 +1,43 @@
 import React, { useState, useEffect } 	from 'react';
-import { useMutation, useQuery } 		from '@apollo/client';
-import * as mutations 					from '../../cache/mutations';
-import { GET_DB_MAPS } 				    from '../../cache/queries';
+//import { useMutation, useQuery } 		from '@apollo/client';
+//import * as mutations 					from '../../cache/mutations';
+//import { GET_DB_MAPS } 				    from '../../cache/queries';
 //import { GET_MAP_BY_ID } 				    from '../../cache/queries';
 //import { ADD_MAP }						from '../../cache/mutations';
 
-import DeleteMap 						from '../modals/DeleteMap';
+//import DeleteMap 						from '../modals/DeleteMapModal';
 import { WButton, WRow, WCol } from 'wt-frontend';
 import WLayout from 'wt-frontend/build/components/wlayout/WLayout';
 import WLMain from 'wt-frontend/build/components/wlayout/WLMain';
 import WLHeader from 'wt-frontend/build/components/wlayout/WLHeader';
 import MapContents 				from '../MapData/MapContents';
+import SpreadsheetScreen 		from '../spreadsheetScreen/SpreadsheetScreen';
+import { BrowserRouter, Switch, Route, Redirect, useParams, useHistory } from 'react-router-dom';
 
 const MapSelect = (props) => {
 
-	console.log(props.user.name + "me");
-    let maps = [];
-    const [activeMap, setActiveMap] = useState({});
-    const [showDeleteMap, toggleShowDeleteMap] = useState(false);
+	// console.log(props.user.name + "me");
+    // let maps = [];
+    // const [activeMap, setActiveMap] = useState({});
+    //const [showDeleteMap, toggleShowDeleteMap] = useState(false);
+	//const [spreadsheetScreenOn, toggleSpreadsheetScreen] = useState(false);
+
+	const { mapName } = useParams();
 
 	//import all mutations and queries here
-	const [AddMap] = useMutation(mutations.ADD_MAP);
+	// const [AddMap] = useMutation(mutations.ADD_MAP);
+	// const [DeleteMap] = useMutation(mutations.DELETE_MAP);
 	//const {GetMap} = useQuery(GET_MAP_BY_ID);
-
+/*
     const { loading, error, data, refetch } = useQuery(GET_DB_MAPS);
 	if(loading) { console.log(loading, 'loading'); }
 	if(error) { console.log(error, 'error'); }
 	if(data) { maps = data.getAllMaps; }
 
-
     const refetchMaps = async (refetch) => {
 		const { loading, error, data } = await refetch();
-		//console.log(data + "FACE");
 		if (data) {
-			maps = data.getAllMaps; //MAPS ARRAY HAS 0 ELEMENTS
+			maps = data.getAllMaps;
 			if (activeMap._id) {
 				let tempID = activeMap._id; 
 				let map = maps.find(map => map._id === tempID);
@@ -41,7 +45,8 @@ const MapSelect = (props) => {
 			}
 		}
 	}
-
+*/
+/*
     const tpsUndo = async () => {
 		const retVal = await props.tps.undoTransaction();
 		refetchMaps(refetch);
@@ -53,7 +58,7 @@ const MapSelect = (props) => {
 		refetchMaps(refetch);
 		return retVal;
 	}
-
+*/
     // Creates a default region and passes it to the backend resolver.
 	// The return id is assigned to the region, and the region is appended
 	//  to the local cache copy of the active map. 
@@ -113,7 +118,7 @@ const MapSelect = (props) => {
 
 	};
 */
-
+/*
     const createNewMap = async () => { //creates and adds a new map
 		const length = maps.length
 		const id = length >= 1 ? maps[length - 1].id + Math.floor((Math.random() * 100) + 1) : 1;
@@ -121,7 +126,7 @@ const MapSelect = (props) => {
 			_id: '',
 			id: id,
 			name: 'Untitled',
-			owner: props.user.name,
+			owner: props.user._id,
 			subregions: [],
 		}
 		const { data } = await AddMap({ variables: { map: map }, refetchQueries: [{ query: GET_DB_MAPS }] });
@@ -133,20 +138,34 @@ const MapSelect = (props) => {
 			let _id = data.addMap;
 			handleSetActive(_id);
 		}*/
-	};
+/*
+	const handleMapDeletion = (_id) => {
+		handleSetActive(_id);
+		toggleShowDeleteMap(!showDeleteMap);
+		console.log(showDeleteMap);
+		//setShowDeleteMap();
+	}
 
+	const setShowDeleteMap = () => {
+		console.log("before" + showDeleteMap);
+		toggleShowDeleteMap(!showDeleteMap);
+		console.log("KEVIND" + showDeleteMap);
+	}
+*/
 /*
     const deleteMap = async (_id) => { //deleting a map will delete all of its subregions from the database as well (perhaps everytime a new region is added, it's _id is appended to the root's array of subregions)
-		DeleteTodolist({ variables: { _id: _id }, refetchQueries: [{ query: GET_DB_TODOS }] });
-		refetch();
-		setActiveList({});
-	};
-*/
-
+		/*console.log("what is my id? " + _id);
+		//DeleteMap({ variables: { _id: _id }, refetchQueries: [{ query: GET_DB_MAPS }] });
+		await refetchMaps(refetch);
+		console.log("DELETE WORKED");
+		//refetch();*/
+	
+/*
     const handleSetActive = (id) => {
 		const map = maps.find(map => map.id === id || map._id === id);
 		setActiveMap(map);
 	};
+
 
 /*
 <WRow className = "mapSelect-button-header"> //for spreadsheet
@@ -176,6 +195,54 @@ const MapSelect = (props) => {
 				<WMMain>
 	
 				</WMMain> //className = "mapSelect-header" className = "mapSelect-body"
+		
+
+				<BrowserRouter>
+				<Switch>
+					<Route 
+						path = "/mapSelect/spreadsheet"
+						name = "/mapSelect/spreadsheet"> 
+						{console.log("WHAT THE HELL IS GOING ON?" + spreadsheetScreenOn)}
+						{spreadsheetScreenOn ?
+							<div>
+								<SpreadsheetScreen/>
+							</div>
+						: <Redirect from = "/mapSelect/spreadsheet" to="/mapSelect"/> }
+					</Route>
+					<Route path ="/mapSelect">
+						{console.log("redirected here")}
+						{!spreadsheetScreenOn ? 
+						<>
+							<div className = "mapSelect-spacing"></div>
+							<WLayout wLayout = "header">
+								<WLHeader>
+									<WRow className = "mapSelect-redbar"></WRow>
+									<div className = "mapSelect-blackbar">Your Maps</div>
+								</WLHeader>
+								<WLMain>
+									<>
+									<div className = "mapSelectionBox"> 
+										<MapContents
+											maps={maps} activeMap={activeMap}
+											toggleSpreadsheetScreen={activateSpreadSheetScreen}
+											handleMapDeletion={handleMapDeletion}
+										/>
+									</div>
+									<div className = "globeBox"> 
+										<div className = "mapSelect-globe"></div>
+										<WButton className = "createNewMap-button" span = "true" onClick = {createNewMap}>Create New Map</WButton>
+									</div>
+									{
+										  showDeleteMap && (<DeleteMap deleteMap={deleteMap} setShowDeleteMap={setShowDeleteMap} activeMap_id={activeMap._id}/>)
+									}
+									</>
+								</WLMain>
+							</WLayout>
+						</>
+						: <Redirect from = "/mapSelect" to = "/mapSelect/spreadsheet"/>}
+					</Route>
+				</Switch>
+			</BrowserRouter>
 
 */
     return(
@@ -187,15 +254,19 @@ const MapSelect = (props) => {
 					<div className = "mapSelect-blackbar">Your Maps</div>
 				</WLHeader>
 				<WLMain>
+					<>
 					<div className = "mapSelectionBox"> 
 						<MapContents
-							maps={maps} activeMap={activeMap}
+							maps={props.maps} activeMap={props.activeMap}
+							toggleSpreadsheetScreen={props.toggleSpreadsheetScreen}
+							handleMapDeletion={props.handleMapDeletion}
 						/>
 					</div>
 					<div className = "globeBox"> 
 						<div className = "mapSelect-globe"></div>
-						<WButton className = "createNewMap-button" span = "true" onClick = {createNewMap}>Create New Map</WButton>
+						<WButton className = "createNewMap-button" span = "true" onClick = {props.createNewMap}>Create New Map</WButton>
 					</div>
+					</>
 				</WLMain>
 			</WLayout>
 		</>

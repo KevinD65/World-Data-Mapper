@@ -1,5 +1,5 @@
 import React, { useState } 	from 'react';
-import { REGISTER }			from '../../cache/mutations';
+import { UPDATE }			from '../../cache/mutations';
 import { useMutation }    	from '@apollo/client';
 
 import { WModal, WMHeader, WMMain, WMFooter, WButton, WInput, WRow, WCol } from 'wt-frontend';
@@ -7,7 +7,7 @@ import { WModal, WMHeader, WMMain, WMFooter, WButton, WInput, WRow, WCol } from 
 const UpdateAccount = (props) => {
 	const [input, setInput] = useState({ email: '', password: '', name: '' });
 	const [loading, toggleLoading] = useState(false);
-	const [Register] = useMutation(REGISTER);
+	const [UpdateAccount] = useMutation(UPDATE);
 
 	
 	const updateInput = (e) => {
@@ -19,11 +19,11 @@ const UpdateAccount = (props) => {
 	const handleUpdateAccount = async (e) => {
 		for (let field in input) {
 			if (!input[field]) {
-				alert('All fields must be filled out to register');
+				alert('All fields must be filled');
 				return;
 			}
 		}
-		const { loading, error, data } = await Register({ variables: { ...input } });
+		const { loading, error, data } = await UpdateAccount({ variables: { ...input } });
 		if (loading) { toggleLoading(true) };
 		if (error) { return `Error: ${error.message}` };
 		if (data) {
@@ -41,11 +41,11 @@ const UpdateAccount = (props) => {
 	};
 
 	return (
-		<WModal className="signup-modal">
-			<div className="modal-header" onClose={() => props.setShowCreate(false)}>
-				Create A New Account
+		<WModal className="update-modal">
+			<div className="modal-header" onClose={() => props.setShowUpdate(false)}>
+				Enter Updated Account Information
 			</div>
-			<WButton className = "modal-x" onClick ={ () => props.setShowCreate(false)}>X</WButton>
+			<WButton className = "modal-x" onClick ={ () => props.setShowUpdate(false)}>X</WButton>
 
 			{
 				loading ? <div />
@@ -81,10 +81,10 @@ const UpdateAccount = (props) => {
 						</WRow>
 					</div>
 			}
-			<WButton className="modal-button" onClick={handleCreateAccount} span clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded" color="primary">
-				Submit
+			<WButton className="modal-button" onClick={handleUpdateAccount} span clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded" color="primary">
+				Update
 			</WButton>
-			<WButton className="modal-button" onClick={() => props.setShowCreate(false)} span clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded" color="primary">
+			<WButton className="modal-button" onClick={() => props.setShowUpdate(false)} span clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded" color="primary">
 				Cancel
 			</WButton>
 		</WModal>

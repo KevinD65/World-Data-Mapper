@@ -8,6 +8,8 @@ const MapContents = (props) => {
             <MapList
                 maps={props.maps} activeMap={props.activeMaps} 
                 deleteMap={props.deleteMap} updateMapName={props.updateMapName}
+                toggleSpreadsheetScreen={props.toggleSpreadsheetScreen}
+                handleMapDeletion={props.handleMapDeletion}
             />
         </div>
     );
