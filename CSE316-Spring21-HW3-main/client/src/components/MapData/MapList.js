@@ -11,8 +11,8 @@ const MapList = (props) => {
                         key={map.id}
                         handleSetActive={props.handleSetActive}
                         id={map.id} name={map.name} _id={map._id}
-                        deleteMap={props.deleteMap} updateMapName={props.updateMapName}
-                        toggleSpreadsheetScreen={props.toggleSpreadsheetScreen}
+                        deleteMap={props.deleteMap} editMapName={props.editMapName}
+                        setShowSpreadsheetScreen={props.setShowSpreadsheetScreen}
                         handleMapDeletion={props.handleMapDeletion}
                     />
                 ))

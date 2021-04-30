@@ -18,6 +18,7 @@ const LoggedIn = (props) => {
             if (reset) props.toggleMapSelectScreen(false);
             //console.log("LOGOUTTTTT");
         }
+
     };
 
 /*
@@ -27,6 +28,7 @@ const LoggedIn = (props) => {
     }
     let name = getName();
 */
+
     return (
         //add user's name here for updateaccount option
         <>
@@ -45,6 +47,7 @@ const LoggedIn = (props) => {
 };
 
 const LoggedOut = (props) => {
+
     return (
         <>
             <WNavItem hoverAnimation="lighten">

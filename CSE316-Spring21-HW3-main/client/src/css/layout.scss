@@ -19,16 +19,17 @@ html {
     display: flex;
 }
 
-.wsidebar {
-    scrollbar-width: thin;
-}
-
 .map-text {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: 1.125rem;
     padding: 12px 24px;
+}
+
+.mapName {
+    height: 50px;
+    float: left;
 }
 
 .table-text {
@@ -49,7 +50,7 @@ html {
     //align-items: center;
 }
 
-.table-entries {
+.table-regions {
     overflow-y: scroll;
 }
 
@@ -86,69 +87,62 @@ html {
     align-items: center;
 }
 
-.table-entry-buttons {
-    padding: 0;
-    margin-left: 18px;
-    margin-right: 18px;
-}
-
 .table-entry {
     //padding: 12px 24px;
     //padding: 12px 0;
 }
 
-.button-group {
-    height: 100%;
-    display: flex;
-    align-items: center;
-}
+    /*
+        CSS for all modals
+    */
 
-.modal-input {
-    width: 100%;
-}
-
-.modal-header {
-    height: 50px;
-    width: 550px;
-    padding-top: 3%;
-    padding-bottom: 3%;
-    float: left;
-}
-
-.modal-x {
-    height: 50px;
-    width: 50px;
-    float: left;
+.paddingLeft {
+    padding-left: 25%;
 }
 
 .modal-input-field {
     height: 30px;
-    flex-basis: auto;
     margin-left: 5px;
     float: left;
-}
-
-.modal-input-label {
-    margin-left: 175px;
-    padding-top: 12px;
-    float: left;
+    display: block;
 }
 
 .login-modal {
-    height: 30%;
-    width: 700px;
+    height: 300px;
+    width: 900px;
     display: block;
     z-index: 1;
 }
 
-.login-modal-wrapper {
-    height: 100%;
+.loginModal-header {
+    height: 25%;
+    width: 90%;
+    float: left;
+}
+
+.loginModal-x {
+    height: 25%;
+    width: 10%;
+    float: left;
 }
 
 .signup-modal {
-    width: 600px;
+    height: 400px;
+    width: 900px;
     display: block;
     z-index: 1;
+}
+
+.signupModal-header {
+    height: 15%;
+    width: 90%;
+    float: left;
+}
+
+.signupModal-x {
+    height: 15%;
+    width: 10%;
+    float: left;
 }
 
 .update-modal {
@@ -157,15 +151,57 @@ html {
     z-index: 1;
 }
 
+.deleteMap-modal {
+    width: 600px;
+    height: 150px;
+    display: block;
+    z-index: 1;
+}
+
+.delete-modal-header {
+    height: 35%;
+    width: 92%;
+    float: left;
+}
+
+.deleteModal-x {
+    height: 35%;
+    width: 8%;
+    float: left;
+}
+
+.modal-nameInput-field {
+    margin-left: 34.5%;
+    padding-top: 12px;
+    float: left;
+}
+
+.modal-emailInput-label {
+    margin-left: 35%;
+    padding-top: 12px;
+    float: left;
+}
+
+.modal-passwordInput-label {
+    margin-left: 31.5%;
+    padding-top: 12px;
+    float: left;
+}
+
 .modal-col-gap{
     column-gap: 0px;
 }
 
+.modal-button-container {
+    margin-left: 10%;
+}
+
 .modal-button {
     justify-content: space-evenly;
+    margin-top: 5%;
     margin-left: 10px;
     float: left;
-    width: 50px;
+    width: 200px;
     text-transform: uppercase;
     font-weight: bold;
     letter-spacing: 1px;
@@ -183,13 +219,6 @@ html {
     height: 24px;
     align-items: center;
     display: flex;
-}
-
-.delete-modal {
-    width: 600px;
-    display: block;
-    z-index: 1;
-    //width: fit-content;
 }
 
 .col-spacer {
@@ -215,10 +244,6 @@ html {
     padding-left: 0px !important;
     padding-right: 0px !important;
     //font-size: 1.125rem;
-}
-
-.welcome-title {
-    
 }
 
 .bottom-text {
@@ -268,6 +293,10 @@ html {
 .spreadsheet-header {
     margin-left: 10%;
     margin-right: 10%;
+}
+
+.headerLabels {
+    background-color: rgb(215,55,55);
 }
 
 /*

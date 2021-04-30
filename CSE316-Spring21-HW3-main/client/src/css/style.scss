@@ -66,37 +66,21 @@ html, body {
     text-align: center;
 } 
 
-.signup-modal {
-    background-color: black;
-}
-
-.modal-error {
-    color: $primary-color;
-    font-size: 14px;
-}
-
-.modal-input-label {
-    color: white;
-}
-
-.modal-input-field {
-    background-color: white;
-}
 
 .spreadsheet-header-section {
     color: white;
 }
 
-.table-entries {
+.table-regions {
     scrollbar-width: thin;
 }
 
-.table-entries::-webkit-scrollbar, .wsidebar::-webkit-scrollbar {
+.table-regions::-webkit-scrollbar, .wsidebar::-webkit-scrollbar {
 	width: 5px;
 	height: 8px;
 	background-color: var(--darkblue-gray); 
 }
-.table-entries::-webkit-scrollbar-thumb .wsidebar::-webkit-scrollbar-thumb {
+.table-regions::-webkit-scrollbar-thumb .wsidebar::-webkit-scrollbar-thumb {
 	width: 5px;
 	height: 8px;
 	background-color: var(--blue-gray); 
@@ -161,7 +145,11 @@ html, body {
     color: var(--light-gray);
 }
 
-.modal-header {
+/*
+    CSS for all modals
+*/
+
+.delete-modal-header {
     color: $text-color;
     font-size: 18px;
     padding-left: 33%;
@@ -169,13 +157,50 @@ html, body {
     width: 450px;
 }
 
+.loginModal-header {
+    height: 25%;
+    width: 90%;
+    color: $text-color;
+    font-size: 18px;
+    padding-left: 40%;
+    padding-top: 3%;
+    background-color: rgb(215, 55, 55);
+}
+
+.signupModal-header {
+    color: $text-color;
+    font-size: 18px;
+    padding-left: 40%;
+    padding-top: 2%;
+    background-color: rgb(215, 55, 55);
+}
+
+.modal-error {
+    color: $primary-color;
+    font-size: 14px;
+}
+
+.modal-nameInput-field {
+    color: white;
+}
+
+.modal-emailInput-label {
+    color: white;
+}
+
+.modal-passwordInput-label {
+    color: white;
+}
+
+
+
+.modal-input-field {
+    background-color: white;
+}
+
 .navbar-options {
     color: $text-color;
     font-size: 16px;
-}
-
-.cancel-button {
-    color: $text-color;
 }
 
 .undo-redo {

@@ -18,7 +18,7 @@ const Login = (props) => {
 	}
 
 	const handleLogin = async (e) => {
-
+		
 		const { loading, error, data } = await Login({ variables: { ...input } });
 		if (loading) { toggleLoading(true) };
 		if (data.login._id === null) {
@@ -31,58 +31,51 @@ const Login = (props) => {
 			toggleLoading(false)
 			props.setShowLogin(false)
 			props.toggleMapSelectScreen(true);
+			window.location.reload(false);
 		};
 	};
 
 
 	return (
-		<WModal className="login-modal">
-		<WMHeader></WMHeader>
-		{/* <div className = "login-modal-wrapper"> */}
-		<WMMain>
-			<div className="modal-header" onClose={() => props.setShowLogin(false)}>
+		<WModal className = "login-modal">
+			<div className = "loginModal-header" onClose={() => props.setShowLogin(false)}>
 				Login To Your Account
 			</div>
-			<WButton className = "modal-x" onClick ={ () => props.setShowLogin(false)}>X</WButton>
+			<WButton className = "loginModal-x" onClick ={ () => props.setShowLogin(false)}>X</WButton>
 
 			{
-				loading ? <div />
+				loading ? <div/>
 					: <div>
-						<WRow className="modal-col-gap">
-							<WCol size = "6">
-								<div className = "modal-input-label" >Email: </div>
+						<div className="modal-spacer">&nbsp;</div>
+						<div className="modal-spacer">&nbsp;</div>
+						<div className="modal-col-gap">
+								<div className = "modal-emailInput-label" >Email: </div>
 								<WInput 
 									className="modal-input-field" onBlur={updateInput} name="email" labelAnimation="up" 
 									barAnimation="solid" placeholderText="*Enter Email Here*" wType="outlined" inputType="text"
 									outlined = "disabled"
 									 
 								/>
-							</WCol>
-						</WRow>
+						</div>
 						<div className="modal-spacer">&nbsp;</div>
-						<WRow className="modal-col-gap">
-							<WCol size = "6">
-								<div className = "modal-input-label" >Password: </div>
+						<div className="modal-col-gap">
+								<div className = "modal-passwordInput-label" >Password: </div>
 								<WInput 
 									className="modal-input-field" onBlur={updateInput} name="password" labelAnimation="up" 
-									barAnimation="solid" labelText="*Enter Password Here*" wType="outlined" inputType="password" 
+									barAnimation="solid" placeholderText="*Enter Password Here*" wType="outlined" inputType="password" 
 								/>
-							</WCol>
-						</WRow>
+						</div>
 					</div>
 			}
-			
-			{/* <WMFooter> */}
-				HERE
-				<WButton className="modal-button" onClick={handleLogin} clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded" color="primary">
-					Login
-				</WButton>
-				<WButton className="modal-button" onClick={() => props.setShowLogin(false)} clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded" color="primary">
-					Cancel
-				</WButton>
-			{/* </WMFooter> */}
-			</WMMain>
-		{/* </div> */}
+				<div className="modal-spacer">&nbsp;</div>
+				<div className = "paddingLeft">
+					<WButton className="modal-button" onClick={handleLogin} clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded" color="primary">
+						Login
+					</WButton>
+					<WButton className="modal-button" onClick={() => props.setShowLogin(false)} clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded" color="primary">
+						Cancel
+					</WButton>
+				</div>
 		</WModal>
 		/*
 		<WModal className="login-modal">

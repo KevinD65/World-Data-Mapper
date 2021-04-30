@@ -16,43 +16,18 @@ import SpreadsheetContents from '../MapData/SpreadsheetContents';
 
 const SpreadsheetScreen = (props) => {
 
-	console.log(props.user.name + "me");
+	//console.log(props.user.name + "me");
 
-    const [activeMap, setActiveMap] = useState({});
-    const [showDeleteMap, toggleShowDeleteMap] = useState(false);
-	const [spreadsheetScreenOn, toggleSpreadsheetScreen] = useState(false);
+    // const [activeMap, setActiveMap] = useState({});
+    // const [showDeleteMap, toggleShowDeleteMap] = useState(false);
+	// const [spreadsheetScreenOn, toggleSpreadsheetScreen] = useState(false);
 
-	const { regionName } = useParams();
+	// const { regionName } = useParams();
 
 	//import all mutations and queries here
 	//const [AddMap] = useMutation(mutations.ADD_MAP);
 	//const [DeleteMap] = useMutation(mutations.DELETE_MAP);
 	//const {GetMap} = useQuery(GET_MAP_BY_ID);
-
-
-    const refetchMaps = async (refetch) => {
-		const { loading, error, data } = await refetch();
-		if (data) {
-			maps = data.getAllMaps;
-			if (activeMap._id) {
-				let tempID = activeMap._id; 
-				let map = maps.find(map => map._id === tempID);
-				setActiveMap(map);
-			}
-		}
-	}
-
-    const tpsUndo = async () => {
-		const retVal = await props.tps.undoTransaction();
-		refetchMaps(refetch);
-		return retVal;
-	}
-
-	const tpsRedo = async () => {
-		const retVal = await props.tps.doTransaction();
-		refetchMaps(refetch);
-		return retVal;
-	}
 
     // Creates a default region and passes it to the backend resolver.
 	// The return id is assigned to the region, and the region is appended
@@ -147,14 +122,14 @@ const SpreadsheetScreen = (props) => {
     return(
 			<BrowserRouter>
 				<Switch>
-                    <Route path = "/mapSelect/spreadsheet">
-                        {console.log("hi")}
-                        <SpreadsheetHeader>
-
-                        </SpreadsheetHeader>
-                        <SpreadsheetContents>
-                            
-                        </SpreadsheetContents>
+                    <Route path = "/regionSpreadsheet">
+                        <SpreadsheetHeader
+							addRegion={props.addRegion}
+						/>
+                        <SpreadsheetContents
+							activeMap={props.activeMap} activeRegion={props.activeRegion}
+							regions={props.regions}
+						/>    
                     </Route>
 				</Switch>
 			</BrowserRouter>

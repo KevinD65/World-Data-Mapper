@@ -4,93 +4,99 @@ import { WButton, WInput, WRow, WCol } from 'wt-frontend';
 const RegionEntry = (props) => {
     const { data } = props;
 
-    const completeStyle = data.completed ? ' complete-task' : ' incomplete-task';
+    //const completeStyle = data.completed ? ' complete-task' : ' incomplete-task';
 
-    const description = data.description;
-    const due_date = data.due_date;
-    const status = data.completed ? 'complete' : 'incomplete';
-    const [editingDate, toggleDateEdit] = useState(false);
-    const [editingDescr, toggleDescrEdit] = useState(false);
-    const [editingStatus, toggleStatusEdit] = useState(false);
+    const name = data.name;
+    const capital = data.capital;
+    const leader = data.leader;
+    const flag = data.flag;
+    const landmarksArr = data.landmarks;
+    const landmarks = ""; //string of all the landmarks in a comma separated list for display purposes
+    for(let i = 0; i < landmarksArr.length; i++){
+        landmarks += landmarksArr[i] + ", ";
+    }
 
-    const handleDateEdit = (e) => {
-        toggleDateEdit(false);
-        const newDate = e.target.value ? e.target.value : 'No Date';
-        const prevDate = due_date;
-        props.editItem(data._id, 'due_date', newDate, prevDate);
+    const [editingName, toggleNameEdit] = useState(false);
+    const [editingCapital, toggleCapitalEdit] = useState(false);
+    const [editingLeader, toggleLeaderEdit] = useState(false);
+
+    const handleNameEdit = (e) => {
+        toggleNameEdit(false);
+        const newName = e.target.value ? e.target.value : 'No Name';
+        const prevName = name;
+        props.editItem(data._id, 'name', newName, prevName);
     };
 
-    const handleDescrEdit = (e) => {
-        toggleDescrEdit(false);
-        const newDescr = e.target.value ? e.target.value : 'No Description';
-        const prevDescr = description;
-        props.editItem(data._id, 'description', newDescr, prevDescr);
+    const handleCapitalEdit = (e) => {
+        toggleCapitalEdit(false);
+        const newCapital = e.target.value ? e.target.value : 'No Capital';
+        const prevCapital = capital;
+        props.editItem(data._id, 'capital', newCapital, prevCapital);
     };
 
-    const handleStatusEdit = (e) => {
-        toggleStatusEdit(false);
-        const newStatus = e.target.value ? e.target.value : false;
-        const prevStatus = status;
-        props.editItem(data._id, 'completed', newStatus, prevStatus);
+    const handleLeaderEdit = (e) => {
+        toggleLeaderEdit(false);
+        const newLeader = e.target.value ? e.target.value : 'No Leader';
+        const prevLeader = leader;
+        props.editItem(data._id, 'leader', newLeader, prevLeader);
     };
 
     return (
         <WRow className='table-entry'>
-            <WCol size="4">
+            <WCol size="2">
                 {
-                    editingDescr || description === ''
+                    editingName || name === ''
                         ? <WInput
-                            className='table-input' onBlur={handleDescrEdit}
-                            autoFocus={true} defaultValue={description} type='text'
+                            className='table-input' onBlur={handleNameEdit}
+                            autoFocus={true} defaultValue={name} type='text'
                             wType="outlined" barAnimation="solid" inputClass="table-input-class"
                         />
                         : <div className="table-text"
-                            onClick={() => toggleDescrEdit(!editingDescr)}
-                        >{description}
+                            onClick={() => toggleNameEdit(!editingName)}
+                        >{name}
                         </div>
                 }
             </WCol>
 
             <WCol size="3">
                 {
-                    editingDate ? <input
-                        className='table-input' onBlur={handleDateEdit}
-                        autoFocus={true} defaultValue={due_date} type='date'
+                    editingCapital || capital === '' 
+                    ?<WInput
+                        className='table-input' onBlur={handleCapitalEdit}
+                        autoFocus={true} defaultValue={capital} type='text'
                         wType="outlined" barAnimation="solid" inputClass="table-input-class"
                     />
-                        : <div className="table-text"
-                            onClick={() => toggleDateEdit(!editingDate)}
-                        >{due_date}
-                        </div>
+                    : <div className="table-text"
+                        onClick={() => toggleCapitalEdit(!editingCapital)}
+                    >{capital}
+                    </div>
                 }
             </WCol>
 
             <WCol size="2">
                 {
-                    editingStatus ? <select
-                        className='table-select' onBlur={handleStatusEdit}
-                        autoFocus={true} defaultValue={status}
-                    >
-                        <option value="complete">complete</option>
-                        <option value="incomplete">incomplete</option>
-                    </select>
-                        : <div onClick={() => toggleStatusEdit(!editingStatus)} className={`${completeStyle} table-text`}>
-                            {status}
-                        </div>
+                    editingLeader || leader === '' 
+                    ?<WInput
+                        className='table-input' onBlur={handleLeaderEdit}
+                        autoFocus={true} defaultValue={leader} type='text'
+                        wType="outlined" barAnimation="solid" inputClass="table-input-class"
+                    />
+                    : <div className="table-text"
+                        onClick={() => toggleLeaderEdit(!editingLeader)}
+                    >{leader}
+                    </div>
                 }
             </WCol>
 
-            <WCol size="3">
-                <div className='button-group'>
-                    <WButton className="table-entry-buttons" onClick={() => props.reorderItem(data._id, -1)} wType="texted">
-                        <i className="material-icons">expand_less</i>
-                    </WButton>
-                    <WButton className="table-entry-buttons" onClick={() => props.reorderItem(data._id, 1)} wType="texted">
-                        <i className="material-icons">expand_more</i>
-                    </WButton>
-                    <WButton className="table-entry-buttons" onClick={() => props.deleteItem(data, props.index)} wType="texted">
-                        <i className="material-icons">close</i>
-                    </WButton>
+            <WCol size="1">
+                {
+                    <div>FLAG IMAGE HERE</div>
+                }
+            </WCol>
+
+            <WCol size="4">
+                <div className = "spreadsheet-landmarks">
+                    {landmarks}
                 </div>
             </WCol>
         </WRow>

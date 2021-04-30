@@ -4,25 +4,23 @@ import { WModal, WMHeader, WMMain, WButton } from 'wt-frontend';
 const DeleteMapModal = (props) => {
 
     const handleDelete = async () => {
-        console.log("myID " + props.activeMap_id);
         props.deleteMap(props.activeMap_id);
         props.setShowDeleteMap(false);
     }
 
-    //console.log("HERE SAFE");
-
     return (
-        <WModal className="delete-modal">
-            <div className="modal-header" onClose={() => props.setShowDeleteMap(false)}>
-                Delete List?
+        <WModal className="deleteMap-modal">
+            <div className="delete-modal-header" onClose={() => props.setShowDeleteMap(false)}>
+                Delete Map?
 			</div>
+            <WButton className = "deleteModal-x" onClick ={ () => props.setShowDeleteMap(false)}>X</WButton>
 
-            <div>
-                <WButton className="modal-button cancel-button" onClick={() => props.setShowDeleteMap(false)} wType="texted">
+            <div className = "modal-button-container">
+                <WButton className="modal-button" onClick={() => props.setShowDeleteMap(false)} clickAnimation="ripple-light" hoverAnimation="darken" color="">
                     Cancel
 				</WButton>
                 <label className="col-spacer">&nbsp;</label>
-                <WButton className="modal-button" onClick={handleDelete} clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded" color="danger">
+                <WButton className="modal-button" onClick={handleDelete} clickAnimation="ripple-light" hoverAnimation="darken" color="white">
                     Delete
 				</WButton>
             </div>

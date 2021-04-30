@@ -3,6 +3,7 @@ import React, { useState, useEffect } 						from 'react';
 import Logo 												from '../navbar/Logo';
 import NavbarOptions 										from '../navbar/NavbarOptions';
 import MapSelect 											from '../mapSelectScreen/MapSelect';
+import SpreadsheetScreen                                    from '../spreadsheetScreen/SpreadsheetScreen';
 
 import Login 												from '../modals/Login';
 import CreateAccount 										from '../modals/CreateAccount';
@@ -37,11 +38,19 @@ const Welcome = (props) => {
 	//define mutations/queries needed
 	const [AddMap] 											= useMutation(mutations.ADD_MAP);
 	const [DeleteMap] 										= useMutation(mutations.DELETE_MAP);
+	const [UpdateMapName]									= useMutation(mutations.UPDATE_MAP_NAME);
 	const [Logout] 											= useMutation(mutations.LOGOUT);
 
-	let maps = [];
+	let maps = []; //holds all the maps
+	let regions = []; //holds all the regions
 	const client = useApolloClient();
-    const [activeMap, setActiveMap] = useState({});
+    const [activeMap, setActiveMap] = useState({}); //an array holding a singular map object (or none)
+	const [activeRegion, setActiveRegion] = useState({}); //an array holding a singular region object (or none)
+	useEffect(() => {
+		console.log(activeMap);
+		console.log("useEffect");
+
+	}, [activeMap]);
 
 	const { loading, error, data, refetch } = useQuery(queries.GET_DB_MAPS);
 	if(loading) { console.log(loading, 'loading'); }
@@ -54,8 +63,8 @@ const Welcome = (props) => {
 			maps = data.getAllMaps;
 			if (activeMap) {
 				let tempID = activeMap._id; 
-				let map = maps.find(map => map._id === tempID);
-				setActiveMap(map);
+				let myMap = maps.find(map => map._id === tempID);
+				setActiveMap(myMap);
 			}
 		}
 	}
@@ -68,7 +77,7 @@ const Welcome = (props) => {
         const { data } = await props.fetchUser();
         if (data) {
             let reset = await client.resetStore();
-            if (reset) props.toggleMapSelectScreen(false);
+            if (reset) toggleMapSelectScreen(false);
         }
     };
 
@@ -80,9 +89,7 @@ const Welcome = (props) => {
 	}
 
 	const setShowDeleteMap = () => {
-		console.log("before" + showDeleteMap);
 		toggleShowDeleteMap(!showDeleteMap);
-		console.log("KEVIND" + showDeleteMap);
 	}
 
 	const handleSetActive = (id) => {
@@ -104,13 +111,20 @@ const Welcome = (props) => {
 		await refetchMaps(refetch);
 	};
 
-	const deleteMap = async (_id) => { //deleting a map will delete all of its subregions from the database as well (perhaps everytime a new region is added, it's _id is appended to the root's array of subregions)
-		console.log("what is my id? " + _id);
+	const editMapName = async (mapID, name) => {
+		await UpdateMapName({ variables: { _id: mapID, value: name }});
+		await refetchMaps(refetch);
+	}
+
+	const deleteMap = async (_id) => { 
+		//deleting a map will delete all of its subregions from the database as well (perhaps everytime a new region is added, it's _id is appended to the root's array of subregions)
 		DeleteMap({ variables: { _id: _id }, refetchQueries: [{ query: queries.GET_DB_MAPS }] });
 		await refetchMaps(refetch);
-		console.log("DELETE WORKED");
-		//refetch();
 	};
+
+	const addRegion = async () => {
+
+	}
 
 	/*
 		Used for toggling modals
@@ -142,10 +156,29 @@ const Welcome = (props) => {
 		toggleShowLogin(false);
 		toggleShowDeleteMap(!showDeleteMap)
 	}
+	/*
+		Used for toggling between screens
+	*/
+	const setShowSpreadsheetScreen = async (parentID) => {
+		//needs to be compatiable with both a map data file or a region
+		console.log("parent" + parentID);
+		toggleMapSelectScreen(false);
+		toggleSpreadsheetScreen(true);
+		handleSetActive(parentID);
+		//console.log("ACTIVE MAP: " + activeMap._id);
+		const selectedRegion = maps.find(map => map._id === parentID); 
+		//console.log("OHMYGOD" + selectedRegion._id);
+		/*
+		if(selectedRegion === undefined) //a region was selected, not a map data file
+			//search regions array and compile an array of all the regions associated with the parent
+			console.log("placeholder");*/
+	}
+
 
 	let history = useHistory();
+
 	function goHome(){
-		history.push("/welcome/mapSelect");
+		history.push("/mapSelect");
 	}
 
 	return (
@@ -155,6 +188,7 @@ const Welcome = (props) => {
 				<Route exact path="/"> 
 					<Redirect exact from="/" to="/welcome"/>
 				</Route>
+
 				<Route path = "/welcome"> 
 					{/* {auth ?  */}
 					
@@ -163,7 +197,7 @@ const Welcome = (props) => {
 						<WLHeader>
 							<WNavbar color="colored">
 								<ul>
-									<WNavItem onClick={goHome}>
+									<WNavItem>
 										<Logo className='logo' />
 									</WNavItem>
 								</ul>
@@ -171,8 +205,8 @@ const Welcome = (props) => {
 									<NavbarOptions
 										fetchUser={props.fetchUser} auth={auth} 
 										setShowCreate={setShowCreate} setShowLogin={setShowLogin}
-										toggleMapSelectScreen={toggleMapSelectScreen}
 										setShowUpdate={setShowUpdate} /*Need a prop for the user's name*/
+										toggleMapSelectScreen={toggleMapSelectScreen}
 									/>
 								</ul>
 							</WNavbar>
@@ -181,7 +215,7 @@ const Welcome = (props) => {
 						<WLMain>
 							{!auth ? 
 								<>
-									<Redirect exact from="/welcome/mapSelect" to={ {pathname: "/welcome"} } />
+									<Redirect exact from="/mapSelect" to={ {pathname: "/welcome"} } />
 									<div className="container-secondary">
 										
 									</div>
@@ -212,56 +246,91 @@ const Welcome = (props) => {
 				<Route 
 					path = "/mapSelect" 
 					name = "/mapSelect">
-						{console.log("MAPPP" + auth)}
+					<>
 					{auth ?
-					<WLayout wLayout="header">
+						!spreadsheetScreenOn ?
+							<WLayout wLayout="header">
+								<WLHeader>
+									<WNavbar color="colored">
+										<ul>
+											<WNavItem onClick={goHome}>
+												<Logo className='logo' />
+											</WNavItem>
+										</ul>
+										<ul>
+											<NavbarOptions
+												fetchUser={props.fetchUser} auth={auth} 
+												setShowCreate={setShowCreate} setShowLogin={setShowLogin}
+												setShowUpdate={setShowUpdate} /*Need a prop for the user's name*/
+												toggleMapSelectScreen={toggleMapSelectScreen}
+											/>
+										</ul>
+									</WNavbar>
+								</WLHeader>
+								<WLMain>
+									<>
+										<MapSelect /*send props here*/
+											auth={auth} fetchUser={props.fetchUser}
+											user={props.user} handleMapDeletion={handleMapDeletion}
+											setShowSpreadsheetScreen={setShowSpreadsheetScreen}
+											maps={maps} activeMap={activeMap}
+											createNewMap={createNewMap} editMapName={editMapName}
+										/>
+									</>
+								</WLMain>
+										{
+											showCreate && (<CreateAccount fetchUser={props.fetchUser} setShowCreate={setShowCreate} />)
+										}
+
+										{
+											showLogin && (<Login fetchUser={props.fetchUser} /*refetchTodos={refetch}*/ setShowLogin={setShowLogin} toggleMapSelectScreen={toggleMapSelectScreen}/>)
+										}
+										{
+											showUpdate && (<UpdateAccount fetchUser={props.fetchUser} setShowUpdate={setShowUpdate}/>)
+										}
+										{
+											showDeleteMap && (<DeleteMapModal deleteMap={deleteMap} setShowDeleteMap={setShowDeleteMap} activeMap_id={activeMap._id}/>)
+										}
+							</WLayout>
+						: <Redirect from="/mapSelect" to="/regionSpreadsheet"/>
+					: <Redirect exact from="/mapSelect" to="/welcome"/>}
+					</>
+				</Route>
+
+				<Route path = "/regionSpreadsheet">
+					{auth ?
+					<WLayout wLayout = "header">
 						<WLHeader>
 							<WNavbar color="colored">
 								<ul>
 									<WNavItem onClick={goHome}>
 										<Logo className='logo' />
-									</WNavItem>
+											</WNavItem>
 								</ul>
 								<ul>
 									<NavbarOptions
 										fetchUser={props.fetchUser} auth={auth} 
 										setShowCreate={setShowCreate} setShowLogin={setShowLogin}
-										toggleMapSelectScreen={toggleMapSelectScreen}
 										setShowUpdate={setShowUpdate} /*Need a prop for the user's name*/
+										toggleMapSelectScreen={toggleMapSelectScreen}
 									/>
 								</ul>
 							</WNavbar>
 						</WLHeader>
 						<WLMain>
-							<>
-								{
-									showCreate && (<CreateAccount fetchUser={props.fetchUser} setShowCreate={setShowCreate} />)
-								}
-
-								{
-									showLogin && (<Login fetchUser={props.fetchUser} /*refetchTodos={refetch}*/ setShowLogin={setShowLogin} toggleMapSelectScreen={toggleMapSelectScreen}/>)
-								}
-								{
-									showUpdate && (<UpdateAccount fetchUser={props.fetchUser} setShowUpdate={setShowUpdate}/>)
-								}
-								{
-									showDeleteMap && (<DeleteMapModal deleteMap={deleteMap} setShowDeleteMap={setShowDeleteMap} activeMap_id={activeMap._id}/>)
-								}
-								<MapSelect /*send props here*/
-									auth={auth} fetchUser={props.fetchUser}
-									user={props.user} handleMapDeletion={handleMapDeletion}
-									toggleSpreadsheetScreen={toggleSpreadsheetScreen}
-									maps={maps} activeMap={activeMap}
-									createNewMap={createNewMap}
-								/>
-
-							</>
+							<SpreadsheetScreen
+								activeMap={activeMap} activeRegion={activeRegion /*We are sending both activeMap & activeRegion. In RegionEntry, we will check if activeRegion is empty 
+								or not and decide there whether to render the activeMap's subregions or the activeRegion's subregions*/}
+								addRegion={addRegion} 
+								regions={regions}
+							/>
 						</WLMain>
 					</WLayout>
-					: <Redirect exact from="/mapSelect" to="/welcome"/>
+					: <Redirect from="/regionSpreadsheet" to="/welcome"/>
 					}
 				</Route>
-				<Route path = "regionSpreadsheet">
+
+				<Route>
 
 				</Route>
 			</Switch>

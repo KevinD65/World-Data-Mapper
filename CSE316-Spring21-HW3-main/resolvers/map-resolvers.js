@@ -98,13 +98,13 @@ module.exports = {
 			else return false;
 		},
 		/** 
-		 	@param 	 {object} args - a todolist objectID, field, and the update value
+		 	@param 	 {object} args - a map objectID, field, and the update value
 			@returns {boolean} true on successful update, false on failure
 		**/
-		updateTodolistField: async (_, args) => {
-			const { field, value, _id } = args;
+		updateMapName: async (_, args) => {
+			const { _id, value } = args;
 			const objectId = new ObjectId(_id);
-			const updated = await Todolist.updateOne({_id: objectId}, {[field]: value});
+			const updated = await Map.updateOne({_id: objectId}, {name: value});
 			if(updated) return value;
 			else return "";
 		},

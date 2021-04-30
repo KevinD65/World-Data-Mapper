@@ -94,8 +94,8 @@ export const DELETE_MAP = gql`
 	}
 `;
 
-export const UPDATE_TODOLIST_FIELD = gql`
-	mutation UpdateTodolistField($_id: String!, $field: String!, $value: String!) {
-		updateTodolistField(_id: $_id, field: $field, value: $value)
+export const UPDATE_MAP_NAME = gql`
+	mutation UpdateMapName($_id: String!, $value: String!) {
+		updateMapName(_id: $_id, value: $value)
 	}
 `;

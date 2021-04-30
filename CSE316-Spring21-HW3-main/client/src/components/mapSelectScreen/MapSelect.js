@@ -260,6 +260,8 @@ const MapSelect = (props) => {
 							maps={props.maps} activeMap={props.activeMap}
 							toggleSpreadsheetScreen={props.toggleSpreadsheetScreen}
 							handleMapDeletion={props.handleMapDeletion}
+							setShowSpreadsheetScreen={props.setShowSpreadsheetScreen}
+							editMapName={props.editMapName}
 						/>
 					</div>
 					<div className = "globeBox"> 
