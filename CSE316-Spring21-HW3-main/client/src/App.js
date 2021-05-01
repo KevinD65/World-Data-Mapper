@@ -7,6 +7,7 @@ import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
  
 const App = () => {
 	let user = null;
+	let userName = null;
     let transactionStack = new jsTPS();
 	
     const { loading, error, data, refetch } = useQuery(queries.GET_DB_USER);
@@ -15,7 +16,7 @@ const App = () => {
 	if(loading) { console.log(loading); }
 	if(data) { 
 		let { getCurrentUser } = data;
-		if(getCurrentUser !== null) { user = getCurrentUser;}
+		if(getCurrentUser !== null) { user = getCurrentUser; userName = getCurrentUser.name}
     }
 
 	return(
@@ -26,7 +27,7 @@ const App = () => {
 					path="/welcome" 
 					name="welcome" 
 					render={() => 
-						<Welcome tps={transactionStack} fetchUser={refetch} user={user} />
+						<Welcome tps={transactionStack} fetchUser={refetch} user={user} userName={userName}/>
 					} 
 				/>
 				<Route/>

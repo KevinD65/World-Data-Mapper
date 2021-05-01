@@ -79,24 +79,27 @@ module.exports = {
 			const { email, password, name } = args;
 			const alreadyRegistered = await User.findOne({email: email});
 			const hashed = await bcrypt.hash(password, 10);
-			const user_id = new ObjectID(alreadyRegistered._id);
+			const user_id = new ObjectId(alreadyRegistered._id);
 			let updatedUser;
 			if(alreadyRegistered) {
+				updatedUser = await User.updateOne({ _id: user_id }, {name: name, email: email, password: hashed});
+/*
 				await User.deleteOne({_id: user_id}); //delete the old account information
 				updatedUser = new User({ //update the user's account information
 					_id: user_id,
 					name: name,
 					email: email,
 					password: hashed
-				})
+				})*/
 			}
-			const saved = await user.save(); //save the new account information
+			//const saved = await updatedUser.save(); //save the new account information
+
 			// After registering the user, their tokens are generated here so they
 			// are automatically logged in on account creation.
-			const accessToken = tokens.generateAccessToken(user);
-			const refreshToken = tokens.generateRefreshToken(user);
-			res.cookie('refresh-token', refreshToken, { httpOnly: true , sameSite: 'None', secure: true}); 
-			res.cookie('access-token', accessToken, { httpOnly: true , sameSite: 'None', secure: true}); 
+			//const accessToken = tokens.generateAccessToken(updatedUser);
+			//const refreshToken = tokens.generateRefreshToken(updatedUser);
+			//res.cookie('refresh-token', refreshToken, { httpOnly: true , sameSite: 'None', secure: true}); 
+			//res.cookie('access-token', accessToken, { httpOnly: true , sameSite: 'None', secure: true}); 
 			return updatedUser;
 		},
 		/** 

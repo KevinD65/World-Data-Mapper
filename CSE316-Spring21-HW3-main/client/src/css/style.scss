@@ -232,6 +232,14 @@ The following CSS is for icons
     font-weight: bold;
 }
 
+.undo {
+    color: white;
+}
+
+.redo {
+    color: white
+}
+
 .spreadsheetHeader {
     color: white;
     text-align: center;
@@ -286,3 +294,14 @@ No longer for icons
     background-color: white;
 }
 
+.spreadsheet-header-text {
+    color: white;
+    font-size: large;
+    text-align: center;
+}
+
+.spreadsheet-header-name {
+    color: rgb(87,121,178);
+    font-size: large;
+    text-align: center;
+}

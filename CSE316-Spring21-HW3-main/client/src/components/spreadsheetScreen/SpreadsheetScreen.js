@@ -124,7 +124,9 @@ const SpreadsheetScreen = (props) => {
 				<Switch>
                     <Route path = "/regionSpreadsheet">
                         <SpreadsheetHeader
-							addRegion={props.addRegion}
+							activeMap={props.activeMap} activeRegion={props.activeRegion}
+							region={props.regions} addRegion={props.addRegion}
+							undo={props.undo} redo={props.redo}
 						/>
                         <SpreadsheetContents
 							activeMap={props.activeMap} activeRegion={props.activeRegion}

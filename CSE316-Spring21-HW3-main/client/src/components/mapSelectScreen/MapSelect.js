@@ -257,7 +257,8 @@ const MapSelect = (props) => {
 					<>
 					<div className = "mapSelectionBox"> 
 						<MapContents
-							maps={props.maps} activeMap={props.activeMap}
+							maps={props.maps} regions={props.regions}
+							activeMap={props.activeMap}
 							toggleSpreadsheetScreen={props.toggleSpreadsheetScreen}
 							handleMapDeletion={props.handleMapDeletion}
 							setShowSpreadsheetScreen={props.setShowSpreadsheetScreen}

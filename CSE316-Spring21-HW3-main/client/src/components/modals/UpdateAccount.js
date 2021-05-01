@@ -24,70 +24,65 @@ const UpdateAccount = (props) => {
 			}
 		}
 		const { loading, error, data } = await UpdateAccount({ variables: { ...input } });
+		//console.log("MADE IT OUT");
 		if (loading) { toggleLoading(true) };
 		if (error) { return `Error: ${error.message}` };
 		if (data) {
 			console.log(data)
-			toggleLoading(false);
+			toggleLoading(false);/*
 			if(data.register.email === 'already exists') {
 				alert('User with that email already registered');
 			}
 			else {
 				props.fetchUser();
-			}
-			props.setShowCreate(false);
+			}*/
+			props.fetchUser();
+			props.setShowUpdate(false);
 
 		};
 	};
 
 	return (
-		<WModal className="update-modal">
-			<div className="modal-header" onClose={() => props.setShowUpdate(false)}>
-				Enter Updated Account Information
-			</div>
-			<WButton className = "modal-x" onClick ={ () => props.setShowUpdate(false)}>X</WButton>
+		<WModal className="signup-modal">
+		<div className="signupModal-header" onClose={() => props.setShowUpdate(false)}>
+			Enter Updated Account Information
+		</div>
+		<WButton className = "signupModal-x" onClick ={ () => props.setShowUpdate(false)}>X</WButton>
 
-			{
-				loading ? <div />
-					: <div>
-						<WRow className="modal-col-gap signup-modal">
-						<div className = "modal-input-label" >Name: </div>
-							<WCol size="6">
-								<WInput 
-									className="modal-input-field" onBlur={updateInput} name="name" labelAnimation="up" 
-									barAnimation="solid" labelText="*Enter Name Here*" wType="outlined" inputType="text" 
-								/>
-							</WCol>
-						</WRow>
-						<div className="modal-spacer">&nbsp;</div>
-						<WRow className="modal-col-gap signup-modal">
-						<div className = "modal-input-label" >Email: </div>
-							<WCol size = "6">
-								<WInput 
-									className="modal-input-field" onBlur={updateInput} name="email" labelAnimation="up" 
-									barAnimation="solid" labelText="*Enter Email Here*" wType="outlined" inputType="text" 
-								/>
-							</WCol>
-						</WRow>
-						<WRow className="modal-col-gap signup-modal">
-						<div className="modal-spacer">&nbsp;</div>
-						<div className = "modal-input-label" >Password: </div>
-							<WCol size = "6">
-								<WInput 
-									className="modal-input-field" onBlur={updateInput} name="password" labelAnimation="up" 
-									barAnimation="solid" labelText="*Enter Password Here*" wType="outlined" inputType="password" 
-								/>
-							</WCol>
-						</WRow>
-					</div>
-			}
-			<WButton className="modal-button" onClick={handleUpdateAccount} span clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded" color="primary">
-				Update
+		{
+			loading ? <div />
+				: <div>
+					<div className="modal-spacer">&nbsp;</div>
+					<div className="modal-spacer">&nbsp;</div>
+					<div className = "modal-nameInput-field" >Name: </div>
+					<WInput 
+						className="modal-input-field" onBlur={updateInput} name="name" labelAnimation="up" 
+						barAnimation="solid" placeholderText="*Enter Name Here*" wType="outlined" inputType="text" 
+					/>
+					<div className="modal-spacer">&nbsp;</div>
+					<div className = "modal-emailInput-label" >Email: </div>
+					<WInput 
+						className="modal-input-field" onBlur={updateInput} name="email" labelAnimation="up" 
+						barAnimation="solid" placeholderText="*Enter Email Here*" wType="outlined" inputType="text" 
+					/>
+					<div className="modal-spacer">&nbsp;</div>
+					<div className = "modal-passwordInput-label" >Password: </div>
+					<WInput 
+						className="modal-input-field" onBlur={updateInput} name="password" labelAnimation="up" 
+						barAnimation="solid" placeholderText="*Enter Password Here*" wType="outlined" inputType="password" 
+					/>
+					<div className="modal-spacer">&nbsp;</div>
+				</div>
+		}
+		<div className = "paddingLeft">
+			<WButton className="modal-button" onClick={handleUpdateAccount} clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded" color="primary">
+				Submit
 			</WButton>
-			<WButton className="modal-button" onClick={() => props.setShowUpdate(false)} span clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded" color="primary">
+			<WButton className="modal-button" onClick={() => props.setShowUpdate(false)} clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded" color="primary">
 				Cancel
 			</WButton>
-		</WModal>
+		</div>
+	</WModal>
 	);
 }
 

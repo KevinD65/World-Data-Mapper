@@ -289,10 +289,25 @@ html {
     position: absolute;
     bottom: 0;
 }
+.spreadsheet-header-container {
+    //float: left;
+    margin-top: 50px;
+}
+
 
 .spreadsheet-header {
     margin-left: 10%;
     margin-right: 10%;
+}
+
+.spreadsheet-header-text {
+    display: inline-block;
+    margin-left: 37%;
+}
+
+.spreadsheet-header-name {
+    display: inline-block;
+    margin-left: 10px;
 }
 
 .headerLabels {

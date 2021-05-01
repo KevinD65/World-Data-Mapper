@@ -37,21 +37,26 @@ export const LOGOUT = gql`
 	}
 `;
 
-export const ADD_ITEM = gql`
-	mutation AddItem($item: ItemInput!, $_id: String!, $index: Int!) {
-	  	addItem(item: $item, _id: $_id, index: $index)
+export const ADD_REGION = gql`
+	mutation AddRegion($region: RegionInput!, $_id: String!, $index: Int!) {
+	  	addRegion(region: $region, _id: $_id, index: $index)
 	}
 `;
 
-export const DELETE_ITEM = gql`
-	mutation DeleteItem($itemId: String!, $_id: String!) {
-		deleteItem(itemId: $itemId, _id: $_id) {
+export const DELETE_REGION = gql`
+	mutation DeleteRegion($itemId: String!, $_id: String!) {
+		deleteRegion(itemId: $itemId, _id: $_id) {
 			_id
 			id
-			description
-			due_date
-			assigned_to
-			completed
+			name
+			capital
+			leader
+			flag
+			landmarks
+			position
+			parent
+			subregions
+			path
 		}
 	}
 `;

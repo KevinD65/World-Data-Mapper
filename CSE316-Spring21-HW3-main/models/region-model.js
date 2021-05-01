@@ -25,7 +25,7 @@ const regionSchema = new Schema(
 		},
 		flag: {
 			type: String,
-			required: true
+			required: false
 		},
 		landmarks: [Landmark],
 		position: {

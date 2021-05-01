@@ -3,19 +3,26 @@ import RegionEntry   from './RegionEntry';
 
 const SpreadsheetContents = (props) => {
 
-    console.log(props.activeRegion);
     let regionsIDs = [];
-    if(props.activeRegion[0] === null)
+    if(props.activeRegion[0] === null){
         regionsIDs = props.activeMap.subregions;
-    else if(props.activeRegion[0] === undefined)
+        console.log("NULLBOI");
+    }
+    else if(props.activeRegion[0] === undefined){
         regionsIDs = props.activeMap.subregions;
+        console.log(regionsIDs);
+    }
     else{
         regionsIDs = props.activeRegion[0].subregions;
+        console.log("JAH");
     }
+
     //const regionsIDs = props.activeRegion !== {} ? props.activeRegion[0].subregions : props.activeMap.subregions;
     let regions = props.regions;
+    console.log(regions);
+    let regionToFind;
     for(let i = 0; i < regionsIDs.length; i++){
-        let regionToFind = regions.find(region => region._id === regionsIDs[i]);//search the master list of all regions for the regions associated with this parent
+        regionToFind = regions.find(region => region._id === regionsIDs[i]);//search the master list of all regions for the regions associated with this parent
         regions.push(regionToFind);
     }
 

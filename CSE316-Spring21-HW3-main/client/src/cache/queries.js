@@ -11,7 +11,7 @@ export const GET_DB_USER = gql`
 `;
 
 export const GET_DB_MAPS = gql`
-	query getDBMaps {
+	query GetAllMaps {
 		getAllMaps {
 			_id
 			id
@@ -30,6 +30,24 @@ export const GET_MAP_BY_ID = gql`
 			name
 			owner
 			subregions
+		}
+	}
+`;
+
+export const GET_DB_REGIONS = gql`
+	query getDBRegions {
+		getAllRegions {
+			_id
+			id
+			name
+			capital
+			leader
+			flag
+			
+			position
+			parent
+			subregions
+			path
 		}
 	}
 `;

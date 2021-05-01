@@ -82,27 +82,31 @@ export class EditItem_Transaction extends jsTPS_Transaction {
 }
 
 /*  Handles create/delete of list items */
-export class UpdateListItems_Transaction extends jsTPS_Transaction {
+export class UpdateSpreadsheetItems_Transaction extends jsTPS_Transaction {
     // opcodes: 0 - delete, 1 - add 
-    constructor(listID, itemID, item, opcode, addfunc, delfunc, index = -1) {
+    constructor(parentID, regionID, region, opcode, addfunc, delfunc, index = -1) {
         super();
-        this.listID = listID;
-		this.itemID = itemID;
-		this.item = item;
+        this.parentID = parentID;
+		this.regionID = regionID;
+		this.region = region;
         this.addFunction = addfunc;
         this.deleteFunction = delfunc;
         this.opcode = opcode;
-	this.index = index
+	    this.index = index
     }
+
+    
     async doTransaction() {
 		let data;
+        console.log(this.region);
         this.opcode === 0 ? { data } = await this.deleteFunction({
 							variables: {itemId: this.itemID, _id: this.listID}})
 						  : { data } = await this.addFunction({
-							variables: {item: this.item, _id: this.listID, index: this.index}})  
+							variables: {region: this.region, _id: this.parentID, index: this.index}})  
 		if(this.opcode !== 0) {
-            this.item._id = this.itemID = data.addItem;
+            this.region._id = this.regionID = data.addRegion;
 		}
+        console.log(this.region); 
 		return data;
     }
     // Since delete/add are opposites, flip matching opcode

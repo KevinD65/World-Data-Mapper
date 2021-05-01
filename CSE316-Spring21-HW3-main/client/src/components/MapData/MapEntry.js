@@ -15,8 +15,7 @@ const MapEntry = (props) => {
 
     const handleSubmit = (e) => {
         handleEditing(e);
-        const { name } = e.target.value;
-        console.log(e.target.value);
+        let name = e.target.value;
         props.editMapName(props._id, name);
     };
 

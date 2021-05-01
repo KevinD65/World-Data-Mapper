@@ -6,11 +6,30 @@ const SpreadsheetHeader = (props) => {
     const buttonStyle = props.disabled ? ' table-header-button-disabled ' : 'table-header-button ';
     const clickDisabled = () => { };
 
+    let parent;
+    if(props.activeRegion[0] === null)
+        parent = props.activeMap;
+    else if(props.activeRegion[0] === undefined)
+        parent = props.activeMap;
+    else{
+        parent = props.activeRegion[0];
+    }
+
     return (
         <div className = "">
-            <WRow className = "spreadsheet-header">
-				<i className="material-icons addRegion" onClick = {props.addRegion}>add</i>
-			</WRow>
+            <div className = "spreadsheet-header">
+                <div className="spreadsheet-header-container">
+                    <i className="material-icons addRegion" onClick = {() => props.addRegion(parent._id)}>add</i>
+                    <i className="material-icons undo" onClick = {props.undo}>undo</i>
+                    <i className="material-icons redo" onClick = {props.redo}>redo</i>
+                    <div className="spreadsheet-header-text">
+                        {"Region Name: "}
+                    </div>
+                    <div className="spreadsheet-header-name">
+                        {parent.name}
+                    </div>
+                </div>
+			</div>
             <WLHeader className = "spreadsheet-header headerLabels">
                 <WRow>
                     <WCol size="2">
