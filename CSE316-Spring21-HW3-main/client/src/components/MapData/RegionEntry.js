@@ -6,14 +6,18 @@ const RegionEntry = (props) => {
 
     //const completeStyle = data.completed ? ' complete-task' : ' incomplete-task';
 
+    const _id = data._id;
     const name = data.name;
     const capital = data.capital;
     const leader = data.leader;
     const flag = data.flag;
     const landmarksArr = data.landmarks;
+    console.log(name);
     const landmarks = ""; //string of all the landmarks in a comma separated list for display purposes
-    for(let i = 0; i < landmarksArr.length; i++){
-        landmarks += landmarksArr[i] + ", ";
+    if(landmarksArr !== undefined){
+        for(let i = 0; i < landmarksArr.length; i++){
+            landmarks += landmarksArr[i] + ", ";
+        }
     }
 
     const [editingName, toggleNameEdit] = useState(false);
@@ -41,6 +45,12 @@ const RegionEntry = (props) => {
         props.editItem(data._id, 'leader', newLeader, prevLeader);
     };
 
+    const handleGoToViewer = () => {
+        props.toggleRegionViewerScreen(true);
+        console.log(data);
+        props.setViewedRegion(data);
+    }
+
     return (
         <WRow className='table-entry'>
             <WCol size="2">
@@ -52,7 +62,7 @@ const RegionEntry = (props) => {
                             wType="outlined" barAnimation="solid" inputClass="table-input-class"
                         />
                         : <div className="table-text"
-                            onClick={() => toggleNameEdit(!editingName)}
+                            onClick={() => props.setShowSpreadsheetScreen(props.data._id, true)/*toggleNameEdit(!editingName)*/}
                         >{name}
                         </div>
                 }
@@ -90,11 +100,11 @@ const RegionEntry = (props) => {
 
             <WCol size="1">
                 {
-                    <div>FLAG IMAGE HERE</div>
+                    <div className = "spreadsheet-flags">FLAG</div>
                 }
             </WCol>
 
-            <WCol size="4">
+            <WCol size="4" onClick = {handleGoToViewer}>
                 <div className = "spreadsheet-landmarks">
                     {landmarks}
                 </div>

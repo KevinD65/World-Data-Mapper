@@ -17,6 +17,8 @@ html {
     width: 100%;
     height: 75%;
     display: flex;
+    padding-left: 34%;
+    padding-top: 5%;
 }
 
 .map-text {
@@ -60,7 +62,7 @@ html {
     margin-left: 24px;
     margin-right: 32px;
 }
-
+/*
 .spreadsheet-header-section {
     width: 100%;
     height: 100%;
@@ -68,7 +70,7 @@ html {
     padding-top: 24px;
     padding-bottom: 12px;
 }
-
+*/
 .table-header-button {
     padding: 0;
     margin-left: 36px;
@@ -88,8 +90,9 @@ html {
 }
 
 .table-entry {
-    //padding: 12px 24px;
-    //padding: 12px 0;
+    margin-left: 10%;
+    margin-right: 10%;
+    width: 80%;
 }
 
     /*
@@ -283,6 +286,14 @@ html {
     position: relative;
 }
 
+.mapSelectGlobe {
+    height: 100%;
+}
+
+.mapSelectGlobeImage {
+    height: 92%;
+}
+
 .createNewMap-button {
     height: 60px;
     width: 750px;
@@ -293,7 +304,6 @@ html {
     //float: left;
     margin-top: 50px;
 }
-
 
 .spreadsheet-header {
     margin-left: 10%;
@@ -324,4 +334,54 @@ The following CSS is for icons
 
 .spreadsheetHeaderIcon {
     margin-left: 10px;
+}
+
+.regionViewer-header-spacer {
+    margin-top: 5%;
+    margin-left: 50%;
+}
+
+.regionViewer-body {
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.RegionViewerLeftSide {
+    float: left;
+    width: 50%;
+}
+
+.RegionViewerRightSide {
+    float: left;
+    width: 50%;
+}
+
+.regionLandmarks {
+    height: 600px;
+}
+
+.regionLandmarks-add-container {
+    height: 40px;
+    width: 100%;
+}
+
+.addLandmark {
+    float: left;
+    margin-top: 1%;
+    margin-left: 1%;
+}
+
+.landmarkInput {
+    float: left;
+    margin-top: 0.5%;
+    margin-left: 0.5%;
+}
+
+.regionViewerNavigation {
+    margin-right: 40%;
+}
+
+.RegionViewerInfoContainer {
+    width: 80%;
+    margin-top: 10px;
 }

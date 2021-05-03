@@ -74,6 +74,7 @@ module.exports = {
 				parent: region.parent,
 				subregions: region.subregions,
 				path: region.path,
+				owner: region.owner,
 			});
 			const updated = await newRegion.save();
 		

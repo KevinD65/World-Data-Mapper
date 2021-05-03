@@ -7,19 +7,37 @@ const SpreadsheetHeader = (props) => {
     const clickDisabled = () => { };
 
     let parent;
+    /*
     if(props.activeRegion[0] === null)
         parent = props.activeMap;
     else if(props.activeRegion[0] === undefined)
         parent = props.activeMap;
     else{
         parent = props.activeRegion[0];
+    }*/
+    if(props.activeRegion === null)
+        parent = props.activeMap;
+    else if(props.activeRegion === undefined)
+        parent = props.activeMap;
+    else{
+        parent = props.activeRegion;
+    }
+
+    const handleAddRegion = async () => {
+        //await addRegionIntermeditate();
+        await props.addRegion(parent._id);
+        await props.refetch2();
+    }
+
+    const addRegionIntermeditate = async () => {
+        await props.addRegion(parent._id);
     }
 
     return (
         <div className = "">
             <div className = "spreadsheet-header">
                 <div className="spreadsheet-header-container">
-                    <i className="material-icons addRegion" onClick = {() => props.addRegion(parent._id)}>add</i>
+                    <i className="material-icons addRegion" onClick = {handleAddRegion/*() => props.addRegion(parent._id)*/}>add</i>
                     <i className="material-icons undo" onClick = {props.undo}>undo</i>
                     <i className="material-icons redo" onClick = {props.redo}>redo</i>
                     <div className="spreadsheet-header-text">

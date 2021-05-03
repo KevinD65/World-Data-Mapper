@@ -29,7 +29,7 @@ const MapEntry = (props) => {
         <>
             <WNavItem 
                 className="MapName" onDoubleClick={handleEditing} 
-                onClick={() => props.setShowSpreadsheetScreen(props._id)} hoverAnimation="lighten"
+                onClick={() => props.setShowSpreadsheetScreen(props._id, false)} hoverAnimation="lighten"
             >
                 {
                     editing ? <WInput className="map-edit" inputClass="map-edit-input" wType="lined" barAnimation="solid" /*name="name"*/ onBlur={handleSubmit} autoFocus={true} defaultValue={props.name} />

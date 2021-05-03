@@ -43,11 +43,11 @@ export const GET_DB_REGIONS = gql`
 			capital
 			leader
 			flag
-			
 			position
 			parent
 			subregions
 			path
+			owner
 		}
 	}
 `;

@@ -21,6 +21,7 @@ const typeDefs = gql `
 		parent: String!
 		subregions: [String]!
 		path: [String]!
+		owner: String!
 	}
 
 	type Landmark {
@@ -62,6 +63,7 @@ const typeDefs = gql `
 		parent: String
 		subregions: [String]
 		path: [String]
+		owner: String
 	}
 
 	input MapInput {

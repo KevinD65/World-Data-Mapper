@@ -12,6 +12,7 @@
     $modal-button-hover: #e9edf0,
     
     $button-text-color: black,
+    
     // other variable changes here
 );
 
@@ -304,4 +305,30 @@ No longer for icons
     color: rgb(87,121,178);
     font-size: large;
     text-align: center;
+}
+
+.RegionViewerInfo {
+    color: white;
+    font-size: 25px;
+}
+
+.regionLandmarks-header {
+    color: white;
+    text-align: center;
+}
+
+.regionLandmarks {
+    background-color: black;
+}
+
+.regionLandmarks-add-container {
+    background-color: rgb(71,71,71);
+}
+
+.addLandmark {
+    color: rgb(67,192,33);
+}
+
+.landmarkInput {
+    background-color: rgb(189,189,189);
 }

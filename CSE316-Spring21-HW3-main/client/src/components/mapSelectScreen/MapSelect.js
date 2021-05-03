@@ -1,4 +1,5 @@
 import React, { useState, useEffect } 	from 'react';
+import globe							from '../../Images/Globe.PNG';
 //import { useMutation, useQuery } 		from '@apollo/client';
 //import * as mutations 					from '../../cache/mutations';
 //import { GET_DB_MAPS } 				    from '../../cache/queries';
@@ -266,7 +267,7 @@ const MapSelect = (props) => {
 						/>
 					</div>
 					<div className = "globeBox"> 
-						<div className = "mapSelect-globe"></div>
+						<div className = "mapSelectGlobe"><img src = {globe} className="mapSelectGlobeImage"/></div>
 						<WButton className = "createNewMap-button" span = "true" onClick = {props.createNewMap}>Create New Map</WButton>
 					</div>
 					</>
