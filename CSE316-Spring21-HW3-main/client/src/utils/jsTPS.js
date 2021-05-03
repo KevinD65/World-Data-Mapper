@@ -1,3 +1,5 @@
+import * as queries 				    					from '../cache/queries';
+
 export class jsTPS_Transaction {
     constructor() {};
     doTransaction() {};
@@ -100,9 +102,9 @@ export class UpdateSpreadsheetItems_Transaction extends jsTPS_Transaction {
 		let data;
         console.log(this.region);
         this.opcode === 0 ? { data } = await this.deleteFunction({
-							variables: {itemId: this.itemID, _id: this.listID}})
+							variables: {itemId: this.itemID, _id: this.listID}, refetchQueries: [{ query: queries.GET_DB_REGIONS }]})
 						  : { data } = await this.addFunction({
-							variables: {region: this.region, _id: this.parentID, index: this.index}})  
+							variables: {region: this.region, _id: this.parentID, index: this.index}, refetchQueries: [{ query: queries.GET_DB_REGIONS }]})  
 		if(this.opcode !== 0) {
             this.region._id = this.regionID = data.addRegion;
 		}

@@ -53,14 +53,16 @@ module.exports = {
 			const { _id, region, index } = args;
 			const mapId = new ObjectId(_id);
 			const objectId = new ObjectId();
-			const found = await Map.findOne({_id: mapId});
-			if(!found) return ('Map not found'); //instead, check regions for the parent (greater depth than 1)
-
+			let found = await Map.findOne({_id: mapId});
+			if(!found) { //instead, check regions for the parent (greater depth than 1)
+				found = await Region.findOne({_id: mapId});
+			}
 			if(region._id === '') region._id = objectId;
 			let mapRegions = found.subregions;
 		        if(index < 0) mapRegions.push(region._id);
 			else mapRegions.splice(index, 0, region._id);
 			await Map.updateOne({_id: mapId}, { subregions: mapRegions }); //appends the newRegionID to the parent's subregions array
+			await Region.updateOne({_id: mapId}, { subregions: mapRegions });
 			
 			const newRegion = new Region({
 				_id: region._id,

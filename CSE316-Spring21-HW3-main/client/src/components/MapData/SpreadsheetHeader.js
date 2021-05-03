@@ -25,8 +25,10 @@ const SpreadsheetHeader = (props) => {
 
     const handleAddRegion = async () => {
         //await addRegionIntermeditate();
+        console.log("HIIIIIIIIIIIIIIIII");
+        console.log(parent._id);
         await props.addRegion(parent._id);
-        await props.refetch2();
+        //await props.refetch2();
     }
 
     const addRegionIntermeditate = async () => {

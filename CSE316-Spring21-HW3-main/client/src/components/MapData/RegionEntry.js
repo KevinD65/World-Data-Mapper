@@ -48,7 +48,7 @@ const RegionEntry = (props) => {
     const handleGoToViewer = () => {
         props.toggleRegionViewerScreen(true);
         console.log(data);
-        props.setViewedRegion(data);
+        props.setViewedRegion(data._id); //changed from data to data._id
     }
 
     return (
@@ -62,7 +62,7 @@ const RegionEntry = (props) => {
                             wType="outlined" barAnimation="solid" inputClass="table-input-class"
                         />
                         : <div className="table-text"
-                            onClick={() => props.setShowSpreadsheetScreen(props.data._id, true)/*toggleNameEdit(!editingName)*/}
+                            onClick={() => props.setShowSpreadsheetScreen(props.data._id, true, false)/*toggleNameEdit(!editingName)*/}
                         >{name}
                         </div>
                 }

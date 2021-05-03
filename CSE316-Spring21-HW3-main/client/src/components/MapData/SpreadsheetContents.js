@@ -17,6 +17,7 @@ const SpreadsheetContents = (props) => {
     }
     else{
         regionsIDs = props.activeRegion.subregions;
+        console.log(regionsIDs);
         console.log("JAH");
     }
 

@@ -179,16 +179,24 @@ const Welcome = (props) => {
 	};
 
 	const addRegion = async (parentID) => { //needs parent path as argument
+		console.log("MADE IT HERE MAN");
 		let map;
 		let updatedPath = [];
-		if(activeRegion/*[0]*/ == null || activeRegion/*[0]*/ == undefined){
+		if(activeRegion/*[0]*/ == null || activeRegion/*[0]*/ === undefined){
 			map = activeMap;
 			updatedPath.push(map._id);
+			console.log("hello");
 		}
 		else{
+			console.log("hello");
 			map = activeRegion;
+			console.log(activeRegion);
 			updatedPath = map.path;
-			updatedPath.push(map.name);
+			console.log(updatedPath);
+			//updatedPath.splice(updatedPath.length - 1, 1, map._id);
+			//updatedPath.push(map._id);
+			updatedPath = updatedPath.concat(map._id);
+			console.log(updatedPath);
 		}
 		console.log(map);
 		const regions = map.subregions; //regions holds an array of IDs
@@ -217,12 +225,13 @@ const Welcome = (props) => {
 		props.tps.addTransaction(transaction);
 		await intermediate();
 		//await tpsRedo();
-		const found = await refetchRegions(refetch2);
+		const { found } = refetchRegions(refetch2);
 		console.log("SOLID");
+		//window.location.reload();
 	};
 
 	const intermediate = async () => {
-		await tpsRedo();
+		tpsRedo();
 		console.log("FRUIT");
 	}
 
@@ -263,18 +272,23 @@ const Welcome = (props) => {
 	/*
 		Used for toggling between screens
 	*/
-	const setShowSpreadsheetScreen = async (parentID, setCode) => {
+	const setShowSpreadsheetScreen = async (parentID, setCode, resetViewedRegion) => {
 		//needs to be compatiable with both a map data file or a region
 		console.log("parent" + parentID);
 		toggleMapSelectScreen(false);
 		toggleRegionViewerScreen(false);
+		//toggleSpreadsheetScreen(false);
 		toggleSpreadsheetScreen(true);
 		
 		console.log(mapSelectScreen);
 		console.log(regionViewerScreen);
 		console.log(spreadsheetScreenOn);
 
-
+		if(resetViewedRegion){
+			setViewedRegion(null);
+			setActiveRegion(null);
+		}
+			
 		if(!setCode){
 			handleSetActive(parentID);
 		}
@@ -282,6 +296,9 @@ const Welcome = (props) => {
 			handleSetActiveRegion(parentID);
 			console.log(activeRegion);
 		}
+
+		setViewedRegion(parentID);
+		console.log(viewedRegion);
 		//const selectedRegion = maps.find(map => map._id === parentID); 
 		//console.log("OHMYGOD" + selectedRegion._id);
 		/*
@@ -300,7 +317,7 @@ const Welcome = (props) => {
 		console.log(spreadsheetScreenOn);
 		console.log(regionViewerScreen);
 		
-		setViewedRegion(_id);
+		//setViewedRegion(_id);
 	}
 
 	const backToSpreadSheet = async () => {
@@ -458,7 +475,9 @@ const Welcome = (props) => {
 											spreadsheetScreenOn={spreadsheetScreenOn}
 											activeMap={activeMap} activeRegion={activeRegion}
 											maps={maps} regions={regions}
-
+											viewedRegion={viewedRegion}
+											setShowSpreadsheetScreen={setShowSpreadsheetScreen}
+											toggleRegionViewerScreen={toggleRegionViewerScreen}
 											//send props to get name to show up on navbar
 										/>
 									</ul>
@@ -507,6 +526,7 @@ const Welcome = (props) => {
 											toggleMapSelectScreen={toggleMapSelectScreen} 
 											toggleRegionViewerScreen={toggleRegionViewerScreen}
 											backToSpreadSheet={backToSpreadSheet}
+											setShowSpreadsheetScreen={setShowSpreadsheetScreen}
 
 											spreadsheetScreenOn={props.spreadsheetScreenOn}
 											regionViewerScreen={regionViewerScreen}

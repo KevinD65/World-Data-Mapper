@@ -7,7 +7,8 @@ import RegionViewerScreen from '../regionViewerScreen/RegionViewerScreen';
 const LoggedIn = (props) => {
     const client = useApolloClient();
 	const [Logout] = useMutation(LOGOUT);
-    let parent, regionName;
+    let parent, parentIDForNav, ParentIsMap, regionName;
+    let resetVR = false;
     console.log(props.viewedRegion);
 
     let myMaps = props.maps;
@@ -32,27 +33,43 @@ const LoggedIn = (props) => {
             //parent = props.activeMap[0].name;
             regionName = props.viewedRegion.name;
         }
-        else if(/*props.activeRegion[0] === undefined*/ props.activeRegion === null){ //for regions of map data files
+        else if(props.activeRegion === null){ //for regions of map data files
             console.log("like a someboody");
-            //console.log(props.activeRegion[0]);
             parent = props.activeMap.name;
+            parentIDForNav = props.activeMap._id; //we are viewing a mad data file's spreadsheet. Clicking the name of the map will simply bring them to this same spreadsheet page
+            ParentIsMap = false;
             if(props.viewedRegion === undefined){ //landmark view of the map data file itself
                 regionName = parent;
                 parent = "";
-            }
+            }/*
             else{
                 regionName = props.viewedRegion.name;
-            }
+            }*/
         }
         else{ //for regions of regions
             console.log("VERY NICE");
-            //console.log(props.activeRegion[0]);
-            let parentID = props.activeRegion._id;
+            //console.log(props.activeRegion);
+            let parentID = props.activeRegion.parent;
+            //console.log(parentID);
             parent = myRegions.find(region => region._id === parentID);
+            ParentIsMap = true;
+            console.log(parent);
+            if(parent === undefined){ //if we are dealing with a subregion of a map data file
+                parent = myMaps.find(map => map._id === parentID);
+                ParentIsMap = false;
+                resetVR = true;
+                console.log("IN HERE");
+            }
+            parentIDForNav = parent._id;
+            //console.log(parent);
             if(parent !== undefined){
                 parent = parent.name;
+                console.log(props.viewedRegion);
+                let region = myRegions.find(region => region._id === props.viewedRegion);
+                //if(region === undefined)
+                regionName = region.name;
             }
-            if(props.viewedRegion === undefined){ //landmark view of the map data file itself
+            else if(props.viewedRegion === undefined){ //landmark view of the map data file itself
                 regionName = parent;
                 parent = "";
             }
@@ -60,6 +77,8 @@ const LoggedIn = (props) => {
                 regionName = props.viewedRegion.name;
             }
         }
+        console.log(parentIDForNav);
+        console.log(ParentIsMap);
         //console.log(parent);
         //console.log(regionName);
 }
@@ -82,11 +101,11 @@ const LoggedIn = (props) => {
         //add user's name here for updateaccount option
         <> { props.regionViewerScreen || props.spreadsheetScreenOn ?
             <WNavItem className = "regionViewerNavigation" hoverAnimation="lighten">
-                <div onClick = {props.backToSpreadSheet}>
+                <div onClick = {() => props.setShowSpreadsheetScreen(parentIDForNav, ParentIsMap, resetVR)}>
                     {parent}
                 </div>
                 <i className="material-icons">chevron_right</i>
-                <div>
+                <div onClick = {() => props.toggleRegionViewerScreen(false)}>
                     {regionName}
                 </div>
             </WNavItem>
@@ -132,7 +151,8 @@ const NavbarOptions = (props) => {
                 props.auth === false ? <LoggedOut setShowLogin={props.setShowLogin} setShowCreate={props.setShowCreate}/>
                 : <LoggedIn fetchUser={props.fetchUser} userName={props.userName} toggleMapSelectScreen={props.toggleMapSelectScreen} setShowUpdate={props.setShowUpdate} 
                     viewedRegion={props.viewedRegion} maps={props.maps} regions={props.regions} activeMap={props.activeMap} activeRegion={props.activeRegion}
-                    spreadsheetScreenOn={props.spreadsheetScreenOn} regionViewerScreen={props.regionViewerScreen} backToSpreadSheet={props.backToSpreadSheet}/>
+                    spreadsheetScreenOn={props.spreadsheetScreenOn} regionViewerScreen={props.regionViewerScreen} backToSpreadSheet={props.backToSpreadSheet} 
+                    setShowSpreadsheetScreen={props.setShowSpreadsheetScreen} toggleRegionViewerScreen={props.toggleRegionViewerScreen}/>
             }
         </>
 
