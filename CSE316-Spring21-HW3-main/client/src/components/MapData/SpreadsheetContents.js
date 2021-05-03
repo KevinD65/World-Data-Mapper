@@ -9,13 +9,13 @@ const SpreadsheetContents = (props) => {
         regionsIDs = props.activeMap.subregions;
         console.log("NULLBOI");
     }
-    else if(/*props.activeRegion[0] === undefined &&*/ props.activeRegion === null){
+    else if(/*props.activeRegion[0] === undefined &&*/ props.activeRegion === null){ //if null, we must load activeMap's subregions
         console.log(props.activeMap);
         //console.log(props.activeRegion[0]);
         regionsIDs = props.activeMap.subregions;
         console.log(regionsIDs);
     }
-    else{
+    else{ //in the case that it's not null, we must load the activeRegion's subregions
         regionsIDs = props.activeRegion.subregions;
         console.log(regionsIDs);
         console.log("JAH");

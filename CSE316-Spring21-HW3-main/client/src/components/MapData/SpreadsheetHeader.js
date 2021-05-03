@@ -45,7 +45,7 @@ const SpreadsheetHeader = (props) => {
                     <div className="spreadsheet-header-text">
                         {"Region Name: "}
                     </div>
-                    <div className="spreadsheet-header-name">
+                    <div className="spreadsheet-header-name" onClick = {() => props.toggleRegionViewerScreen(true)}>
                         {parent.name}
                     </div>
                 </div>

@@ -50,21 +50,18 @@ const Welcome = (props) => {
 
 	let maps = []; //holds all the maps
 	let regions = []; //holds all the regions
-	//let user = useQuery(queries.GET_DB_USER);
-	//const myUser = user.data.getCurrentUser.name;
-	//console.log(props.user);
-	//console.log("HJAWOIUHFWNN");
+
 	const client = useApolloClient();
     const [activeMap, setActiveMap] = useState(null); //an array holding a singular map object (or none). The map whose spreadsheet screen is being showed
 	const [activeRegion, setActiveRegion] = useState(null); //an array holding a singular region object (or none). The region whose spreadsheet screen is being showed
 	const [viewedRegion, setViewedRegion] = useState(null); //the map/region whose region viewed screen is being showed (should be an _id);
 
-	/*
+	
 	useEffect(() => {
-		console.log(activeMap);
-		console.log("useEffect");
-
-	}, [activeMap]);*/
+		//console.log(activeMap);
+		//console.log("useEffect");
+		//refetchRegions(refetch2);
+	}/*, [activeMap]*/);
 
 	const { loading, error, data, refetch } = useQuery(queries.GET_DB_MAPS);
 	const regionQuery = useQuery(queries.GET_DB_REGIONS);
@@ -122,16 +119,15 @@ const Welcome = (props) => {
 
 	const tpsRedo = async () => {
 		const retVal = await props.tps.doTransaction();
-		refetchMaps(refetch);
-		refetchRegions(refetch2);
+		await refetchMaps(refetch);
+		await refetchRegions(refetch2);
+		console.log("WE ARE REFETCHING HERE");
 		return retVal;
 	}
 
 	const handleMapDeletion = (_id) => {
 		handleSetActive(_id);
 		toggleShowDeleteMap(!showDeleteMap);
-		//console.log(showDeleteMap);
-		//setShowDeleteMap();
 	}
 
 	const setShowDeleteMap = () => {
@@ -179,22 +175,18 @@ const Welcome = (props) => {
 	};
 
 	const addRegion = async (parentID) => { //needs parent path as argument
-		console.log("MADE IT HERE MAN");
+		//console.log("MADE IT HERE MAN");
 		let map;
 		let updatedPath = [];
-		if(activeRegion/*[0]*/ == null || activeRegion/*[0]*/ === undefined){
+		if(activeRegion == null || activeRegion === undefined){
 			map = activeMap;
 			updatedPath.push(map._id);
-			console.log("hello");
 		}
 		else{
-			console.log("hello");
 			map = activeRegion;
-			console.log(activeRegion);
+			//console.log(activeRegion);
 			updatedPath = map.path;
-			console.log(updatedPath);
-			//updatedPath.splice(updatedPath.length - 1, 1, map._id);
-			//updatedPath.push(map._id);
+			//console.log(updatedPath);
 			updatedPath = updatedPath.concat(map._id);
 			console.log(updatedPath);
 		}
@@ -223,17 +215,23 @@ const Welcome = (props) => {
 		let regionID = newRegion._id;
 		let transaction = new UpdateSpreadsheetItems_Transaction(parentID, regionID, newRegion, opcode, AddRegion, DeleteRegion);
 		props.tps.addTransaction(transaction);
-		await intermediate();
-		//await tpsRedo();
-		const { found } = refetchRegions(refetch2);
-		console.log("SOLID");
+		console.log("IS THIS BEFORE RENDER?");
+		//await intermediate();
+		await tpsRedo();
 		//window.location.reload();
+		await refetchMaps(refetch);
+		await refetchRegions(refetch2);
+		//console.log("SOLID");
+		//return found;
+		//console.log("SOLID");
 	};
 
+	/*
 	const intermediate = async () => {
 		tpsRedo();
 		console.log("FRUIT");
 	}
+*/
 
 	const deleteRegion = async () => {
 
@@ -269,46 +267,39 @@ const Welcome = (props) => {
 		toggleShowLogin(false);
 		toggleShowDeleteMap(!showDeleteMap)
 	}
+
 	/*
 		Used for toggling between screens
 	*/
-	const setShowSpreadsheetScreen = async (parentID, setCode, resetViewedRegion) => {
-		//needs to be compatiable with both a map data file or a region
-		console.log("parent" + parentID);
+	const setShowSpreadsheetScreen = async (parentID, setCode, resetActiveRegion) => {
+		//console.log("parent" + parentID);
 		toggleMapSelectScreen(false);
 		toggleRegionViewerScreen(false);
-		//toggleSpreadsheetScreen(false);
 		toggleSpreadsheetScreen(true);
 		
 		console.log(mapSelectScreen);
 		console.log(regionViewerScreen);
 		console.log(spreadsheetScreenOn);
 
-		if(resetViewedRegion){
-			setViewedRegion(null);
+		if(resetActiveRegion){ //decides whether to reset the active region (Ex: returning from a subregion's spreadsheet to the map data file's spreadsheet)
+			//setViewedRegion(null);
 			setActiveRegion(null);
+			//console.log("this happened");
 		}
 			
-		if(!setCode){
+		if(!setCode){ //conditional used to set up activeRegion/activeMap so spreadsheets open properly
 			handleSetActive(parentID);
 		}
 		else{
 			handleSetActiveRegion(parentID);
-			console.log(activeRegion);
+			//console.log(activeRegion);
 		}
 
 		setViewedRegion(parentID);
-		console.log(viewedRegion);
-		//const selectedRegion = maps.find(map => map._id === parentID); 
-		//console.log("OHMYGOD" + selectedRegion._id);
-		/*
-		if(selectedRegion === undefined) //a region was selected, not a map data file
-			//search regions array and compile an array of all the regions associated with the parent
-			console.log("placeholder");*/
+		//console.log(viewedRegion);
 	}
 
 	const setShowRegionViewerScreen = async (_id) => {
-		//why are these hooks not setting properly
 		toggleMapSelectScreen(false);
 		toggleSpreadsheetScreen(false);
 		toggleRegionViewerScreen(true);
@@ -316,8 +307,6 @@ const Welcome = (props) => {
 		console.log(mapSelectScreen)
 		console.log(spreadsheetScreenOn);
 		console.log(regionViewerScreen);
-		
-		//setViewedRegion(_id);
 	}
 
 	const backToSpreadSheet = async () => {
@@ -333,7 +322,7 @@ const Welcome = (props) => {
 		toggleSpreadsheetScreen(false);
 		toggleRegionViewerScreen(false);
 		toggleMapSelectScreen(true);
-		setViewedRegion(null);
+		setViewedRegion(null); //reset the viewedRegion
 		setActiveRegion(null); //reset the activeRegion
 	}
 
@@ -392,7 +381,7 @@ const Welcome = (props) => {
 										showUpdate && (<UpdateAccount fetchUser={props.fetchUser} setShowUpdate={setShowUpdate}/>)
 									}
 								</>
-								:<Redirect exact from="/welcome" to="/mapSelect" /*{ {pathname: "/welcome/mapSelect"} }*/ />
+								:<Redirect exact from="/welcome" to="/mapSelect"/>
 							}
 						</WLMain>
 					</WLayout>
@@ -402,7 +391,6 @@ const Welcome = (props) => {
 				<Route 
 					path = "/mapSelect" 
 					name = "/mapSelect">
-						{/* {JSON.parse(props.user))} */}
 					<>
 					{auth ?
 						!spreadsheetScreenOn && !regionViewerScreen ?
@@ -418,7 +406,7 @@ const Welcome = (props) => {
 											<NavbarOptions
 												fetchUser={props.fetchUser} auth={auth} 
 												setShowCreate={setShowCreate} setShowLogin={setShowLogin}
-												setShowUpdate={setShowUpdate} userName={userName}/*Need a prop for the user's name*/
+												setShowUpdate={setShowUpdate} userName={userName}
 												toggleMapSelectScreen={toggleMapSelectScreen} spreadsheetScreenOn={props.spreadsheetScreenOn}
 											/>
 										</ul>
@@ -426,7 +414,7 @@ const Welcome = (props) => {
 								</WLHeader>
 								<WLMain>
 									<>
-										<MapSelect /*send props here*/
+										<MapSelect
 											auth={auth} fetchUser={props.fetchUser}
 											user={props.user} handleMapDeletion={handleMapDeletion}
 											setShowSpreadsheetScreen={setShowSpreadsheetScreen}
@@ -470,7 +458,7 @@ const Welcome = (props) => {
 										<NavbarOptions
 											fetchUser={props.fetchUser} auth={auth} 
 											setShowCreate={setShowCreate} setShowLogin={setShowLogin}
-											setShowUpdate={setShowUpdate} userName={userName}/*Need a prop for the user's name*/
+											setShowUpdate={setShowUpdate} userName={userName}
 											toggleMapSelectScreen={toggleMapSelectScreen}
 											spreadsheetScreenOn={spreadsheetScreenOn}
 											activeMap={activeMap} activeRegion={activeRegion}
@@ -478,14 +466,13 @@ const Welcome = (props) => {
 											viewedRegion={viewedRegion}
 											setShowSpreadsheetScreen={setShowSpreadsheetScreen}
 											toggleRegionViewerScreen={toggleRegionViewerScreen}
-											//send props to get name to show up on navbar
 										/>
 									</ul>
 								</WNavbar>
 							</WLHeader>
 							<WLMain>
 								<SpreadsheetScreen
-									activeMap={activeMap} activeRegion={activeRegion /*We are sending both activeMap & activeRegion. In RegionEntry, we will check if activeRegion is empty 
+									activeMap={activeMap} activeRegion={activeRegion /*We are sending both activeMap & activeRegion. In RegionEntry, we will check if activeRegion is null 
 									or not and decide there whether to render the activeMap's subregions or the activeRegion's subregions*/}
 									undo={tpsUndo} redo={tpsRedo}
 									addRegion={addRegion} 
@@ -522,7 +509,7 @@ const Welcome = (props) => {
 										<NavbarOptions
 											fetchUser={props.fetchUser} auth={auth} 
 											setShowCreate={setShowCreate} setShowLogin={setShowLogin}
-											setShowUpdate={setShowUpdate} userName={userName}/*Need a prop for the user's name*/
+											setShowUpdate={setShowUpdate} userName={userName}
 											toggleMapSelectScreen={toggleMapSelectScreen} 
 											toggleRegionViewerScreen={toggleRegionViewerScreen}
 											backToSpreadSheet={backToSpreadSheet}

@@ -27,18 +27,19 @@ const LoggedIn = (props) => {
 
     //console.log(myRegions);
     if(props.spreadsheetScreenOn || props.regionViewerScreen){
+        /*
         if(props.activeRegion === "ROCKSOLID" && props.activeRegion === null){ //might not be needed
             console.log("GET PRANKED");
             console.log(props.activeMap);
             //parent = props.activeMap[0].name;
             regionName = props.viewedRegion.name;
-        }
-        else if(props.activeRegion === null){ //for regions of map data files
+        }*/
+        if(props.activeRegion === null){ //we're seeing the spreadsheet screen of a map data file
             console.log("like a someboody");
             parent = props.activeMap.name;
-            parentIDForNav = props.activeMap._id; //we are viewing a mad data file's spreadsheet. Clicking the name of the map will simply bring them to this same spreadsheet page
+            parentIDForNav = props.activeMap._id; //we are viewing a map data file's spreadsheet. Clicking the name of the map will simply bring them to this same spreadsheet page
             ParentIsMap = false;
-            if(props.viewedRegion === undefined){ //landmark view of the map data file itself
+            if(props.viewedRegion === undefined){ //landmark view of the map data file itself (blue name was clicked) CHECK THIS AND MAKE SURE IT IS WORKING
                 regionName = parent;
                 parent = "";
             }/*
@@ -46,7 +47,7 @@ const LoggedIn = (props) => {
                 regionName = props.viewedRegion.name;
             }*/
         }
-        else{ //for regions of regions
+        else{ //we're seeing the spreadsheet screen of a region
             console.log("VERY NICE");
             //console.log(props.activeRegion);
             let parentID = props.activeRegion.parent;

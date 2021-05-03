@@ -128,6 +128,7 @@ const SpreadsheetScreen = (props) => {
 							region={props.regions} addRegion={props.addRegion}
 							undo={props.undo} redo={props.redo}
 							refetch2={props.refetch2}
+							toggleRegionViewerScreen={props.toggleRegionViewerScreen}
 						/>
                         <SpreadsheetContents
 							activeMap={props.activeMap} activeRegion={props.activeRegion}
@@ -135,6 +136,7 @@ const SpreadsheetScreen = (props) => {
 							setShowSpreadsheetScreen={props.setShowSpreadsheetScreen}
 							toggleRegionViewerScreen={props.toggleRegionViewerScreen}
 							setViewedRegion={props.setViewedRegion}
+							refetch2={props.refetch2}
 						/>    
                     </Route>
 				</Switch>

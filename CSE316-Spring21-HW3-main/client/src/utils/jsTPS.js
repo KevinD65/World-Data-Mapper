@@ -108,7 +108,7 @@ export class UpdateSpreadsheetItems_Transaction extends jsTPS_Transaction {
 		if(this.opcode !== 0) {
             this.region._id = this.regionID = data.addRegion;
 		}
-        console.log(this.region); 
+        //console.log(this.region); 
 		return data;
     }
     // Since delete/add are opposites, flip matching opcode
