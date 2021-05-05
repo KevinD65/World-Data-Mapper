@@ -52,6 +52,8 @@ const SpreadsheetHeader = (props) => {
 			</div>
             <WLHeader className = "spreadsheet-header headerLabels">
                 <WRow>
+                    <WCol size="1">
+                    </WCol>
                     <WCol size="2">
                         <WButton className='spreadsheet-header-section' wType="texted" span="true">Name<i className="material-icons spreadsheetHeaderIcon">south</i></WButton> 
                     </WCol>
@@ -66,7 +68,7 @@ const SpreadsheetHeader = (props) => {
                     <WCol size="1">
                         <WButton className='spreadsheet-header-section' wType="texted" span="true">Flag<i className="material-icons spreadsheetHeaderIcon">south</i></WButton>
                     </WCol>
-                    <WCol size="4">
+                    <WCol size="3">
                         <WButton className='spreadsheet-header-section' wType="texted" span="true">Landmarks<i className="material-icons spreadsheetHeaderIcon">south</i></WButton>
                     </WCol>
                 </WRow>

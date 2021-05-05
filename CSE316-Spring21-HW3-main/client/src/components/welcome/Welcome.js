@@ -24,8 +24,8 @@ import { WLayout, WLHeader, WLMain, WLSide } 				from 'wt-frontend';
 import { UpdateListField_Transaction, 
 	UpdateSpreadsheetItems_Transaction, 
 	ReorderItems_Transaction, 
-	EditItem_Transaction } 				from '../../utils/jsTPS';
-import WInput from 'wt-frontend/build/components/winput/WInput';
+	EditRegion_Transaction } 				from '../../utils/jsTPS';
+//import WInput from 'wt-frontend/build/components/winput/WInput';
 import { BrowserRouter, Switch, Route, Redirect, useHistory} from 'react-router-dom';
 
 const Welcome = (props) => {
@@ -45,6 +45,7 @@ const Welcome = (props) => {
 	const [DeleteMap] 										= useMutation(mutations.DELETE_MAP);
 	const [UpdateMapName]									= useMutation(mutations.UPDATE_MAP_NAME);
 	const [AddRegion]										= useMutation(mutations.ADD_REGION);
+	const [EditRegion]										= useMutation(mutations.EDIT_REGION_FIELD);
 	const [DeleteRegion]									= useMutation(mutations.DELETE_REGION)
 	const [Logout] 											= useMutation(mutations.LOGOUT);
 
@@ -224,6 +225,18 @@ const Welcome = (props) => {
 		//console.log("SOLID");
 		//return found;
 		//console.log("SOLID");
+	};
+
+	
+    const editRegion = async (regionId, field, value, prev) => { //user can edit name, capital, or leader
+		console.log(regionId);
+		//let flag = 0;
+		//if (field === 'completed') flag = 1;
+		//let listID = activeList._id;
+		let transaction = new EditRegion_Transaction(/*listID,*/ regionId, field, prev, value, /*flag,*/ EditRegion);
+		props.tps.addTransaction(transaction);
+		const myString = await tpsRedo();
+		console.log(myString);
 	};
 
 	/*
@@ -475,7 +488,7 @@ const Welcome = (props) => {
 									activeMap={activeMap} activeRegion={activeRegion /*We are sending both activeMap & activeRegion. In RegionEntry, we will check if activeRegion is null 
 									or not and decide there whether to render the activeMap's subregions or the activeRegion's subregions*/}
 									undo={tpsUndo} redo={tpsRedo}
-									addRegion={addRegion} 
+									addRegion={addRegion} editRegion={editRegion}
 									regions={regions}
 									setShowSpreadsheetScreen={setShowSpreadsheetScreen}
 									setShowRegionViewerScreen={setShowRegionViewerScreen}

@@ -98,6 +98,10 @@ html, body {
     background-color: var(--warm-white-transparent);
 }
 
+.table-entry-column {
+    text-align: center;
+}
+
 .table-header-button {
     transition: 0.1s ease-in-out;
     color: var(--light-gray);
@@ -293,6 +297,10 @@ No longer for icons
 
 .mapSelect-rside {
     background-color: white;
+}
+
+.spreadsheetBackground {
+    background-color: rgb(189,189,189);
 }
 
 .spreadsheet-header-text {

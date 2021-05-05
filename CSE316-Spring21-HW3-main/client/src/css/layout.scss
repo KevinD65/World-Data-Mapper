@@ -90,9 +90,22 @@ html {
 }
 
 .table-entry {
-    margin-left: 10%;
-    margin-right: 10%;
-    width: 80%;
+    //margin-left: 10%;
+    //margin-right: 10%;
+    //width: 80%;
+}
+
+.table-entry-column {
+    border-right: 1px solid black;
+}
+
+.deleteRegionButton {
+    padding-top: 15px;
+    //border-right: none;
+}
+
+.regionNameEdit {
+    margin-left: 15px;
 }
 
     /*
@@ -303,6 +316,11 @@ html {
 .spreadsheet-header-container {
     //float: left;
     margin-top: 50px;
+}
+
+.spreadsheetBackground {
+    margin-left: 10%;
+    margin-right: 10%;
 }
 
 .spreadsheet-header {

@@ -166,86 +166,9 @@ const MapSelect = (props) => {
 		const map = maps.find(map => map.id === id || map._id === id);
 		setActiveMap(map);
 	};
-
-
-/*
-<WRow className = "mapSelect-button-header"> //for spreadsheet
-				<i className="material-icons addRegion" /*onClick = {addRegion}>add</i>
-				</WRow>
-				<WCHeader className = "mapSelect-header">
-					<WRow>
-						<WCol size="2">
-							<WButton className='spreadsheet-header-section' wType="texted" span="true">Name<i className="material-icons spreadsheetHeaderIcon">south</i></WButton> 
-						</WCol>
-	
-						<WCol size="3">
-							<WButton className='spreadsheet-header-section' wType="texted" span="true">Capital</WButton>
-						</WCol>
-	
-						<WCol size="2">
-							<WButton className='spreadsheet-header-section' wType="texted" span="true">Leader</WButton>
-						</WCol>
-						<WCol size="1">
-							<WButton className='spreadsheet-header-section' wType="texted" span="true">Flag</WButton>
-						</WCol>
-						<WCol size="4">
-							<WButton className='spreadsheet-header-section' wType="texted" span="true">Landmarks</WButton>
-						</WCol>
-					</WRow>
-				</WCHeader>
-				<WMMain>
-	
-				</WMMain> //className = "mapSelect-header" className = "mapSelect-body"
-		
-
-				<BrowserRouter>
-				<Switch>
-					<Route 
-						path = "/mapSelect/spreadsheet"
-						name = "/mapSelect/spreadsheet"> 
-						{console.log("WHAT THE HELL IS GOING ON?" + spreadsheetScreenOn)}
-						{spreadsheetScreenOn ?
-							<div>
-								<SpreadsheetScreen/>
-							</div>
-						: <Redirect from = "/mapSelect/spreadsheet" to="/mapSelect"/> }
-					</Route>
-					<Route path ="/mapSelect">
-						{console.log("redirected here")}
-						{!spreadsheetScreenOn ? 
-						<>
-							<div className = "mapSelect-spacing"></div>
-							<WLayout wLayout = "header">
-								<WLHeader>
-									<WRow className = "mapSelect-redbar"></WRow>
-									<div className = "mapSelect-blackbar">Your Maps</div>
-								</WLHeader>
-								<WLMain>
-									<>
-									<div className = "mapSelectionBox"> 
-										<MapContents
-											maps={maps} activeMap={activeMap}
-											toggleSpreadsheetScreen={activateSpreadSheetScreen}
-											handleMapDeletion={handleMapDeletion}
-										/>
-									</div>
-									<div className = "globeBox"> 
-										<div className = "mapSelect-globe"></div>
-										<WButton className = "createNewMap-button" span = "true" onClick = {createNewMap}>Create New Map</WButton>
-									</div>
-									{
-										  showDeleteMap && (<DeleteMap deleteMap={deleteMap} setShowDeleteMap={setShowDeleteMap} activeMap_id={activeMap._id}/>)
-									}
-									</>
-								</WLMain>
-							</WLayout>
-						</>
-						: <Redirect from = "/mapSelect" to = "/mapSelect/spreadsheet"/>}
-					</Route>
-				</Switch>
-			</BrowserRouter>
-
 */
+
+
     return(
 		<>
 			<div className = "mapSelect-spacing"></div>

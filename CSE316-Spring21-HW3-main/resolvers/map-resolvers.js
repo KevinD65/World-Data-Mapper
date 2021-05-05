@@ -142,16 +142,24 @@ module.exports = {
 			else return "";
 		},
 		/** 
-			@param	 {object} args - a todolist objectID, an item objectID, field, and
-									 update value. Flag is used to interpret the completed 
-									 field,as it uses a boolean instead of a string
-			@returns {array} the updated item array on success, or the initial item array on failure
+			@param	 {object} args - a region objectID, field, and update value.
+			@returns {string} a string indicating if the edit was successful or not
 		**/
-		updateItemField: async (_, args) => {
-			const { _id, itemId, field,  flag } = args;
+		editRegionField: async (_, args) => {
+			const { regionId, field } = args;
 			let { value } = args
-			const listId = new ObjectId(_id);
-			const found = await Todolist.findOne({_id: listId});
+			let updated;
+			if(field === 'name')
+				updated = await Region.updateOne({_id: regionId}, { name: value })
+			else if(field === 'capital')
+				updated = await Region.updateOne({_id: regionId}, { capital: value })
+			else if(field === 'leader')
+				updated = await Region.updateOne({_id: regionId}, { leader: value })
+			else
+				updated = undefined;
+			//const listId = new ObjectId(_id);
+			//const found = await Todolist.findOne({_id: listId});
+			/*
 			let listItems = found.items;
 			if(flag === 1) {
 				if(value === 'complete') { value = true; }
@@ -162,10 +170,10 @@ module.exports = {
 					
 					item[field] = value;
 				}
-			});
-			const updated = await Todolist.updateOne({_id: listId}, { items: listItems })
-			if(updated) return (listItems);
-			else return (found.items);
+			});*/
+			//const updated = await Region.updateOne({_id: regionId}, { name: value })
+			if(updated) return (field + " edit was successful");
+			else return (field + " edit was unsuccessful");
 		},
 		/**
 			@param 	 {object} args - contains list id, item to swap, and swap direction

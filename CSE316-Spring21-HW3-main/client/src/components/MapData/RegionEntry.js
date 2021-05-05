@@ -28,21 +28,21 @@ const RegionEntry = (props) => {
         toggleNameEdit(false);
         const newName = e.target.value ? e.target.value : 'No Name';
         const prevName = name;
-        props.editItem(data._id, 'name', newName, prevName);
+        props.editRegion(data._id, 'name', newName, prevName);
     };
 
     const handleCapitalEdit = (e) => {
         toggleCapitalEdit(false);
         const newCapital = e.target.value ? e.target.value : 'No Capital';
         const prevCapital = capital;
-        props.editItem(data._id, 'capital', newCapital, prevCapital);
+        props.editRegion(data._id, 'capital', newCapital, prevCapital);
     };
 
     const handleLeaderEdit = (e) => {
         toggleLeaderEdit(false);
         const newLeader = e.target.value ? e.target.value : 'No Leader';
         const prevLeader = leader;
-        props.editItem(data._id, 'leader', newLeader, prevLeader);
+        props.editRegion(data._id, 'leader', newLeader, prevLeader);
     };
 
     const handleGoToViewer = () => {
@@ -53,22 +53,29 @@ const RegionEntry = (props) => {
 
     return (
         <WRow className='table-entry'>
-            <WCol size="2">
+            <WCol size = "1" className = "table-entry-column deleteRegionButton">
+                X
+            </WCol>
+            <WCol size="2" className = "table-entry-column">
                 {
                     editingName || name === ''
                         ? <WInput
                             className='table-input' onBlur={handleNameEdit}
                             autoFocus={true} defaultValue={name} type='text'
                             wType="outlined" barAnimation="solid" inputClass="table-input-class"
+                            fillColor="default"
                         />
-                        : <div className="table-text"
-                            onClick={() => props.setShowSpreadsheetScreen(props.data._id, true, false)/*toggleNameEdit(!editingName)*/}
-                        >{name}
-                        </div>
+                        : <>
+                            <div className="table-text"
+                                onClick={() => props.setShowSpreadsheetScreen(props.data._id, true, false)/*toggleNameEdit(!editingName)*/}
+                            >{name}
+                            </div>
+                            <i className="material-icons regionNameEdit" onClick={toggleNameEdit}>edit</i>
+                        </>
                 }
             </WCol>
 
-            <WCol size="3">
+            <WCol size="3" className = "table-entry-column">
                 {
                     editingCapital || capital === '' 
                     ?<WInput
@@ -83,7 +90,7 @@ const RegionEntry = (props) => {
                 }
             </WCol>
 
-            <WCol size="2">
+            <WCol size="2" className = "table-entry-column">
                 {
                     editingLeader || leader === '' 
                     ?<WInput
@@ -98,13 +105,13 @@ const RegionEntry = (props) => {
                 }
             </WCol>
 
-            <WCol size="1">
+            <WCol size="1" className = "table-entry-column">
                 {
                     <div className = "spreadsheet-flags">FLAG</div>
                 }
             </WCol>
 
-            <WCol size="4" onClick = {handleGoToViewer}>
+            <WCol size="3" onClick = {handleGoToViewer}>
                 <div className = "spreadsheet-landmarks">
                     {landmarks}
                 </div>

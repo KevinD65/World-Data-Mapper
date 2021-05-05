@@ -49,37 +49,26 @@ export class ReorderItems_Transaction extends jsTPS_Transaction {
     
 }
 
-export class EditItem_Transaction extends jsTPS_Transaction {
-	constructor(listID, itemID, field, prev, update, flag, callback) {
+export class EditRegion_Transaction extends jsTPS_Transaction {
+	constructor(regionId, field, prev, update, callback) {
 		super();
-		this.listID = listID;
-		this.itemID = itemID;
+		//this.listID = listID;
+		this.regionId = regionId;
 		this.field = field;
 		this.prev = prev;
 		this.update = update;
-		this.flag = flag;
+		//this.flag = flag;
 		this.updateFunction = callback;
 	}	
 
 	async doTransaction() {
-		const { data } = await this.updateFunction({ 
-				variables:{  itemId: this.itemID, _id: this.listID, 
-							 field: this.field, value: this.update, 
-							 flag: this.flag 
-						  }
-			});
+		const { data } = await this.updateFunction({variables:{ regionId: this.regionId, field: this.field, value: this.update}, refetchQueries: [{ query: queries.GET_DB_REGIONS }]});
 		return data;
     }
 
     async undoTransaction() {
-		const { data } = await this.updateFunction({ 
-				variables:{ itemId: this.itemID, _id: this.listID, 
-							field: this.field, value: this.prev, 
-							flag: this.flag 
-						  }
-			});
+		const { data } = await this.updateFunction({variables:{ regionId: this.regionId, field: this.field, value: this.prev}, refetchQueries: [{ query: queries.GET_DB_REGIONS }]});
 		return data;
-
     }
 }
 

@@ -42,7 +42,7 @@ const typeDefs = gql `
 		deleteMap(_id: String!): Boolean
 		deleteRegion(region_Id: String!): [String]		
 		updateMapName(_id: String!, value: String!): String
-		updateRegionField(region_Id: String!, field: String!, value: String!): [String]
+		editRegionField(regionId: String!, field: String!, value: String!): String
 	}
 
 	input LandmarkInput {

@@ -123,21 +123,24 @@ const SpreadsheetScreen = (props) => {
 			<BrowserRouter>
 				<Switch>
                     <Route path = "/regionSpreadsheet">
-                        <SpreadsheetHeader
+						<SpreadsheetHeader
 							activeMap={props.activeMap} activeRegion={props.activeRegion}
 							region={props.regions} addRegion={props.addRegion}
 							undo={props.undo} redo={props.redo}
 							refetch2={props.refetch2}
 							toggleRegionViewerScreen={props.toggleRegionViewerScreen}
 						/>
-                        <SpreadsheetContents
-							activeMap={props.activeMap} activeRegion={props.activeRegion}
-							regions={props.regions} setShowRegionViewerScreen={props.setShowRegionViewerScreen}
-							setShowSpreadsheetScreen={props.setShowSpreadsheetScreen}
-							toggleRegionViewerScreen={props.toggleRegionViewerScreen}
-							setViewedRegion={props.setViewedRegion}
-							refetch2={props.refetch2}
-						/>    
+						<div className = "spreadsheetBackground">
+							<SpreadsheetContents
+								activeMap={props.activeMap} activeRegion={props.activeRegion}
+								regions={props.regions} editRegion={props.editRegion}
+								setShowRegionViewerScreen={props.setShowRegionViewerScreen}
+								setShowSpreadsheetScreen={props.setShowSpreadsheetScreen}
+								toggleRegionViewerScreen={props.toggleRegionViewerScreen}
+								setViewedRegion={props.setViewedRegion}
+								refetch2={props.refetch2}
+							/>    
+						</div>
                     </Route>
 				</Switch>
 			</BrowserRouter>
