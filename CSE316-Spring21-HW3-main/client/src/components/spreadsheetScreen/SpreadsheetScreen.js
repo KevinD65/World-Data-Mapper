@@ -133,7 +133,7 @@ const SpreadsheetScreen = (props) => {
 						<div className = "spreadsheetBackground">
 							<SpreadsheetContents
 								activeMap={props.activeMap} activeRegion={props.activeRegion}
-								regions={props.regions} editRegion={props.editRegion}
+								regions={props.regions} editRegion={props.editRegion} deleteRegion={props.deleteRegion}
 								setShowRegionViewerScreen={props.setShowRegionViewerScreen}
 								setShowSpreadsheetScreen={props.setShowSpreadsheetScreen}
 								toggleRegionViewerScreen={props.toggleRegionViewerScreen}

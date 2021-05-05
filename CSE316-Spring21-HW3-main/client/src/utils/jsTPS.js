@@ -72,7 +72,7 @@ export class EditRegion_Transaction extends jsTPS_Transaction {
     }
 }
 
-/*  Handles create/delete of list items */
+/*  Handles create/delete of region items */
 export class UpdateSpreadsheetItems_Transaction extends jsTPS_Transaction {
     // opcodes: 0 - delete, 1 - add 
     constructor(parentID, regionID, region, opcode, addfunc, delfunc, index = -1) {
@@ -91,7 +91,7 @@ export class UpdateSpreadsheetItems_Transaction extends jsTPS_Transaction {
 		let data;
         console.log(this.region);
         this.opcode === 0 ? { data } = await this.deleteFunction({
-							variables: {itemId: this.itemID, _id: this.listID}, refetchQueries: [{ query: queries.GET_DB_REGIONS }]})
+							variables: {parentId: this.parentID, regionId: this.regionID}, refetchQueries: [{ query: queries.GET_DB_REGIONS }]})
 						  : { data } = await this.addFunction({
 							variables: {region: this.region, _id: this.parentID, index: this.index}, refetchQueries: [{ query: queries.GET_DB_REGIONS }]})  
 		if(this.opcode !== 0) {
@@ -104,9 +104,9 @@ export class UpdateSpreadsheetItems_Transaction extends jsTPS_Transaction {
     async undoTransaction() {
 		let data;
         this.opcode === 1 ? { data } = await this.deleteFunction({
-							variables: {itemId: this.itemID, _id: this.listID}})
+							variables: {parentId: this.parentID, regionId: this.regionID}, refetchQueries: [{ query: queries.GET_DB_REGIONS }]})
                           : { data } = await this.addFunction({
-							variables: {item: this.item, _id: this.listID, index: this.index}})
+							variables: {region: this.region, _id: this.parentID, index: this.index}, refetchQueries: [{ query: queries.GET_DB_REGIONS }]})
 		if(this.opcode !== 1) {
             this.item._id = this.itemID = data.addItem;
         }

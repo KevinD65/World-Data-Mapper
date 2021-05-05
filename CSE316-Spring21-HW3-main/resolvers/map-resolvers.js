@@ -109,14 +109,30 @@ module.exports = {
 							 array on failure
 		**/
 		deleteRegion: async (_, args) => {
-			const  { _id, itemId } = args;
-			const listId = new ObjectId(_id);
-			const found = await Todolist.findOne({_id: listId});
-			let listItems = found.items;
-			listItems = listItems.filter(item => item._id.toString() !== itemId);
-			const updated = await Todolist.updateOne({_id: listId}, { items: listItems })
-			if(updated) return (listItems);
-			else return (found.items);
+			const  { parentId, regionId } = args;
+			//const listId = new ObjectId(_id);
+			//const found = await Todolist.findOne({_id: listId});
+			//let listItems = found.items;
+			//listItems = listItems.filter(item => item._id.toString() !== itemId);
+			let deleteFromParent = await Region.findOne({_id: parentId});
+			//return(deleteFromParent._id.toString());
+			if(deleteFromParent){ //the parent of the region to delete is a region
+				//return(deleteFromParent._)
+				let parentSubregions = deleteFromParent.subregions;
+				let updatedParentSubregions = parentSubregions.filter(region => region.toString() !== regionId); //remove the region to delete from its parent's subregions' array (array of IDs)
+				await Region.updateOne({_id: parentId}, {subregions: updatedParentSubregions});
+			}
+			else{ //the parent of the region to delete is a map data file
+				deleteFromParent = await Map.findOne({_id: parentId});
+				//return deleteFromParent._id.toString();
+				let parentSubregions = deleteFromParent.subregions;
+				let updatedParentSubregions = parentSubregions.filter(region => region.toString() !== regionId); //remove the region to delete from its parent's subregions' array (array of IDs)
+				//return updated
+				await Map.updateOne({_id: parentId}, {subregions: updatedParentSubregions});
+			}
+			const updated = await Region.deleteOne({_id: regionId})
+			if(updated) return ("Region was successfully deleted");
+			else return ("Region failed to delete");
 
 		},
 		/** 
@@ -157,21 +173,7 @@ module.exports = {
 				updated = await Region.updateOne({_id: regionId}, { leader: value })
 			else
 				updated = undefined;
-			//const listId = new ObjectId(_id);
-			//const found = await Todolist.findOne({_id: listId});
-			/*
-			let listItems = found.items;
-			if(flag === 1) {
-				if(value === 'complete') { value = true; }
-				if(value === 'incomplete') { value = false; }
-			}
-			listItems.map(item => {
-				if(item._id.toString() === itemId) {	
-					
-					item[field] = value;
-				}
-			});*/
-			//const updated = await Region.updateOne({_id: regionId}, { name: value })
+			//updating of flag goes here based on region name
 			if(updated) return (field + " edit was successful");
 			else return (field + " edit was unsuccessful");
 		},

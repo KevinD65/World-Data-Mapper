@@ -45,6 +45,10 @@ const RegionEntry = (props) => {
         props.editRegion(data._id, 'leader', newLeader, prevLeader);
     };
 
+    const handleDeleteRegion = () => {
+        props.deleteRegion(data);
+    }
+
     const handleGoToViewer = () => {
         props.toggleRegionViewerScreen(true);
         console.log(data);
@@ -53,7 +57,7 @@ const RegionEntry = (props) => {
 
     return (
         <WRow className='table-entry'>
-            <WCol size = "1" className = "table-entry-column deleteRegionButton">
+            <WCol size = "1" className = "table-entry-column deleteRegionButton" onClick = {handleDeleteRegion/*() => props.deleteRegion(data/*data.parent, data._id)*/}>
                 X
             </WCol>
             <WCol size="2" className = "table-entry-column">
@@ -65,13 +69,13 @@ const RegionEntry = (props) => {
                             wType="outlined" barAnimation="solid" inputClass="table-input-class"
                             fillColor="default"
                         />
-                        : <>
-                            <div className="table-text"
+                        : <div>
+                            <div className="table-text regionName"
                                 onClick={() => props.setShowSpreadsheetScreen(props.data._id, true, false)/*toggleNameEdit(!editingName)*/}
                             >{name}
                             </div>
                             <i className="material-icons regionNameEdit" onClick={toggleNameEdit}>edit</i>
-                        </>
+                        </div>
                 }
             </WCol>
 

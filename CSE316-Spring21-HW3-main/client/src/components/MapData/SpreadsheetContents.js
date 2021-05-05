@@ -39,7 +39,7 @@ const SpreadsheetContents = (props) => {
         myRegions.map((entry, index) => (
             <RegionEntry
                 data={entry} key={entry.id} index={index}
-                deleteItem={props.deleteItem} editRegion={props.editRegion} 
+                deleteRegion={props.deleteRegion} editRegion={props.editRegion} 
                 setShowSpreadsheetScreen={props.setShowSpreadsheetScreen}
                 setShowRegionViewerScreen={props.setShowRegionViewerScreen}
                 toggleRegionViewerScreen={props.toggleRegionViewerScreen}

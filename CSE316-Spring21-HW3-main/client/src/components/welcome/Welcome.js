@@ -95,7 +95,7 @@ const Welcome = (props) => {
 
 	const refetchRegions = async (refetch) => {
 		const regionRefetch = await refetch();
-		if(regionRefetch.data) {
+		if(regionRefetch) {
 			regions = regionRefetch.data.getAllRegions;
 			console.log(regionRefetch.data);
 		}
@@ -229,14 +229,14 @@ const Welcome = (props) => {
 
 	
     const editRegion = async (regionId, field, value, prev) => { //user can edit name, capital, or leader
-		console.log(regionId);
+		//console.log(regionId);
 		//let flag = 0;
 		//if (field === 'completed') flag = 1;
 		//let listID = activeList._id;
 		let transaction = new EditRegion_Transaction(/*listID,*/ regionId, field, prev, value, /*flag,*/ EditRegion);
 		props.tps.addTransaction(transaction);
-		const myString = await tpsRedo();
-		console.log(myString);
+		tpsRedo();
+		//console.log(myString);
 	};
 
 	/*
@@ -246,8 +246,29 @@ const Welcome = (props) => {
 	}
 */
 
-	const deleteRegion = async () => {
-
+	const deleteRegion = async (region/*parentId, regionId*/) => {
+		//const parentID = this.parentId;
+		//const regionID = this.regionId;
+		let opcode = 0; //opcode for deletion
+		let regionToDelete = {
+			_id: region._id,
+			id: region.id,
+			name: region.name,
+			capital: region.capital,
+			leader: region.leader,
+            flag: region.flag,
+            landmarks: region.landmarks,
+            position: region.position,
+            parent: region.parent,
+            subregions: region.subregions,
+            path: region.path,
+			owner: region.owner,
+		}
+		let transaction = new UpdateSpreadsheetItems_Transaction(region.parent, region._id, regionToDelete, opcode, AddRegion, DeleteRegion);
+		props.tps.addTransaction(transaction);
+		await tpsRedo();
+		await refetchMaps(refetch);
+		await refetchRegions(refetch2);
 	}
 
 	/*
@@ -488,7 +509,7 @@ const Welcome = (props) => {
 									activeMap={activeMap} activeRegion={activeRegion /*We are sending both activeMap & activeRegion. In RegionEntry, we will check if activeRegion is null 
 									or not and decide there whether to render the activeMap's subregions or the activeRegion's subregions*/}
 									undo={tpsUndo} redo={tpsRedo}
-									addRegion={addRegion} editRegion={editRegion}
+									addRegion={addRegion} editRegion={editRegion} deleteRegion={deleteRegion}
 									regions={regions}
 									setShowSpreadsheetScreen={setShowSpreadsheetScreen}
 									setShowRegionViewerScreen={setShowRegionViewerScreen}
