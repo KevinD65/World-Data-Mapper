@@ -44,6 +44,7 @@ const typeDefs = gql `
 		updateMapName(_id: String!, value: String!): String
 		editRegionField(regionId: String!, field: String!, value: String!): String
 		sortByColumn(parentId: String!, sortCode: Int!): String
+		revertSort(parentId: String!, prevConfig: [String], sortCode: Int!): String
 	}
 
 	input LandmarkInput {

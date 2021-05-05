@@ -24,14 +24,6 @@ const SpreadsheetHeader = (props) => {
     }
 
     const handleAddRegion = async () => {
-        //await addRegionIntermeditate();
-        console.log("HIIIIIIIIIIIIIIIII");
-        console.log(parent._id);
-        await props.addRegion(parent._id);
-        //await props.refetch2();
-    }
-
-    const addRegionIntermeditate = async () => {
         await props.addRegion(parent._id);
     }
 
@@ -39,7 +31,7 @@ const SpreadsheetHeader = (props) => {
         <div className = "">
             <div className = "spreadsheet-header">
                 <div className="spreadsheet-header-container">
-                    <i className="material-icons addRegion" onClick = {handleAddRegion/*() => props.addRegion(parent._id)*/}>add</i>
+                    <i className="material-icons addRegion" onClick = {handleAddRegion}>add</i>
                     <i className="material-icons undo" onClick = {props.undo}>undo</i>
                     <i className="material-icons redo" onClick = {props.redo}>redo</i>
                     <div className="spreadsheet-header-text">
@@ -55,7 +47,7 @@ const SpreadsheetHeader = (props) => {
                     <WCol size="1">
                     </WCol>
                     <WCol size="2">
-                        <WButton className='spreadsheet-header-section' wType="texted" span="true">Name<i className="material-icons spreadsheetHeaderIcon">south</i></WButton> 
+                        <WButton className='spreadsheet-header-section' wType="texted" span="true">Name<i className="material-icons spreadsheetHeaderIcon" onClick>south</i></WButton> 
                     </WCol>
 
                     <WCol size="3">

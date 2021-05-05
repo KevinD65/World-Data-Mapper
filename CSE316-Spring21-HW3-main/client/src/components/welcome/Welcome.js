@@ -24,6 +24,7 @@ import { WLayout, WLHeader, WLMain, WLSide } 				from 'wt-frontend';
 import { UpdateListField_Transaction, 
 	UpdateSpreadsheetItems_Transaction, 
 	ReorderItems_Transaction, 
+	SortByColumn_Transaction,
 	EditRegion_Transaction } 				from '../../utils/jsTPS';
 //import WInput from 'wt-frontend/build/components/winput/WInput';
 import { BrowserRouter, Switch, Route, Redirect, useHistory} from 'react-router-dom';
@@ -46,7 +47,9 @@ const Welcome = (props) => {
 	const [UpdateMapName]									= useMutation(mutations.UPDATE_MAP_NAME);
 	const [AddRegion]										= useMutation(mutations.ADD_REGION);
 	const [EditRegion]										= useMutation(mutations.EDIT_REGION_FIELD);
-	const [DeleteRegion]									= useMutation(mutations.DELETE_REGION)
+	const [DeleteRegion]									= useMutation(mutations.DELETE_REGION);
+	const [sortingFunction]									= useMutation(mutations.SORT_BY_COLUMN);
+	const [revertingFunction]								= useMutation(mutations.REVERT_SORT);
 	const [Logout] 											= useMutation(mutations.LOGOUT);
 
 	let maps = []; //holds all the maps
@@ -76,7 +79,7 @@ const Welcome = (props) => {
 	if(regionQuery.loading) { console.log(loading, 'loading'); }
 	if(regionQuery.error) { console.log(error, 'error'); }
 	//if(regionQuery.data) { regions = regionQuery.data.getAllRegions; }
-	if(regionQuery.data) {
+	if(regionQuery.data) { //used to fill regionsOfParent array with all regions that are subregions of the activeMap/activeRegion
 		let active = null;
 		if(activeRegion === null)
 			active = activeMap;
@@ -92,9 +95,7 @@ const Welcome = (props) => {
 			}
 		}
 	}
-
 	const refetch2 = regionQuery.refetch;
-	//console.log(regions);
 
 	const userName = props.userName;
 
@@ -102,7 +103,7 @@ const Welcome = (props) => {
 		const { loading, error, data } = await refetch();
 		if (data) {
 			maps = data.getAllMaps;
-			if (activeMap) {
+			if (activeMap !== null) {
 				let tempID = activeMap._id; 
 				let myMap = maps.find(map => map._id === tempID);
 				setActiveMap(myMap);
@@ -120,6 +121,7 @@ const Welcome = (props) => {
 
 	const auth = props.user === null ? false : true; //used to check if a user is logged in
 
+	/*
     const handleLogout = async () => {
         Logout();
         const { data } = await props.fetchUser();
@@ -128,7 +130,7 @@ const Welcome = (props) => {
             if (reset) toggleMapSelectScreen(false);
         }
     };
-
+	*/
 	const tpsUndo = async () => {
 		const retVal = await props.tps.undoTransaction();
 		refetchMaps(refetch);
@@ -139,7 +141,7 @@ const Welcome = (props) => {
 		const retVal = await props.tps.doTransaction();
 		await refetchMaps(refetch);
 		await refetchRegions(refetch2);
-		console.log("WE ARE REFETCHING HERE");
+		//console.log("WE ARE REFETCHING HERE");
 		return retVal;
 	}
 
@@ -192,8 +194,7 @@ const Welcome = (props) => {
 		await refetchMaps(refetch);
 	};
 
-	const addRegion = async (parentID) => { //needs parent path as argument
-		//console.log("MADE IT HERE MAN");
+	const addRegion = async (parentID) => {
 		let map;
 		let updatedPath = [];
 		if(activeRegion == null || activeRegion === undefined){
@@ -202,13 +203,11 @@ const Welcome = (props) => {
 		}
 		else{
 			map = activeRegion;
-			//console.log(activeRegion);
 			updatedPath = map.path;
-			//console.log(updatedPath);
 			updatedPath = updatedPath.concat(map._id);
-			console.log(updatedPath);
+			//console.log(updatedPath);
 		}
-		console.log(map);
+		//console.log(map);
 		const regions = map.subregions; //regions holds an array of IDs
 		const lastID = regions.length >= 1 ? regions.length : 0;
         const lastPosition = regions.length >= 1 ? regions.length: 0;
@@ -233,39 +232,20 @@ const Welcome = (props) => {
 		let regionID = newRegion._id;
 		let transaction = new UpdateSpreadsheetItems_Transaction(parentID, regionID, newRegion, opcode, AddRegion, DeleteRegion);
 		props.tps.addTransaction(transaction);
-		console.log("IS THIS BEFORE RENDER?");
-		//await intermediate();
+		//console.log("IS THIS BEFORE RENDER?");
 		await tpsRedo();
-		//window.location.reload();
 		await refetchMaps(refetch);
 		await refetchRegions(refetch2);
-		//console.log("SOLID");
-		//return found;
-		//console.log("SOLID");
 	};
 
 	
     const editRegion = async (regionId, field, value, prev) => { //user can edit name, capital, or leader
-		//console.log(regionId);
-		//let flag = 0;
-		//if (field === 'completed') flag = 1;
-		//let listID = activeList._id;
-		let transaction = new EditRegion_Transaction(/*listID,*/ regionId, field, prev, value, /*flag,*/ EditRegion);
+		let transaction = new EditRegion_Transaction(regionId, field, prev, value, EditRegion);
 		props.tps.addTransaction(transaction);
 		tpsRedo();
-		//console.log(myString);
 	};
 
-	/*
-	const intermediate = async () => {
-		tpsRedo();
-		console.log("FRUIT");
-	}
-*/
-
-	const deleteRegion = async (region/*parentId, regionId*/) => {
-		//const parentID = this.parentId;
-		//const regionID = this.regionId;
+	const deleteRegion = async (region) => {
 		let opcode = 0; //opcode for deletion
 		let regionToDelete = {
 			_id: region._id,
@@ -286,6 +266,11 @@ const Welcome = (props) => {
 		await tpsRedo();
 		await refetchMaps(refetch);
 		await refetchRegions(refetch2);
+	}
+
+	const sortByColumn = async (parentId, sortCode) => {
+		//send parent subregions array to transaction
+		let transaction = new SortByColumn_Transaction(parentId, )
 	}
 
 	/*

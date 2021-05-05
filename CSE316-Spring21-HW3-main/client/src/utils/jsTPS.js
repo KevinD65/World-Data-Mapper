@@ -114,6 +114,26 @@ export class UpdateSpreadsheetItems_Transaction extends jsTPS_Transaction {
     }
 }
 
+export class SortByColumn_Transaction extends jsTPS_Transaction {
+    constructor(parentId, prevSubregionsArr, sortFunction, revertFunction, sortCode) {
+        this.parentId = parentId;
+        let prev = prevSubregionsArr;
+        this.sortingFunction = sortFunction;
+        this.revertingFunction = revertFunction;
+        this.sortCode = sortCode;
+    }
+
+    async doTransaction() {
+        const { data } = await this.sortingFunction({parentId: this.parentId, sortCode: this.sortCode});
+        return data;
+    }
+
+    async undoTransaction() {
+        const { data } = await this.revertingFunction({parentId: this.parentId, prevConfig: this.prev, sortCode: this.sortCode});
+        return data;
+    }
+}
+
 
 
 

@@ -74,6 +74,12 @@ export const SORT_BY_COLUMN = gql`
 	}
 `;
 
+export const REVERT_SORT = gql`
+	mutation RevertSort($parentId: String!, $prevConfig: [String]!, $sortCode: Int!) {
+		revertSort(parentId: $parentId, prevConfig: $prevConfig, sortCode: $sortCode)
+	}
+`;
+
 export const ADD_MAP = gql`
 	mutation AddMap($map: MapInput!) {
 		addMap(map: $map)
