@@ -139,6 +139,8 @@ const SpreadsheetScreen = (props) => {
 								toggleRegionViewerScreen={props.toggleRegionViewerScreen}
 								setViewedRegion={props.setViewedRegion}
 								refetch2={props.refetch2}
+
+								regionsOfParent={props.regionsOfParent}
 							/>    
 						</div>
                     </Route>

@@ -68,6 +68,12 @@ export const REORDER_ITEMS = gql`
 	}
 `;
 
+export const SORT_BY_COLUMN = gql`
+	mutation SortByColumn($parentId: String!, $sortCode: Int!) {
+		sortByColumn(parentId: $parentId, sortCode: $sortCode)
+	}
+`;
+
 export const ADD_MAP = gql`
 	mutation AddMap($map: MapInput!) {
 		addMap(map: $map)

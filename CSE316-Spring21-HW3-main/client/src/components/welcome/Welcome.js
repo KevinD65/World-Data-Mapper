@@ -51,6 +51,7 @@ const Welcome = (props) => {
 
 	let maps = []; //holds all the maps
 	let regions = []; //holds all the regions
+	let regionsOfParent = [];
 
 	const client = useApolloClient();
     const [activeMap, setActiveMap] = useState(null); //an array holding a singular map object (or none). The map whose spreadsheet screen is being showed
@@ -69,15 +70,31 @@ const Welcome = (props) => {
 	//const regionQuery = useQuery(queries.GET_DB_REGIONS);
 	if(loading) { console.log(loading, 'loading'); }
 	if(error) { console.log(error, 'error'); }
-	if(data) { maps = data.getAllMaps; }
+	//if(data) { maps = data.getAllMaps; }
+	if(data) {data.getAllMaps.map(map => maps.push(map));}
 
-	//These lines of code cause error 400 on logout();
-	//const regionQuery = useQuery(queries.GET_DB_REGIONS);
 	if(regionQuery.loading) { console.log(loading, 'loading'); }
 	if(regionQuery.error) { console.log(error, 'error'); }
-	if(regionQuery.data) { regions = regionQuery.data.getAllRegions; }
+	//if(regionQuery.data) { regions = regionQuery.data.getAllRegions; }
+	if(regionQuery.data) {
+		let active = null;
+		if(activeRegion === null)
+			active = activeMap;
+		else if(activeRegion !== null)
+			active = activeRegion;
+		if(active !== null){
+			regionQuery.data.getAllRegions.map(region => regions.push(region));
+			regionsOfParent = [];
+			for(let i = 0; i < regions.length; i++){
+				if(regions[i].parent === active._id){
+					regionsOfParent.push(regions[i]);
+				}
+			}
+		}
+	}
+
 	const refetch2 = regionQuery.refetch;
-	console.log(regions);
+	//console.log(regions);
 
 	const userName = props.userName;
 
@@ -516,6 +533,8 @@ const Welcome = (props) => {
 									toggleRegionViewerScreen={toggleRegionViewerScreen}
 									refetch2={refetch2}
 									setViewedRegion={setViewedRegion}
+
+									regionsOfParent={regionsOfParent}
 								/>
 								{
 									showUpdate && (<UpdateAccount fetchUser={props.fetchUser} setShowUpdate={setShowUpdate}/>)

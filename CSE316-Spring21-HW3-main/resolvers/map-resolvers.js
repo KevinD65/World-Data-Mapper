@@ -206,7 +206,15 @@ module.exports = {
 			// return old ordering if reorder was unsuccessful
 			listItems = found.items;
 			return (found.items);
+		},
 
+		/**
+		 * 
+		 */
+		sortByColumn: async (_, args) => {
+			const { parentId, sortCode } = args;
+			const parentID = new ObjectId(parentId);
+			let findParent = await find
 		}
 
 	}

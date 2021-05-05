@@ -20,8 +20,7 @@ const SpreadsheetContents = (props) => {
         console.log(regionsIDs);
         console.log("JAH");
     }
-
-    //const regionsIDs = props.activeRegion !== {} ? props.activeRegion[0].subregions : props.activeMap.subregions;
+/*
     let regions = props.regions;
     let myRegions = [];
     console.log(regions);
@@ -33,10 +32,10 @@ const SpreadsheetContents = (props) => {
         myRegions.push(regionToFind);
     }
     console.log(myRegions);
-
+*/
     console.log("COMPONENT IS RENDERING");
     return (
-        myRegions.map((entry, index) => (
+        /*myRegions*/props.regionsOfParent.map((entry, index) => (
             <RegionEntry
                 data={entry} key={entry.id} index={index}
                 deleteRegion={props.deleteRegion} editRegion={props.editRegion} 
