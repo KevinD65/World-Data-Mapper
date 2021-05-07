@@ -88,11 +88,23 @@ const Welcome = (props) => {
 		if(active !== null){
 			regionQuery.data.getAllRegions.map(region => regions.push(region));
 			regionsOfParent = [];
-			for(let i = 0; i < regions.length; i++){
+			for(let i = 0; i < regions.length; i++){ //simply makes the array of regions associated with this parent
 				if(regions[i].parent === active._id){
 					regionsOfParent.push(regions[i]);
 				}
 			}
+
+			let temp;
+			for(let a = 0; a < regionsOfParent.length; a++){ //bubble sort to actually sort the array of regions associated with this parent
+				for(let b = 0; b < regionsOfParent.length - a - 1; b++){
+					if(regionsOfParent[b].position > regionsOfParent[b+1].position){
+						temp = regionsOfParent[b];
+						regionsOfParent[b] = regionsOfParent[b+1];
+						regionsOfParent[b+1] = temp;
+					}
+				}
+			}
+
 		}
 	}
 	const refetch2 = regionQuery.refetch;
@@ -139,6 +151,7 @@ const Welcome = (props) => {
 
 	const tpsRedo = async () => {
 		const retVal = await props.tps.doTransaction();
+		//console.log("WHERE ARE WE?");
 		await refetchMaps(refetch);
 		await refetchRegions(refetch2);
 		//console.log("WE ARE REFETCHING HERE");
@@ -268,9 +281,14 @@ const Welcome = (props) => {
 		await refetchRegions(refetch2);
 	}
 
-	const sortByColumn = async (parentId, sortCode) => {
-		//send parent subregions array to transaction
-		let transaction = new SortByColumn_Transaction(parentId, )
+	const sortByColumn = async (parent, sortCode) => {
+		// console.log("BIGBOIMONEY");
+		let prevSubregionsArr = parent.subregions;
+		console.log(parent._id);
+		let transaction = new SortByColumn_Transaction(parent._id, prevSubregionsArr, sortingFunction, revertingFunction, sortCode);
+		props.tps.addTransaction(transaction);
+		await tpsRedo();
+		console.log("ALMOST DONE");
 	}
 
 	/*
@@ -520,6 +538,7 @@ const Welcome = (props) => {
 									setViewedRegion={setViewedRegion}
 
 									regionsOfParent={regionsOfParent}
+									sortByColumn={sortByColumn}
 								/>
 								{
 									showUpdate && (<UpdateAccount fetchUser={props.fetchUser} setShowUpdate={setShowUpdate}/>)

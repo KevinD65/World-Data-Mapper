@@ -209,33 +209,37 @@ module.exports = {
 		},
 
 		/**
-		 * 
+		 * @param	{object} args - contains the parent _id and the sortCode
+		 * @returns	{string} a String indicating whether the sort was successful or not
 		 */
 		sortByColumn: async (_, args) => {
-			let isMap = false;
 			const { parentId, sortCode } = args;
+			let isMap = false;
 			const parentID = new ObjectId(parentId);
 			let findParent = await Region.findOne({_id: parentID});
 			if(!findParent){
 				isMap = true;
-				findParent = await Map.findOne({_id: parentId});
+				findParent = await Map.findOne({_id: parentID});
 			}
 			let parentSubregions = findParent.subregions;
 			if(sortCode === 0){ //sort by name
+				let regionHolder1, regionHolder2;
 				let sorted = true; //flag used to determine if items are already sorted so reverse can be done
 				for(let i = 0; i < parentSubregions.length - 1; i++){ //selection sort algorithm
 					let indexOfLowest = i;
 					let temp = parentSubregions[i];
 					for(let j = i + 1; j < parentSubregions.length; j++){
-						if(parentSubregions[j].name.toUpperCase().localeCompare(parentSubregions[indexOfLowest].name.toUpperCase()) < 0){
+						regionHolder1 = await Region.findOne({_id: parentSubregions[j]});
+						regionHolder2 = await Region.findOne({_id: parentSubregions[indexOfLowest]});
+						if(regionHolder1.name.toUpperCase().localeCompare(regionHolder2.name.toUpperCase()) < 0){
 							//parentSubregions[i] = parentSubregions[j];
 							//parentSubregions[j] = temp;
 							indexOfLowest = j;
 							sorted = false; //items were not already sorted
 						}
 					}
-					parentSubregions[i] = parentSubregions[lowest];
-					parentSubregions[lowest] = temp;
+					parentSubregions[i] = parentSubregions[indexOfLowest];
+					parentSubregions[indexOfLowest] = temp;
 				}
 				if(sorted){ //used to reverse items if already sorted
 					let temp;
@@ -247,13 +251,84 @@ module.exports = {
 						parentSubregions[endIndex - r] = temp;
 					}
 				}
-				let successfulSort;
-				if(isMap)
-					successfulSort = await Map.updateOne({_id: parentId}, {subregions: parentSubregions});
-				else
-					successfulSort = await Region.updateOne({_id: parentId}, {subregions: parentSubregions});
-				return successfulSort;
 			}
+			else if(sortCode === 1){ //sort by capital
+				let regionHolder1, regionHolder2;
+				let sorted = true; //flag used to determine if items are already sorted so reverse can be done
+				for(let i = 0; i < parentSubregions.length - 1; i++){ //selection sort algorithm
+					let indexOfLowest = i;
+					let temp = parentSubregions[i];
+					for(let j = i + 1; j < parentSubregions.length; j++){
+						regionHolder1 = await Region.findOne({_id: parentSubregions[j]});
+						regionHolder2 = await Region.findOne({_id: parentSubregions[indexOfLowest]});
+						if(regionHolder1.capital.toUpperCase().localeCompare(regionHolder2.capital.toUpperCase()) < 0){
+							//parentSubregions[i] = parentSubregions[j];
+							//parentSubregions[j] = temp;
+							indexOfLowest = j;
+							sorted = false; //items were not already sorted
+						}
+					}
+					parentSubregions[i] = parentSubregions[indexOfLowest];
+					parentSubregions[indexOfLowest] = temp;
+				}
+				if(sorted){ //used to reverse items if already sorted
+					let temp;
+					let middle = Math.floor(parentSubregions.length/2);
+					let endIndex = parentSubregions.length - 1;
+					for(let r = 0; r < middle; r++){
+						temp = parentSubregions[r];
+						parentSubregions[r] = parentSubregions[endIndex - r];
+						parentSubregions[endIndex - r] = temp;
+					}
+				}
+			}
+			else if(sortCode === 2){ //sort by capital
+				let regionHolder1, regionHolder2;
+				let sorted = true; //flag used to determine if items are already sorted so reverse can be done
+				for(let i = 0; i < parentSubregions.length - 1; i++){ //selection sort algorithm
+					let indexOfLowest = i;
+					let temp = parentSubregions[i];
+					for(let j = i + 1; j < parentSubregions.length; j++){
+						regionHolder1 = await Region.findOne({_id: parentSubregions[j]});
+						regionHolder2 = await Region.findOne({_id: parentSubregions[indexOfLowest]});
+						if(regionHolder1.capital.toUpperCase().localeCompare(regionHolder2.capital.toUpperCase()) < 0){
+							//parentSubregions[i] = parentSubregions[j];
+							//parentSubregions[j] = temp;
+							indexOfLowest = j;
+							sorted = false; //items were not already sorted
+						}
+					}
+					parentSubregions[i] = parentSubregions[indexOfLowest];
+					parentSubregions[indexOfLowest] = temp;
+				}
+				if(sorted){ //used to reverse items if already sorted
+					let temp;
+					let middle = Math.floor(parentSubregions.length/2);
+					let endIndex = parentSubregions.length - 1;
+					for(let r = 0; r < middle; r++){
+						temp = parentSubregions[r];
+						parentSubregions[r] = parentSubregions[endIndex - r];
+						parentSubregions[endIndex - r] = temp;
+					}
+				}
+			}
+			else{
+				return "Invalid opcode";
+			}
+
+			let successfulSort;
+			if(isMap){
+				successfulSort = await Map.updateOne({_id: parentId}, {subregions: parentSubregions}); //parent subregions array is reordered but we still have to configure region positions
+				let positionHandler;
+				for(let t = 0; t < parentSubregions.length; t++){
+					positionHandler = parentSubregions[t];
+					await Region.updateOne({_id: positionHandler}, {position: t});
+				}
+			}
+			else {
+				successfulSort = await Region.updateOne({_id: parentId}, {subregions: parentSubregions}); //parent subregions array is reordered but we still have to configure region positions
+			}
+			return successfulSort.toString();
 		},
 
 		revertSort: async (_, args) => {

@@ -129,6 +129,7 @@ const SpreadsheetScreen = (props) => {
 							undo={props.undo} redo={props.redo}
 							refetch2={props.refetch2}
 							toggleRegionViewerScreen={props.toggleRegionViewerScreen}
+							sortByColumn={props.sortByColumn}
 						/>
 						<div className = "spreadsheetBackground">
 							<SpreadsheetContents

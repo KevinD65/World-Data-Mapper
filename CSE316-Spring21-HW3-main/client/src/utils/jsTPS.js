@@ -116,20 +116,22 @@ export class UpdateSpreadsheetItems_Transaction extends jsTPS_Transaction {
 
 export class SortByColumn_Transaction extends jsTPS_Transaction {
     constructor(parentId, prevSubregionsArr, sortFunction, revertFunction, sortCode) {
-        this.parentId = parentId;
-        let prev = prevSubregionsArr;
+        super();
+        this.parentID = parentId;
+        this.prev = prevSubregionsArr;
         this.sortingFunction = sortFunction;
         this.revertingFunction = revertFunction;
         this.sortCode = sortCode;
     }
 
     async doTransaction() {
-        const { data } = await this.sortingFunction({parentId: this.parentId, sortCode: this.sortCode});
+        //console.log(this.parentId);
+        const { data } = await this.sortingFunction({ variables: {parentId: this.parentID, sortCode: this.sortCode}, refetchQueries: [{ query: queries.GET_DB_REGIONS }]});
         return data;
     }
 
     async undoTransaction() {
-        const { data } = await this.revertingFunction({parentId: this.parentId, prevConfig: this.prev, sortCode: this.sortCode});
+        const { data } = await this.revertingFunction({parentId: this.parentID, prevConfig: this.prev, sortCode: this.sortCode});
         return data;
     }
 }

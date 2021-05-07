@@ -26,7 +26,12 @@ const SpreadsheetHeader = (props) => {
     const handleAddRegion = async () => {
         await props.addRegion(parent._id);
     }
-
+/*
+    const handleSortByColumn = async (sortCode) => {
+        console.log("HELLO I AM HERE");
+        props.sortByColumn(parent, sortCode);
+    }
+*/
     return (
         <div className = "">
             <div className = "spreadsheet-header">
@@ -46,15 +51,15 @@ const SpreadsheetHeader = (props) => {
                 <WRow>
                     <WCol size="1">
                     </WCol>
-                    <WCol size="2">
-                        <WButton className='spreadsheet-header-section' wType="texted" span="true">Name<i className="material-icons spreadsheetHeaderIcon" onClick>south</i></WButton> 
+                    <WCol size="2" onClick = {() => props.sortByColumn(parent, 0)}>
+                        <WButton className='spreadsheet-header-section' wType="texted" span="true">Name<i className="material-icons spreadsheetHeaderIcon">south</i></WButton> 
                     </WCol>
 
-                    <WCol size="3">
+                    <WCol size="3" onClick = {() => props.sortByColumn(parent, 1)}>
                         <WButton className='spreadsheet-header-section' wType="texted" span="true">Capital<i className="material-icons spreadsheetHeaderIcon">south</i></WButton>
                     </WCol>
 
-                    <WCol size="2">
+                    <WCol size="2" onClick = {() => props.sortByColumn(parent, 2)}>
                         <WButton className='spreadsheet-header-section' wType="texted" span="true">Leader<i className="material-icons spreadsheetHeaderIcon">south</i></WButton>
                     </WCol>
                     <WCol size="1">
