@@ -158,13 +158,13 @@ const Welcome = (props) => {
 		return retVal;
 	}
 
-	const tpsHasUndo = async () => {
-		const hasUndo = await props.tps.hasTransactionToUndo();
+	const tpsHasUndo = () => {
+		const hasUndo = props.tps.hasTransactionToUndo();
 		return hasUndo;
 	}
 
-	const tpsHasRedo = async () => {
-		const hasRedo = await props.tps.hasTransactionToRedo();
+	const tpsHasRedo = () => {
+		const hasRedo = props.tps.hasTransactionToRedo();
 		return hasRedo;
 	}
 

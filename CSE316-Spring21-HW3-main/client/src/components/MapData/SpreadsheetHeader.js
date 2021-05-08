@@ -3,9 +3,6 @@ import { WLHeader, WButton, WRow, WCol } from 'wt-frontend';
 
 const SpreadsheetHeader = (props) => {
 
-    const buttonStyle = props.disabled ? ' table-header-button-disabled ' : 'table-header-button ';
-    const clickDisabled = () => { };
-
     let parent;
     /*
     if(props.activeRegion[0] === null)
@@ -32,16 +29,19 @@ const SpreadsheetHeader = (props) => {
         props.sortByColumn(parent, sortCode);
     }
 */
+
+    //console.log(props.tpsHasUndo());
     return (
         <div className = "">
             <div className = "spreadsheet-header">
                 <div className="spreadsheet-header-container">
                     <i className="material-icons addRegion" onClick = {handleAddRegion}>add</i>
-                    { props.tpsHasUndo() ?
+                    {/* <i className={"material-icons " + undoStyle} onClick = {props.undo}>undo</i> */}
+                    {props.tpsHasUndo() ?
                         <i className="material-icons undo" onClick = {props.undo}>undo</i>
                     : <i className="material-icons disabledUndo">undo</i>
                     }
-                    { props.tpsHasRedo() ?
+                    {props.tpsHasRedo() ?
                         <i className="material-icons redo" onClick = {props.redo}>redo</i>
                     : <i className="material-icons disabledRedo">redo</i>
                     }
