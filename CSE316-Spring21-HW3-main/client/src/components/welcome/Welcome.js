@@ -474,6 +474,7 @@ const Welcome = (props) => {
 												setShowCreate={setShowCreate} setShowLogin={setShowLogin}
 												setShowUpdate={setShowUpdate} userName={userName}
 												toggleMapSelectScreen={toggleMapSelectScreen} spreadsheetScreenOn={props.spreadsheetScreenOn}
+												resetTPSStack={resetTPSStack}
 											/>
 										</ul>
 									</WNavbar>

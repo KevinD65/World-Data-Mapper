@@ -333,6 +333,25 @@ module.exports = {
 
 		revertSort: async (_, args) => {
 			//needs implementation
+			const { parentId, prevConfig, sortCode } = args;
+			let isMap = false;
+			let findParent = await Region.findOne({_id: parentId});
+			if(findParent){ //if the parent is a Region
+				await Region.updateOne({_id: parentId,}, {subregions: prevConfig});
+			}
+			else { //otherwise, the parent is a Map
+				isMap = true;
+				//findParent = await Map.findOne({_id: parentID});
+				await Map.updateOne({_id: parentId,}, {subregions: prevConfig});
+			}
+			let updatedParentSubregions = prevConfig;
+
+			let positionHandler;
+			for(let t = 0; t < updatedParentSubregions.length; t++){ //update the positions of the regions correspondingly
+				positionHandler = updatedParentSubregions[t];
+				await Region.updateOne({_id: positionHandler}, {position: t});
+			}
+			return "Successfully reverted sort";
 		}
 
 	}
