@@ -131,7 +131,7 @@ export class SortByColumn_Transaction extends jsTPS_Transaction {
     }
 
     async undoTransaction() {
-        const { data } = await this.revertingFunction({parentId: this.parentID, prevConfig: this.prev, sortCode: this.sortCode});
+        const { data } = await this.revertingFunction({ variables: {parentId: this.parentID, prevConfig: this.prev, sortCode: this.sortCode}, refetchQueries: [{ query: queries.GET_DB_REGIONS }]});
         return data;
     }
 }

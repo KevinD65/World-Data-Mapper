@@ -37,8 +37,14 @@ const SpreadsheetHeader = (props) => {
             <div className = "spreadsheet-header">
                 <div className="spreadsheet-header-container">
                     <i className="material-icons addRegion" onClick = {handleAddRegion}>add</i>
-                    <i className="material-icons undo" onClick = {props.undo}>undo</i>
-                    <i className="material-icons redo" onClick = {props.redo}>redo</i>
+                    { props.tpsHasUndo() ?
+                        <i className="material-icons undo" onClick = {props.undo}>undo</i>
+                    : <i className="material-icons disabledUndo">undo</i>
+                    }
+                    { props.tpsHasRedo() ?
+                        <i className="material-icons redo" onClick = {props.redo}>redo</i>
+                    : <i className="material-icons disabledRedo">redo</i>
+                    }
                     <div className="spreadsheet-header-text">
                         {"Region Name: "}
                     </div>

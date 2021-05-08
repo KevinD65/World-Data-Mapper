@@ -127,6 +127,7 @@ const SpreadsheetScreen = (props) => {
 							activeMap={props.activeMap} activeRegion={props.activeRegion}
 							region={props.regions} addRegion={props.addRegion}
 							undo={props.undo} redo={props.redo}
+							tpsHasUndo={props.tpsHasUndo} tpsHasRedo={props.tpsHasRedo}
 							refetch2={props.refetch2}
 							toggleRegionViewerScreen={props.toggleRegionViewerScreen}
 							sortByColumn={props.sortByColumn}

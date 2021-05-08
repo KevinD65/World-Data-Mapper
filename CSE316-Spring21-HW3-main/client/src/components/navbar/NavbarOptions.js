@@ -82,31 +82,43 @@ const LoggedIn = (props) => {
         console.log(ParentIsMap);
         //console.log(parent);
         //console.log(regionName);
-}
+    }
 
     const handleLogout = async (e) => {
         Logout();
         const { data } = await props.fetchUser();
         if (data) {
             let reset = await client.resetStore();
+            props.resetTPSStack();
             if (reset) props.toggleMapSelectScreen(false);
         }
 
     };
+/*
+    const toRegionViewer = () => {
+        props.resetTPSStack();
+        props.toggleRegionViewerScreen(false);
+    }
+*/
+    const toParentSpreadsheet = () => {
+        props.resetTPSStack();
+        props.setShowSpreadsheetScreen(parentIDForNav, ParentIsMap, resetVR);
+    }
 
-    const backToSpreadSheet = () => {
-        
+    const toOwnSpreadsheet = () => {
+        props.resetTPSStack();
+        props.toggleRegionViewerScreen(false);
     }
 
     return (
         //add user's name here for updateaccount option
         <> { props.regionViewerScreen || props.spreadsheetScreenOn ?
             <WNavItem className = "regionViewerNavigation" hoverAnimation="lighten">
-                <div onClick = {() => props.setShowSpreadsheetScreen(parentIDForNav, ParentIsMap, resetVR)}>
+                <div onClick = {toParentSpreadsheet/*() => props.setShowSpreadsheetScreen(parentIDForNav, ParentIsMap, resetVR)*/}>
                     {parent}
                 </div>
                 <i className="material-icons">chevron_right</i>
-                <div onClick = {() => props.toggleRegionViewerScreen(false)}>
+                <div onClick = {toOwnSpreadsheet/*() => props.toggleRegionViewerScreen(false)*/}>
                     {regionName}
                 </div>
             </WNavItem>
@@ -153,7 +165,7 @@ const NavbarOptions = (props) => {
                 : <LoggedIn fetchUser={props.fetchUser} userName={props.userName} toggleMapSelectScreen={props.toggleMapSelectScreen} setShowUpdate={props.setShowUpdate} 
                     viewedRegion={props.viewedRegion} maps={props.maps} regions={props.regions} activeMap={props.activeMap} activeRegion={props.activeRegion}
                     spreadsheetScreenOn={props.spreadsheetScreenOn} regionViewerScreen={props.regionViewerScreen} backToSpreadSheet={props.backToSpreadSheet} 
-                    setShowSpreadsheetScreen={props.setShowSpreadsheetScreen} toggleRegionViewerScreen={props.toggleRegionViewerScreen}/>
+                    setShowSpreadsheetScreen={props.setShowSpreadsheetScreen} toggleRegionViewerScreen={props.toggleRegionViewerScreen} resetTPSStack={props.resetTPSStack}/>
             }
         </>
 

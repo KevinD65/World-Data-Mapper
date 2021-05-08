@@ -158,6 +158,20 @@ const Welcome = (props) => {
 		return retVal;
 	}
 
+	const tpsHasUndo = async () => {
+		const hasUndo = await props.tps.hasTransactionToUndo();
+		return hasUndo;
+	}
+
+	const tpsHasRedo = async () => {
+		const hasRedo = await props.tps.hasTransactionToRedo();
+		return hasRedo;
+	}
+
+	const resetTPSStack = async () => { //gets called whenever screen is switched away from spreadsheet view/regionViewer
+		await props.tps.clearAllTransactions();
+	}
+
 	const handleMapDeletion = (_id) => {
 		handleSetActive(_id);
 		toggleShowDeleteMap(!showDeleteMap);
@@ -282,13 +296,11 @@ const Welcome = (props) => {
 	}
 
 	const sortByColumn = async (parent, sortCode) => {
-		// console.log("BIGBOIMONEY");
 		let prevSubregionsArr = parent.subregions;
-		console.log(parent._id);
+		//console.log(parent._id);
 		let transaction = new SortByColumn_Transaction(parent._id, prevSubregionsArr, sortingFunction, revertingFunction, sortCode);
 		props.tps.addTransaction(transaction);
 		await tpsRedo();
-		console.log("ALMOST DONE");
 	}
 
 	/*
@@ -520,6 +532,7 @@ const Welcome = (props) => {
 											viewedRegion={viewedRegion}
 											setShowSpreadsheetScreen={setShowSpreadsheetScreen}
 											toggleRegionViewerScreen={toggleRegionViewerScreen}
+											resetTPSStack={resetTPSStack}
 										/>
 									</ul>
 								</WNavbar>
@@ -539,6 +552,7 @@ const Welcome = (props) => {
 
 									regionsOfParent={regionsOfParent}
 									sortByColumn={sortByColumn}
+									tpsHasUndo={tpsHasUndo} tpsHasRedo={tpsHasRedo}
 								/>
 								{
 									showUpdate && (<UpdateAccount fetchUser={props.fetchUser} setShowUpdate={setShowUpdate}/>)
@@ -571,6 +585,7 @@ const Welcome = (props) => {
 											toggleRegionViewerScreen={toggleRegionViewerScreen}
 											backToSpreadSheet={backToSpreadSheet}
 											setShowSpreadsheetScreen={setShowSpreadsheetScreen}
+											resetTPSStack={resetTPSStack}
 
 											spreadsheetScreenOn={props.spreadsheetScreenOn}
 											regionViewerScreen={regionViewerScreen}

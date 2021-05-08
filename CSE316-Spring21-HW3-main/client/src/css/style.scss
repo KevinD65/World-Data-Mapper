@@ -241,8 +241,16 @@ The following CSS is for icons
     color: white;
 }
 
+.disabledUndo {
+    color: grey;
+}
+
 .redo {
     color: white
+}
+
+.disabledRedo {
+    color: grey;
 }
 
 .spreadsheetHeader {

@@ -332,7 +332,7 @@ module.exports = {
 		},
 
 		revertSort: async (_, args) => {
-
+			//needs implementation
 		}
 
 	}
