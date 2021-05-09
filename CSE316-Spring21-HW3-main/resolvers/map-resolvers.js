@@ -361,6 +361,7 @@ module.exports = {
 				_id: objectId,
 				id: landmark.id,
 				name: landmark.name,
+				ownerRegion: landmark.ownerRegion,
 			}
 			let holder = await Map.findOne({_id: parentId});
 			let reachedMap = true;

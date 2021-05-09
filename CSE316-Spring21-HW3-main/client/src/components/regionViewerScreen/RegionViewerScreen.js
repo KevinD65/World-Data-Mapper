@@ -5,23 +5,51 @@ import LandmarkContents from './LandmarkContents';
 const RegionViewerScreen = (props) => {
     const [input, setInput] = useState("");
 
-    let RegionName, ParentRegion, RegionCapital, RegionLeader, NumSubregions, parent;
+    let RegionName, ParentRegion, RegionCapital, RegionLeader, NumSubregions, parent, locateViewedRegion;
+    /*
     if(props.activeRegion === null){
+        /*
         parent = props.activeMap;
         RegionName = props.activeMap.name;
         ParentRegion = "N/A";
         RegionCapital = props.activeMap.capital;
         RegionLeader = props.activeMap.leader;
         NumSubregions = props.activeMap.subregions.length;
-    }
-    else{
-        parent = props.activeRegion;
-        RegionName = props.activeRegion.name;
+        locateViewedRegion = props.maps.find(map => map._id === props.viewedRegion);
+        parent = locateViewedRegion;
+        RegionName = locateViewedRegion.name;
         ParentRegion = "N/A";
-        RegionCapital = props.activeRegion.capital;
-        RegionLeader = props.activeRegion.leader;
-        NumSubregions = props.activeRegion.subregions.length;
-    }
+        RegionCapital = "N/A";
+        RegionLeader = "N/A";
+        NumSubregions = locateViewedRegion.subregions.length;
+    }*/
+    //else{
+        console.log(props.viewedRegion);
+        locateViewedRegion = props.regions.find(region => region._id === props.viewedRegion);
+        if(!locateViewedRegion){ //viewed region is the map data file
+            locateViewedRegion = props.maps.find(map => map._id === props.viewedRegion);
+            parent = locateViewedRegion;
+            RegionName = locateViewedRegion.name;
+            ParentRegion = "N/A";
+            RegionCapital = "N/A";
+            RegionLeader = "N/A";
+            NumSubregions = locateViewedRegion.subregions.length;
+        }
+        else{ //viewed region is a region
+            let locateViewedRegionParent = props.regions.find(region => region._id === locateViewedRegion.parent);
+            if(!locateViewedRegionParent){
+                locateViewedRegionParent = props.maps.find(map => map._id === locateViewedRegion.parent);
+            }
+            parent = locateViewedRegion;
+            RegionName = locateViewedRegion.name;
+            ParentRegion = locateViewedRegionParent.name;
+            RegionCapital = locateViewedRegion.capital;
+            RegionLeader = locateViewedRegion.leader;
+            NumSubregions = locateViewedRegion.subregions.length;
+        }
+    //}
+    //let locateViewedRegion = 
+    
 
     const updateInput = (e) => {
 		//const { landmarkName, value } = e.target;
@@ -83,7 +111,7 @@ const RegionViewerScreen = (props) => {
                         <div className = "regionLandmarks">
                             <LandmarkContents
                                 activeMap={props.activeMap} activeRegion={props.activeRegion}
-                                editLandmark={props.editLandmark}
+                                editLandmark={props.editLandmark} viewedRegion={props.viewedRegion}
                             />
                         </div>
                         <div className = "regionLandmarks-add-container" /*onClick for add landmark*/> 

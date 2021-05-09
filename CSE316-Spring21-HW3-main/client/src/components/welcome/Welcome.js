@@ -67,8 +67,8 @@ const Welcome = (props) => {
 
 	
 	useEffect(() => {
-		//console.log(activeMap);
-		//console.log("useEffect");
+		console.log(activeRegion);
+		console.log("useEffect");
 		//refetchRegions(refetch2);
 	}/*, [activeMap]*/);
 
@@ -87,11 +87,13 @@ const Welcome = (props) => {
 		let active = null;
 		/*if(activeRegion === null)
 			active = activeMap;*/
-		if(activeMap !== null)
+		if(activeRegion === null)
 			active = activeMap;
 		else if(activeRegion !== null)
 			active = activeRegion;
 		if(active !== null){
+			console.log("FETCHING REGION OF PARENT");
+			console.log(active);
 			regionQuery.data.getAllRegions.map(region => regions.push(region));
 			regionsOfParent = [];
 			for(let i = 0; i < regions.length; i++){ //simply makes the array of regions associated with this parent
@@ -197,10 +199,12 @@ const Welcome = (props) => {
 		console.log(activeMap);
 	};
 
-	const handleSetActiveRegion = (id) => {
-		const region = regions.find(region => region.id === id || region._id === id);
-		setActiveRegion(region);
+	const handleSetActiveRegion = async (id) => {
+		const region = await regions.find(region => region.id === id || region._id === id);
+		console.log(region); //this prints out the correct region to be set as active
+		await setActiveRegion(region);
 		console.log(activeRegion);
+		await refetchRegions(refetch2);
 	};
 
 	const createNewMap = async () => { //creates and adds a new map
@@ -322,6 +326,7 @@ const Welcome = (props) => {
 			_id: '',
 			id: lastID,
 			name: landmarkToAddName,
+			ownerRegion: parent._id,
 		}
 		let transaction = new AddDeleteLandmark_Transaction(parent._id, activeMap._id, landmarkToAdd, 1, AddLandmark, DeleteLandmark);
 		props.tps.addTransaction(transaction);
@@ -393,8 +398,10 @@ const Welcome = (props) => {
 			handleSetActive(parentID);
 		}
 		else{
-			handleSetActiveRegion(parentID);
-			//console.log(activeRegion);
+			await handleSetActiveRegion(parentID);
+			console.log(activeRegion);
+			await refetchRegions(refetch2);
+			console.log(parentID);
 		}
 
 		setViewedRegion(parentID);
@@ -402,6 +409,7 @@ const Welcome = (props) => {
 	}
 
 	const setShowRegionViewerScreen = async (_id) => {
+		setViewedRegion(_id);
 		toggleMapSelectScreen(false);
 		toggleSpreadsheetScreen(false);
 		toggleRegionViewerScreen(true);
@@ -636,7 +644,8 @@ const Welcome = (props) => {
 							</WLHeader>
 							<WLMain>
 								<RegionViewerScreen
-									viewedRegion={viewedRegion} toggleRegionViewerScreen={toggleRegionViewerScreen}
+									viewedRegion={viewedRegion} regions={regions} maps={maps}
+									toggleRegionViewerScreen={toggleRegionViewerScreen}
 									undo={tpsUndo} redo={tpsRedo} activeMap={activeMap} activeRegion={activeRegion}
 									addLandmark={addLandmark} deleteLandmark={deleteLandmark} editLandmark={editLandmark}
 								/>

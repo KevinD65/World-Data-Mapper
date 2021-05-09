@@ -5,10 +5,23 @@ import WCol from 'wt-frontend/build/components/wgrid/WCol';
 const LandmarkEntry = (props) => {
     const { data } = props;
     const landmarkName = data.name;
+    const landmarkOwnerRegion = data.ownerRegion;
     const[editingLandmark, toggleEditing] = useState(false);
 
-    let isDirectLandmark;
-    //if()
+    console.log(props.activeMap._id);
+    console.log(landmarkOwnerRegion);
+    let isDirectLandmark = false;
+    if(props.activeRegion === null){
+        if(landmarkOwnerRegion === props.viewedRegion){
+            isDirectLandmark = true;
+        }
+    }
+    else{
+        if(landmarkOwnerRegion === props.viewedRegion){
+            isDirectLandmark = true;
+        }
+    }
+    
 
     const handleLandmarkDelete = (e) => {
 
@@ -25,7 +38,10 @@ const LandmarkEntry = (props) => {
     return(
         <WRow>
             <WCol>
-                <i className="material-icons" onClick={handleLandmarkDelete}>close</i>
+                { isDirectLandmark ? 
+                    <i className="material-icons landmarkDeleteButton" onClick={handleLandmarkDelete}>close</i>
+                : <></>
+                }
             </WCol>
             <WCol>
                 {editingLandmark ? <WInput

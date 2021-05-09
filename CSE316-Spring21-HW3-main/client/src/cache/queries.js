@@ -22,6 +22,7 @@ export const GET_DB_MAPS = gql`
 				_id
 				id
 				name
+				ownerRegion
 			}
 		}
 	}
@@ -39,6 +40,7 @@ export const GET_MAP_BY_ID = gql`
 				_id
 				id
 				name
+				ownerRegion
 			}
 		}
 	}
@@ -62,6 +64,7 @@ export const GET_DB_REGIONS = gql`
 				_id
 				id
 				name
+				ownerRegion
 			}
 		}
 	}

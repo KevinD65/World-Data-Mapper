@@ -29,6 +29,7 @@ const typeDefs = gql `
 		_id: String!
 		id: Int!
 		name: String!
+		ownerRegion: String!
 	}
 
 	extend type Query {
@@ -54,6 +55,7 @@ const typeDefs = gql `
 		_id: String
 		id: Int
 		name: String
+		ownerRegion: String
 	}
 
 	input RegionInput {

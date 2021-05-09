@@ -149,7 +149,7 @@ export class AddDeleteLandmark_Transaction extends jsTPS_Transaction {
 
         console.log(parentId);
         console.log(activeMapId);
-        console.log(landmark);
+        //console.log(landmark.ownerRegion);
     }
 
     async doTransaction() {

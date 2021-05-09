@@ -13,6 +13,10 @@ const landmarkSchema = new Schema(
 		name: {
 			type: String,
 			required: true
+		},
+		ownerRegion: {
+			type: String,
+			required: true
 		}
 	}
 );

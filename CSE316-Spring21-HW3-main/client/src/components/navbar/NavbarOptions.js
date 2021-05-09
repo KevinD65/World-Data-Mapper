@@ -9,7 +9,7 @@ const LoggedIn = (props) => {
 	const [Logout] = useMutation(LOGOUT);
     let parent, parentIDForNav, ParentIsMap, regionName;
     let resetVR = false;
-    console.log(props.viewedRegion);
+    //console.log(props.viewedRegion);
 
     let myMaps = props.maps;
     let myRegions = props.regions;
@@ -63,11 +63,12 @@ const LoggedIn = (props) => {
             }
             parentIDForNav = parent._id;
             //console.log(parent);
-            if(parent !== undefined){
+            if(parent !== undefined/* !== undefined*/){ //this is vacuously true since it just got set
+                console.log(parent);
                 parent = parent.name;
                 console.log(props.viewedRegion);
-                let region = myRegions.find(region => region._id === props.viewedRegion);
-                //if(region === undefined)
+                console.log(props.activeRegion);
+                let region = myRegions.find(region => region._id === props.activeRegion._id);
                 regionName = region.name;
             }
             else if(props.viewedRegion === undefined){ //landmark view of the map data file itself

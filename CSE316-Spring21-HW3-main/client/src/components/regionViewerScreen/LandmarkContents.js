@@ -14,14 +14,14 @@ const LandmarkContents = (props) => {
     }
     
     let landmarksToRender = parentOfActive.landmarks;
-    console.log(landmarksToRender);
+    console.log(props.viewedRegion);
 
 return(
     landmarksToRender.map((entry, index) => (
         <LandmarkEntry
             data={entry} index={index} key={entry.id}
             activeMap={props.activeMap} activeRegion={props.activeRegion}
-            editLandmark={props.editLandmark}
+            editLandmark={props.editLandmark} viewedRegion={props.viewedRegion}
         />
     ))
 );
