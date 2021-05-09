@@ -91,13 +91,14 @@ module.exports = {
 			//console.log("MADE IT HERE");
 			const { map } = args;
 			const objectId = new ObjectId();
-			const { id, name, owner, subregions } = map;
+			const { id, name, owner, subregions, landmarks } = map;
 			const newMap = new Map({
 				_id: objectId,
 				id: id,
 				name: name,
 				owner: owner,
-				subregions: subregions
+				subregions: subregions,
+				landmarks: landmarks,
 			});
 			const updated = await newMap.save();
 			if(updated) return objectId;
@@ -332,17 +333,16 @@ module.exports = {
 		},
 
 		revertSort: async (_, args) => {
-			//needs implementation
 			const { parentId, prevConfig, sortCode } = args;
 			let isMap = false;
 			let findParent = await Region.findOne({_id: parentId});
 			if(findParent){ //if the parent is a Region
-				await Region.updateOne({_id: parentId,}, {subregions: prevConfig});
+				await Region.updateOne({_id: parentId}, {subregions: prevConfig});
 			}
 			else { //otherwise, the parent is a Map
 				isMap = true;
 				//findParent = await Map.findOne({_id: parentID});
-				await Map.updateOne({_id: parentId,}, {subregions: prevConfig});
+				await Map.updateOne({_id: parentId}, {subregions: prevConfig});
 			}
 			let updatedParentSubregions = prevConfig;
 
@@ -352,7 +352,40 @@ module.exports = {
 				await Region.updateOne({_id: positionHandler}, {position: t});
 			}
 			return "Successfully reverted sort";
-		}
+		},
 
+		addLandmark: async (_, args) => {
+			const { parentId, activeMapId, landmark } = args;
+			const objectId = new ObjectId();
+			let myLandmark = {
+				_id: objectId,
+				id: landmark.id,
+				name: landmark.name,
+			}
+			let holder = await Map.findOne({_id: parentId});
+			let reachedMap = true;
+			if(!holder){ //if the landmark is being added directly to a region, not a map
+				holder = await Region.findOne({_id: parentId});
+				reachedMap = false;
+				//return("FUCK");
+			}
+			while(reachedMap === false){ //while the map data file hasn't been reached yet
+				let updatedLandmarks = holder.landmarks;
+				updatedLandmarks.push(myLandmark);
+				await Region.updateOne({_id: holder._id}, {landmarks: updatedLandmarks});
+				holder = holder.parent;
+				if(holder._id === activeMapId)
+					reachedMap = true;
+			}
+			//lastly, add the landmark the to landmarks array of the map data file
+			let updatedMapLandmarks = holder.landmarks;
+			updatedMapLandmarks.push(myLandmark);
+			await Map.updateOne({_id: activeMapId}, {landmarks: updatedMapLandmarks});
+			return "Successfully added landmark";
+		},
+
+		deleteLandmark: async (_, args) => {
+			const { parentId, activeMapId, landmarkToDeleteId } = args;
+		}
 	}
 }

@@ -7,6 +7,7 @@ const typeDefs = gql `
 		name: String!
 		owner: String!
 		subregions: [String]!
+		landmarks: [Landmark]
 	}
 
 	type Region {
@@ -45,6 +46,8 @@ const typeDefs = gql `
 		editRegionField(regionId: String!, field: String!, value: String!): String
 		sortByColumn(parentId: String!, sortCode: Int!): String
 		revertSort(parentId: String!, prevConfig: [String], sortCode: Int!): String
+		addLandmark(parentId: String!, activeMapId: String!, landmark: LandmarkInput!): String
+		deleteLandmark(parentId: String!, activeMapId: String!, landmarkToDeleteId: String!): String
 	}
 
 	input LandmarkInput {
@@ -74,6 +77,7 @@ const typeDefs = gql `
 		name: String
 		owner: String
 		subregions: [String]
+		landmarks: [LandmarkInput]
 	}
 `;
 

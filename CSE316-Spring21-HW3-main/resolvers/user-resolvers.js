@@ -77,7 +77,7 @@ module.exports = {
 		**/
 		update: async (_, args, { res }) => {
 			const { email, password, name } = args;
-			const alreadyRegistered = await User.findOne({email: email});
+			const alreadyRegistered = await User.findOne({email: email}); //change this to find by userID instead and allow for changing of email
 			const hashed = await bcrypt.hash(password, 10);
 			const user_id = new ObjectId(alreadyRegistered._id);
 			let updatedUser;

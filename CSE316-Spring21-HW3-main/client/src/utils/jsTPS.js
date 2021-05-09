@@ -25,7 +25,9 @@ export class UpdateListField_Transaction extends jsTPS_Transaction {
     }
 }
 
+
 /*  Handles item reordering */
+/*
 export class ReorderItems_Transaction extends jsTPS_Transaction {
     constructor(listID, itemID, dir, callback) {
         super();
@@ -46,8 +48,7 @@ export class ReorderItems_Transaction extends jsTPS_Transaction {
 		return data;
 
     }
-    
-}
+}*/
 
 export class EditRegion_Transaction extends jsTPS_Transaction {
 	constructor(regionId, field, prev, update, callback) {
@@ -136,6 +137,36 @@ export class SortByColumn_Transaction extends jsTPS_Transaction {
     }
 }
 
+export class AddDeleteLandmark_Transaction extends jsTPS_Transaction {
+    constructor(parentId, activeMapId, landmark, opcode, addFunction, deleteFunction){
+        super();
+        this.parentId = parentId;
+        this.activeMapId = activeMapId;
+        this.landmark = landmark;
+        this.opcode = opcode;
+        this.addFunction = addFunction;
+        this.deleteFunction = deleteFunction;
+
+        console.log(parentId);
+        console.log(activeMapId);
+        console.log(landmark);
+    }
+
+    async doTransaction() {
+        let data;
+        this.opcode === 1 ? { data } = await this.addFunction({ 
+                            variables: { parentId: this.parentId, activeMapId: this.activeMapId, landmark: this.landmark }})
+                          : { data } = await this.deleteFunction({variables: {parentId: this.parentId, activeMapId: this.activeMapId, landmarkToDeleteId: this.landmark._id}});
+        return data;
+    }
+
+    async undoTransaction() {
+        let data;
+        /*this.opcode === 0 ? ({ data } = await this.addFunction({variables: {parentId: this.parentId, activeMapId: this.activeMapId, landmark: this.landmark}}))
+                          : ({ data } = await this.deleteFunction({variables: {parentId: this.parentId, activeMapId: this.activeMapId, landmarkToDeleteId: this.landmark._id}}));*/
+        return data;
+    }
+}
 
 
 

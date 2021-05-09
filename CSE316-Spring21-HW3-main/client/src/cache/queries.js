@@ -18,6 +18,11 @@ export const GET_DB_MAPS = gql`
 			name
 			owner
 			subregions
+			landmarks {
+				_id
+				id
+				name
+			}
 		}
 	}
 `;
@@ -30,6 +35,11 @@ export const GET_MAP_BY_ID = gql`
 			name
 			owner
 			subregions
+			landmarks {
+				_id
+				id
+				name
+			}
 		}
 	}
 `;
@@ -48,6 +58,11 @@ export const GET_DB_REGIONS = gql`
 			subregions
 			path
 			owner
+			landmarks {
+				_id
+				id
+				name
+			}
 		}
 	}
 `;

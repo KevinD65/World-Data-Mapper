@@ -33,6 +33,7 @@ const SpreadsheetContents = (props) => {
     }
     console.log(myRegions);
 */
+    console.log(props.regionsOfParent);
     console.log("COMPONENT IS RENDERING");
     return (
         /*myRegions*/props.regionsOfParent.map((entry, index) => (

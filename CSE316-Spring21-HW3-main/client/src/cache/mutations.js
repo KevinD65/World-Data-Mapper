@@ -97,3 +97,15 @@ export const UPDATE_MAP_NAME = gql`
 		updateMapName(_id: $_id, value: $value)
 	}
 `;
+
+export const ADD_LANDMARK = gql`
+	mutation AddLandmark($parentId: String!, $activeMapId: String!, $landmark: LandmarkInput!) {
+		addLandmark(parentId: $parentId, activeMapId: $activeMapId, landmark: $landmark)
+	}
+`;
+
+export const DELETE_LANDMARK = gql`
+	mutation DeleteLandmark($parentId: String!, $activeMapId: String!, $landmarkToDeleteId: String!) {
+		deleteLandmark(parentId: $parentId, activeMapId: $activeMapId, landmarkToDeleteId: $landmarkToDeleteId)
+	}
+`;

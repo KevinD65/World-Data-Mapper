@@ -1,9 +1,39 @@
 import React, { useState, useEffect } 	from 'react';
 import { WLayout, WLHeader, WLSide, WLMain, WInput } from 'wt-frontend';
+import LandmarkContents from './LandmarkContents';
 
 const RegionViewerScreen = (props) => {
+    const [input, setInput] = useState("");
 
-    let RegionName, ParentRegion, RegionCapital, RegionLeader, NumSubregions;
+    let RegionName, ParentRegion, RegionCapital, RegionLeader, NumSubregions, parent;
+    if(props.activeRegion === null){
+        parent = props.activeMap;
+        RegionName = props.activeMap.name;
+        ParentRegion = "N/A";
+        RegionCapital = props.activeMap.capital;
+        RegionLeader = props.activeMap.leader;
+        NumSubregions = props.activeMap.subregions.length;
+    }
+    else{
+        parent = props.activeRegion;
+        RegionName = props.activeRegion.name;
+        ParentRegion = "N/A";
+        RegionCapital = props.activeRegion.capital;
+        RegionLeader = props.activeRegion.leader;
+        NumSubregions = props.activeRegion.subregions.length;
+    }
+
+    const updateInput = (e) => {
+		//const { landmarkName, value } = e.target;
+		//const updated = { ...input, [landmarkName]: value };
+		setInput(e.target.value);
+	}
+
+    const handleAddLandmark = () => {
+        let landmarkName = input;
+        //console.log(parent);
+        props.addLandmark(parent, landmarkName);
+    }
 
     return(
         <>
@@ -51,11 +81,15 @@ const RegionViewerScreen = (props) => {
                     <div className = "RegionViewerRightSide">
                         <div className = "regionLandmarks-header">Region Landmarks:</div>
                         <div className = "regionLandmarks">
-                            {/* render landmarks here */}
+                            <LandmarkContents
+                                activeMap={props.activeMap} activeRegion={props.activeRegion}
+                                editLandmark={props.editLandmark}
+                            />
                         </div>
                         <div className = "regionLandmarks-add-container" /*onClick for add landmark*/> 
-                            <i className="material-icons addLandmark">add</i>
-                            <WInput className = "landmarkInput" autofocus={true} placeholderText="Enter landmark" type="text" wType="outlined" inputClass="table-input-class"/>
+                            <i className="material-icons addLandmark" onClick = {handleAddLandmark}>add</i>
+                            <WInput className = "landmarkInput" autofocus={true} placeholderText="Enter landmark" type="text" wType="outlined" inputClass="table-input-class" 
+                                onBlur={updateInput}/>
                         </div>
                     </div>
                 </WLMain>

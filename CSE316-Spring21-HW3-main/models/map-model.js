@@ -1,5 +1,6 @@
 const { model, Schema, ObjectId } = require('mongoose');
 const Region = require('./region-model').schema;
+const Landmark = require('./landmark-model').schema;
 
 const mapSchema = new Schema(
 	{
@@ -20,6 +21,7 @@ const mapSchema = new Schema(
 			required: true
 		},
 		subregions: [String],
+		landmarks: [Landmark],
 	},
 	{ timestamps: true }
 );

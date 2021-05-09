@@ -25,7 +25,8 @@ import { UpdateListField_Transaction,
 	UpdateSpreadsheetItems_Transaction, 
 	ReorderItems_Transaction, 
 	SortByColumn_Transaction,
-	EditRegion_Transaction } 				from '../../utils/jsTPS';
+	EditRegion_Transaction,
+	AddDeleteLandmark_Transaction} 							from '../../utils/jsTPS';
 //import WInput from 'wt-frontend/build/components/winput/WInput';
 import { BrowserRouter, Switch, Route, Redirect, useHistory} from 'react-router-dom';
 
@@ -50,11 +51,14 @@ const Welcome = (props) => {
 	const [DeleteRegion]									= useMutation(mutations.DELETE_REGION);
 	const [sortingFunction]									= useMutation(mutations.SORT_BY_COLUMN);
 	const [revertingFunction]								= useMutation(mutations.REVERT_SORT);
+	const [AddLandmark]										= useMutation(mutations.ADD_LANDMARK);
+	const [DeleteLandmark]									= useMutation(mutations.DELETE_LANDMARK);
 	const [Logout] 											= useMutation(mutations.LOGOUT);
 
 	let maps = []; //holds all the maps
 	let regions = []; //holds all the regions
 	let regionsOfParent = [];
+	//let landmarksOfActive = []; //holds all the landmarks of the activeMap/activeRegion as well as all of its child landmarks
 
 	const client = useApolloClient();
     const [activeMap, setActiveMap] = useState(null); //an array holding a singular map object (or none). The map whose spreadsheet screen is being showed
@@ -81,7 +85,9 @@ const Welcome = (props) => {
 	//if(regionQuery.data) { regions = regionQuery.data.getAllRegions; }
 	if(regionQuery.data) { //used to fill regionsOfParent array with all regions that are subregions of the activeMap/activeRegion
 		let active = null;
-		if(activeRegion === null)
+		/*if(activeRegion === null)
+			active = activeMap;*/
+		if(activeMap !== null)
 			active = activeMap;
 		else if(activeRegion !== null)
 			active = activeRegion;
@@ -106,7 +112,9 @@ const Welcome = (props) => {
 			}
 
 		}
+		console.log(maps);
 	}
+
 	const refetch2 = regionQuery.refetch;
 
 	const userName = props.userName;
@@ -115,6 +123,7 @@ const Welcome = (props) => {
 		const { loading, error, data } = await refetch();
 		if (data) {
 			maps = data.getAllMaps;
+			console.log(activeMap);
 			if (activeMap !== null) {
 				let tempID = activeMap._id; 
 				let myMap = maps.find(map => map._id === tempID);
@@ -203,6 +212,7 @@ const Welcome = (props) => {
 			name: 'Untitled',
 			owner: props.user._id,
 			subregions: [],
+			landmarks: [],
 		}
 		const { data } = await AddMap({ variables: { map: map }, refetchQueries: [{ query: queries.GET_DB_MAPS }] });
 		await refetchMaps(refetch);
@@ -217,8 +227,11 @@ const Welcome = (props) => {
 
 	const deleteMap = async (_id) => { 
 		//deleting a map will delete all of its subregions from the database as well (perhaps everytime a new region is added, it's _id is appended to the root's array of subregions)
-		DeleteMap({ variables: { _id: _id }, refetchQueries: [{ query: queries.GET_DB_MAPS }] });
-		await refetchMaps(refetch);
+		await DeleteMap({ variables: { _id: _id }, refetchQueries: [{ query: queries.GET_DB_MAPS }] });
+		//await refetchMaps(refetch);
+		setActiveMap(null);
+		setActiveRegion(null);
+		//console.log(activeMap);
 	};
 
 	const addRegion = async (parentID) => {
@@ -303,6 +316,29 @@ const Welcome = (props) => {
 		await tpsRedo();
 	}
 
+	const addLandmark = async (parent, landmarkToAddName) => {
+		const lastID = parent.landmarks.length >= 1 ? parent.landmarks.length : 0;
+		let landmarkToAdd = {
+			_id: '',
+			id: lastID,
+			name: landmarkToAddName,
+		}
+		let transaction = new AddDeleteLandmark_Transaction(parent._id, activeMap._id, landmarkToAdd, 1, AddLandmark, DeleteLandmark);
+		props.tps.addTransaction(transaction);
+		const myString = await tpsRedo();
+		console.log(myString);
+	}
+
+	const deleteLandmark = async (parent, landmarkToDeleteId) => {
+		let transaction = new AddDeleteLandmark_Transaction(parent._id, activeMap._id, landmarkToDeleteId, 0, AddLandmark, DeleteLandmark); //fix these arguments later
+		props.tps.addTransaction(transaction);
+		await tpsRedo();
+	}
+
+	const editLandmark = async (landmarkId, newName, prevName) => {
+		//create transaction for editing landmark
+	}
+
 	/*
 		Used for toggling modals
 	*/
@@ -385,6 +421,7 @@ const Welcome = (props) => {
 	//let history = useHistory();
 
 	const goHome = () =>{
+		props.tps.clearAllTransactions();
 		toggleSpreadsheetScreen(false);
 		toggleRegionViewerScreen(false);
 		toggleMapSelectScreen(true);
@@ -600,7 +637,8 @@ const Welcome = (props) => {
 							<WLMain>
 								<RegionViewerScreen
 									viewedRegion={viewedRegion} toggleRegionViewerScreen={toggleRegionViewerScreen}
-									undo={tpsUndo} redo={tpsRedo}
+									undo={tpsUndo} redo={tpsRedo} activeMap={activeMap} activeRegion={activeRegion}
+									addLandmark={addLandmark} deleteLandmark={deleteLandmark} editLandmark={editLandmark}
 								/>
 								{
 									showUpdate && (<UpdateAccount fetchUser={props.fetchUser} setShowUpdate={setShowUpdate}/>)
