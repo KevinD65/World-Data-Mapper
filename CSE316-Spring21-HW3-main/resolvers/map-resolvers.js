@@ -368,15 +368,20 @@ module.exports = {
 			if(!holder){ //if the landmark is being added directly to a region, not a map
 				holder = await Region.findOne({_id: parentId});
 				reachedMap = false;
-				//return("FUCK");
+				//return(activeMapId);
 			}
 			while(reachedMap === false){ //while the map data file hasn't been reached yet
 				let updatedLandmarks = holder.landmarks;
 				updatedLandmarks.push(myLandmark);
 				await Region.updateOne({_id: holder._id}, {landmarks: updatedLandmarks});
-				holder = holder.parent;
-				if(holder._id === activeMapId)
+				let holderParent = holder.parent;
+				holder = await Region.findOne({_id: holderParent}); //traverse up the tree
+				//holder = await Region.findOne({_id: holderParent});
+				//holder = holder.parent;
+				if(holderParent == activeMapId){
 					reachedMap = true;
+					holder = await Map.findOne({_id: holderParent});
+				}
 			}
 			//lastly, add the landmark the to landmarks array of the map data file
 			let updatedMapLandmarks = holder.landmarks;
@@ -387,6 +392,36 @@ module.exports = {
 
 		deleteLandmark: async (_, args) => {
 			const { parentId, activeMapId, landmarkToDeleteId } = args;
+			//return parentId;
+			let holder = await Map.findOne({_id: parentId});
+			let reachedMap = true;
+			if(!holder){ //if the landmark is being deleted from a region, not a map
+				holder = await Region.findOne({_id: parentId});
+				reachedMap = false;
+				//return("WE ARE DELETING");
+			}
+			while(reachedMap === false){ //while the map data file hasn't been reached yet
+				let landmarks = holder.landmarks;
+				//await updatedLandmarks.filter(landmark => landmark._id !== landmarkToDeleteId); //filter out the landmark to be removed
+				let updatedLandmarks = landmarks.filter(function(landmark) {
+					return landmark._id != landmarkToDeleteId;
+				});
+				//return updatedLandmarks.toString();
+				await Region.updateOne({_id: holder._id}, {landmarks: updatedLandmarks});
+				let holderParent = holder.parent;
+				holder = await Region.findOne({_id: holderParent}); //traverse up the tree
+				if(holderParent == activeMapId){
+					reachedMap = true;
+					holder = await Map.findOne({_id: holderParent});
+				}
+			}
+			//lastly, delete the landmark from the landmarks array of the map data file
+			let updatedMapLandmarks = holder.landmarks;
+			updatedMapLandmarks = updatedMapLandmarks.filter(function(landmark) {
+				return landmark._id != landmarkToDeleteId;
+			});
+			await Map.updateOne({_id: activeMapId}, {landmarks: updatedMapLandmarks});
+			return "Successfully deleted landmark";
 		}
 	}
 }

@@ -22,9 +22,10 @@ const LandmarkEntry = (props) => {
         }
     }
     
-
-    const handleLandmarkDelete = (e) => {
-
+    const handleLandmarkDelete = async (e) => {
+        console.log("delete landmark HERE");
+        let parentID = props.viewedRegion;
+        await props.deleteLandmark(data, parentID);
     }
 
     const handleLandmarkEdit = (e) => {

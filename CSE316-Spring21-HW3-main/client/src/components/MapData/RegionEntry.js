@@ -13,10 +13,10 @@ const RegionEntry = (props) => {
     const flag = data.flag;
     const landmarksArr = data.landmarks;
     console.log(name);
-    const landmarks = ""; //string of all the landmarks in a comma separated list for display purposes
+    let landmarks = ""; //string of all the landmarks in a comma separated list for display purposes
     if(landmarksArr !== undefined){
         for(let i = 0; i < landmarksArr.length; i++){
-            landmarks += landmarksArr[i] + ", ";
+            landmarks += landmarksArr[i].name + ", ";
         }
     }
 

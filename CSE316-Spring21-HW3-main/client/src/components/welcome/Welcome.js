@@ -334,10 +334,12 @@ const Welcome = (props) => {
 		console.log(myString);
 	}
 
-	const deleteLandmark = async (parent, landmarkToDeleteId) => {
-		let transaction = new AddDeleteLandmark_Transaction(parent._id, activeMap._id, landmarkToDeleteId, 0, AddLandmark, DeleteLandmark); //fix these arguments later
+	const deleteLandmark = async (landmarkToDelete, parentID) => {
+		let transaction = new AddDeleteLandmark_Transaction(parentID, activeMap._id, landmarkToDelete, 0, AddLandmark, DeleteLandmark);
+		//console.log("WORKING ON DELETION");
 		props.tps.addTransaction(transaction);
-		await tpsRedo();
+		const myString = await tpsRedo();
+		console.log(myString);
 	}
 
 	const editLandmark = async (landmarkId, newName, prevName) => {

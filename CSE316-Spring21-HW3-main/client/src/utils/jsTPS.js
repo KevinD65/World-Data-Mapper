@@ -109,7 +109,7 @@ export class UpdateSpreadsheetItems_Transaction extends jsTPS_Transaction {
                           : { data } = await this.addFunction({
 							variables: {region: this.region, _id: this.parentID, index: this.index}, refetchQueries: [{ query: queries.GET_DB_REGIONS }]})
 		if(this.opcode !== 1) {
-            this.item._id = this.itemID = data.addItem;
+            this.region._id = this.regionID = data.addRegion;
         }
 		return data;
     }

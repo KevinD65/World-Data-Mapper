@@ -112,6 +112,7 @@ const RegionViewerScreen = (props) => {
                             <LandmarkContents
                                 activeMap={props.activeMap} activeRegion={props.activeRegion}
                                 editLandmark={props.editLandmark} viewedRegion={props.viewedRegion}
+                                maps={props.maps} regions={props.regions} deleteLandmark={props.deleteLandmark}
                             />
                         </div>
                         <div className = "regionLandmarks-add-container" /*onClick for add landmark*/> 
