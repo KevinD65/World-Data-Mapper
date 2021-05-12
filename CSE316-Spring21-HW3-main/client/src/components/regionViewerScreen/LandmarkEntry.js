@@ -23,16 +23,16 @@ const LandmarkEntry = (props) => {
     }
     
     const handleLandmarkDelete = async (e) => {
-        console.log("delete landmark HERE");
         let parentID = props.viewedRegion;
         await props.deleteLandmark(data, parentID);
     }
 
     const handleLandmarkEdit = (e) => {
+        let parentID = props.viewedRegion;
         toggleEditing(false);
         const newLandmarkName = e.target.value ? e.target.value : "No Name";
         const previousLandmarkName = landmarkName;
-        props.editLandmark(props.data._id, newLandmarkName, previousLandmarkName);
+        props.editLandmark(props.data._id, parentID, newLandmarkName, previousLandmarkName);
     }
 
     console.log(data.name);

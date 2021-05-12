@@ -109,3 +109,9 @@ export const DELETE_LANDMARK = gql`
 		deleteLandmark(parentId: $parentId, activeMapId: $activeMapId, landmarkToDeleteId: $landmarkToDeleteId)
 	}
 `;
+
+export const EDIT_LANDMARK = gql`
+	mutation EditLandmark($landmarkID: String!, $parentID: String!, $activeMapId: String!, $name: String!){
+		editLandmark(landmarkID: $landmarkID, parentID: $parentID, activeMapId: $activeMapId, name: $name)
+	}
+`;

@@ -422,6 +422,77 @@ module.exports = {
 			});
 			await Map.updateOne({_id: activeMapId}, {landmarks: updatedMapLandmarks});
 			return "Successfully deleted landmark";
+		},
+
+		editLandmark: async (_, args) => {
+			const { landmarkID, parentID, name, activeMapId } = args;
+			/*
+			let updatedLandmark = {
+				_id: landmark._id,
+				id: landmark.id,
+				name: landmark.name,
+				ownerRegion: landmark.ownerRegion,
+			}*/
+			let holder = await Map.findOne({_id: parentID});
+			let reachedMap = true;
+			if(!holder){ //if the landmark is being edited from a region, not a map
+				holder = await Region.findOne({_id: parentID});
+				reachedMap = false;
+			}
+			while(reachedMap === false){ //while the map data file hasn't been reached yet
+				let landmarks = holder.landmarks;
+				//await updatedLandmarks.filter(landmark => landmark._id !== landmarkToDeleteId); //filter out the landmark to be removed
+				/*let updatedLandmarks = landmarks.filter(function(landmark) {
+					return landmark._id != landmarkToDeleteId;
+				});*/
+				let indexOfLandmarkToEdit;
+				for(let i = 0; i < landmarks.length; i++){
+					//return landmarks[1]._id.toString() + "SPACE" + landmarkID;
+					//return (landmarks[1]._id.toString() === landmarkID).toString();
+					if(landmarks[i]._id.toString() === landmarkID){
+						indexOfLandmarkToEdit = i;
+						//return indexOfLandmarkToEdit.toString();
+						break;
+					}
+				}
+				//return "hi";
+				let updatedLandmark = {
+					_id: landmarkID,
+					id: landmarks[indexOfLandmarkToEdit].id,
+					name: name,
+					ownerRegion: landmarks[indexOfLandmarkToEdit].ownerRegion,
+				}
+				landmarks.splice(indexOfLandmarkToEdit, 1, updatedLandmark);
+				//return updatedLandmarks.toString();
+				await Region.updateOne({_id: holder._id}, {landmarks: landmarks});
+				let holderParent = holder.parent;
+				holder = await Region.findOne({_id: holderParent}); //traverse up the tree
+				if(holderParent == activeMapId){
+					reachedMap = true;
+					holder = await Map.findOne({_id: holderParent});
+				}
+			}
+			//lastly, delete the landmark from the landmarks array of the map data file
+			let updatedMapLandmarks = holder.landmarks;
+			let indexOfLandmarkToEdit;
+			for(let i = 0; i < updatedMapLandmarks.length; i++){
+				if(updatedMapLandmarks[i]._id.toString() === landmarkID){
+					indexOfLandmarkToEdit = i;
+					break;
+				}
+			}
+			let updatedLandmark = {
+				_id: landmarkID,
+				id: updatedMapLandmarks[indexOfLandmarkToEdit].id,
+				name: name,
+				ownerRegion: updatedMapLandmarks[indexOfLandmarkToEdit].ownerRegion,
+			}
+			updatedMapLandmarks.splice(indexOfLandmarkToEdit, 1, updatedLandmark);
+			/*updatedMapLandmarks = updatedMapLandmarks.filter(function(landmark) {
+				return landmark._id != landmarkToDeleteId;
+			});*/
+			await Map.updateOne({_id: activeMapId}, {landmarks: updatedMapLandmarks});
+			return "Successfully edited landmark";
 		}
 	}
 }

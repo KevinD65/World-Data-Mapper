@@ -49,6 +49,7 @@ const typeDefs = gql `
 		revertSort(parentId: String!, prevConfig: [String], sortCode: Int!): String
 		addLandmark(parentId: String!, activeMapId: String!, landmark: LandmarkInput!): String
 		deleteLandmark(parentId: String!, activeMapId: String!, landmarkToDeleteId: String!): String
+		editLandmark(landmarkID: String!, parentID: String!, activeMapId: String!, name: String!): String
 	}
 
 	input LandmarkInput {

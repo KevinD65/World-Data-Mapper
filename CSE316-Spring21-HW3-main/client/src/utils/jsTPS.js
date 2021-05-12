@@ -149,7 +149,7 @@ export class AddDeleteLandmark_Transaction extends jsTPS_Transaction {
 
         console.log(parentId);
         console.log(activeMapId);
-        //console.log(landmark.ownerRegion);
+        console.log(landmark);
     }
 
     async doTransaction() {
@@ -162,8 +162,30 @@ export class AddDeleteLandmark_Transaction extends jsTPS_Transaction {
 
     async undoTransaction() {
         let data;
-        /*this.opcode === 0 ? ({ data } = await this.addFunction({variables: {parentId: this.parentId, activeMapId: this.activeMapId, landmark: this.landmark}}))
-                          : ({ data } = await this.deleteFunction({variables: {parentId: this.parentId, activeMapId: this.activeMapId, landmarkToDeleteId: this.landmark._id}}));*/
+        this.opcode === 1 ?  ({ data } = await this.deleteFunction({variables: {parentId: this.parentId, activeMapId: this.activeMapId, landmarkToDeleteId: this.landmark._id}}))
+                          : ({ data } = await this.addFunction({variables: {parentId: this.parentId, activeMapId: this.activeMapId, landmark: this.landmark}}));
+        return data;
+    }
+}
+
+export class EditLandmark_Transaction extends jsTPS_Transaction {
+    constructor(landmarkID, parentID, activeMapId, newName, prevName, editingFunction){
+        super();
+        this.landmarkID = landmarkID;
+        this.parentID = parentID;
+        this.activeMapId = activeMapId;
+        this.newName = newName;
+        this.prevName = prevName;
+        this.editingFunction = editingFunction;
+    }
+
+    async doTransaction() {
+        let data = await this.editingFunction({variables: {landmarkID: this.landmarkID, parentID: this.parentID, activeMapId: this.activeMapId, name: this.newName}, refetchQueries: [{ query: queries.GET_DB_REGIONS }]});
+        return data;
+    }
+
+    async undoTransaction() {
+        let data = await this.editingFunction({variables: {landmarkID: this.landmarkID, parentID: this.parentID, activeMapId: this.activeMapId, name: this.prevName}, refetchQueries: [{ query: queries.GET_DB_REGIONS }]});
         return data;
     }
 }
