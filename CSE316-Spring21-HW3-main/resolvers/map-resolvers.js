@@ -67,10 +67,10 @@ module.exports = {
 			const newRegion = new Region({
 				_id: region._id,
 				id: region.id,
-				name: 'N/A',
-				capital: 'N/A',
-				leader: 'N/A',
-				flag: '',
+				name: region.name,
+				capital: region.capital,
+				leader: region.leader,
+				flag: region.flag,
 				landmarks: region.landmarks,
 				position: region.position,
 				parent: region.parent,
@@ -79,6 +79,7 @@ module.exports = {
 				owner: region.owner,
 			});
 			const updated = await newRegion.save();
+			//const updated = await region.save();
 		
 			if(updated) return (region._id);
 			else return ('Could not add region');
@@ -386,8 +387,9 @@ module.exports = {
 			//lastly, add the landmark the to landmarks array of the map data file
 			let updatedMapLandmarks = holder.landmarks;
 			updatedMapLandmarks.push(myLandmark);
-			await Map.updateOne({_id: activeMapId}, {landmarks: updatedMapLandmarks});
-			return "Successfully added landmark";
+			const updated = await Map.updateOne({_id: activeMapId}, {landmarks: updatedMapLandmarks});
+			if(updated) return objectId; //return the new landmark _id
+			else return "Failed to add landmark";
 		},
 
 		deleteLandmark: async (_, args) => {

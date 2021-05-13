@@ -46,7 +46,7 @@ const RegionEntry = (props) => {
     };
 
     const handleDeleteRegion = () => {
-        props.deleteRegion(data);
+        props.deleteRegion(data, props.index);
     }
 
     const handleGoToViewer = async () => {

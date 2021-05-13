@@ -291,7 +291,7 @@ const Welcome = (props) => {
 		tpsRedo();
 	};
 
-	const deleteRegion = async (region) => {
+	const deleteRegion = async (region, index) => {
 		let opcode = 0; //opcode for deletion
 		let regionToDelete = {
 			_id: region._id,
@@ -307,7 +307,7 @@ const Welcome = (props) => {
             path: region.path,
 			owner: region.owner,
 		}
-		let transaction = new UpdateSpreadsheetItems_Transaction(region.parent, region._id, regionToDelete, opcode, AddRegion, DeleteRegion);
+		let transaction = new UpdateSpreadsheetItems_Transaction(region.parent, region._id, regionToDelete, opcode, AddRegion, DeleteRegion, index);
 		props.tps.addTransaction(transaction);
 		await tpsRedo();
 		await refetchMaps(refetch);

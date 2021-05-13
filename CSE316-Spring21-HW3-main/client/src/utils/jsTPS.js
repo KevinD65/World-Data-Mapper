@@ -96,7 +96,8 @@ export class UpdateSpreadsheetItems_Transaction extends jsTPS_Transaction {
 						  : { data } = await this.addFunction({
 							variables: {region: this.region, _id: this.parentID, index: this.index}, refetchQueries: [{ query: queries.GET_DB_REGIONS }]})  
 		if(this.opcode !== 0) {
-            this.region._id = this.regionID = data.addRegion;
+            console.log(data.addRegion);
+            /*this.region._id =*/ this.regionID = data.addRegion;
 		}
         //console.log(this.region); 
 		return data;
@@ -109,7 +110,7 @@ export class UpdateSpreadsheetItems_Transaction extends jsTPS_Transaction {
                           : { data } = await this.addFunction({
 							variables: {region: this.region, _id: this.parentID, index: this.index}, refetchQueries: [{ query: queries.GET_DB_REGIONS }]})
 		if(this.opcode !== 1) {
-            this.region._id = this.regionID = data.addRegion;
+            /*this.region._id =*/ this.regionID = data.addRegion;
         }
 		return data;
     }
@@ -138,7 +139,7 @@ export class SortByColumn_Transaction extends jsTPS_Transaction {
 }
 
 export class AddDeleteLandmark_Transaction extends jsTPS_Transaction {
-    constructor(parentId, activeMapId, landmark, opcode, addFunction, deleteFunction){
+    constructor(parentId, activeMapId, landmark, opcode, addFunction, deleteFunction, index = -1){
         super();
         this.parentId = parentId;
         this.activeMapId = activeMapId;
@@ -146,6 +147,8 @@ export class AddDeleteLandmark_Transaction extends jsTPS_Transaction {
         this.opcode = opcode;
         this.addFunction = addFunction;
         this.deleteFunction = deleteFunction;
+        this.landmarkToDeleteId = landmark._id;
+        this.index = index;
 
         console.log(parentId);
         console.log(activeMapId);
@@ -153,17 +156,40 @@ export class AddDeleteLandmark_Transaction extends jsTPS_Transaction {
     }
 
     async doTransaction() {
+        console.log(this.parentId);
+        console.log(this.activeMapId);
+        console.log(this.landmarkToDeleteId);
+        console.log(this.opcode);
         let data;
         this.opcode === 1 ? { data } = await this.addFunction({ 
-                            variables: { parentId: this.parentId, activeMapId: this.activeMapId, landmark: this.landmark }})
-                          : { data } = await this.deleteFunction({variables: {parentId: this.parentId, activeMapId: this.activeMapId, landmarkToDeleteId: this.landmark._id}});
+                            variables: { parentId: this.parentId, activeMapId: this.activeMapId, landmark: this.landmark }, refetchQueries: [{ query: queries.GET_DB_REGIONS }]})
+                          : { data } = await this.deleteFunction({variables: {parentId: this.parentId, activeMapId: this.activeMapId, landmarkToDeleteId: this.landmarkToDeleteId}, refetchQueries: [{ query: queries.GET_DB_REGIONS }]});
+        if(this.opcode === 1){
+            this.landmarkToDeleteId = data.addLandmark;
+        }
         return data;
     }
 
     async undoTransaction() {
+        console.log(this.parentId);
+        console.log(this.activeMapId);
+        console.log(this.landmarkToDeleteId);
+        console.log(this.opcode);
+        let landmarkToReAdd = {
+            _id: this.landmark._id,
+            id: this.landmark.id,
+            name: this.landmark.name,
+            ownerRegion: this.landmark.ownerRegion,
+        }
         let data;
-        this.opcode === 1 ?  ({ data } = await this.deleteFunction({variables: {parentId: this.parentId, activeMapId: this.activeMapId, landmarkToDeleteId: this.landmark._id}}))
-                          : ({ data } = await this.addFunction({variables: {parentId: this.parentId, activeMapId: this.activeMapId, landmark: this.landmark}}));
+        this.opcode === 1 ?  ({ data } = await this.deleteFunction({variables: {parentId: this.parentId, activeMapId: this.activeMapId, landmarkToDeleteId: this.landmarkToDeleteId}, refetchQueries: [{ query: queries.GET_DB_REGIONS }]}))
+                          : ({ data } = await this.addFunction({variables: {parentId: this.parentId, activeMapId: this.activeMapId, landmark: landmarkToReAdd}, refetchQueries: [{ query: queries.GET_DB_REGIONS }]}));
+        if(this.opcode === 0){
+            this.landmarkToDeleteId = data.addLandmark;
+        }/*
+        else if(this.opcode === 0){
+            this.landmark = 
+        }*/
         return data;
     }
 }
