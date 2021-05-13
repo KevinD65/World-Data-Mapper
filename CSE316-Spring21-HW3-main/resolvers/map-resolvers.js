@@ -243,6 +243,7 @@ module.exports = {
 					parentSubregions[i] = parentSubregions[indexOfLowest];
 					parentSubregions[indexOfLowest] = temp;
 				}
+				//return parentSubregions.toString();
 				if(sorted){ //used to reverse items if already sorted
 					let temp;
 					let middle = Math.floor(parentSubregions.length/2);
@@ -329,6 +330,11 @@ module.exports = {
 			}
 			else {
 				successfulSort = await Region.updateOne({_id: parentId}, {subregions: parentSubregions}); //parent subregions array is reordered but we still have to configure region positions
+				let positionHandler;
+				for(let t = 0; t < parentSubregions.length; t++){
+					positionHandler = parentSubregions[t];
+					await Region.updateOne({_id: positionHandler}, {position: t});
+				}
 			}
 			return successfulSort.toString();
 		},

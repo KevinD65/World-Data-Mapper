@@ -318,10 +318,12 @@ const Welcome = (props) => {
 
 	const sortByColumn = async (parent, sortCode) => {
 		let prevSubregionsArr = parent.subregions;
-		//console.log(parent._id);
+		console.log(parent._id);
+		//console.log()
 		let transaction = new SortByColumn_Transaction(parent._id, prevSubregionsArr, sortingFunction, revertingFunction, sortCode);
 		props.tps.addTransaction(transaction);
-		await tpsRedo();
+		const myString = await tpsRedo();
+		console.log(myString);
 	}
 
 	const addLandmark = async (parent, landmarkToAddName) => {
