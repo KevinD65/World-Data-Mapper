@@ -495,6 +495,54 @@ module.exports = {
 			});*/
 			await Map.updateOne({_id: activeMapId}, {landmarks: updatedMapLandmarks});
 			return "Successfully edited landmark";
+		},
+
+		changeParent: async (_, args) => {
+			const { regionID, parentID, newParent } = args;
+			let oldParent = await Region.findOne({_id: parentID}); //find the old (current) parent
+			let grandparentID = oldParent.parent;
+			let grandparent = await Region.findOne({_id: grandparentID}); //attempt to find the grandparent
+			if(!grandparent)
+				grandparent = await Map.findOne({_id: grandparentID}); //if the grandparent is a map data file
+			
+			let auntsUnclesOfRegionArr = grandparent.subregions;
+			let validChange = await Region.findOne({name: newParent}); //verify that the parent to change to is a sibling of the current parent
+			if(!validChange)
+				return "Entered parent to change to is not valid option";
+
+			//removing the region's landmarks from the old parent's landmarks array and appending them to the new parent's landmarks array
+			let region = await Region.findOne({_id: regionID}); //find the region
+			let regionLandmarks = region.landmarks;
+			let parentLandmarks = oldParent.landmarks;
+			let updatedParentLandmarks = [];
+			let updatedNewParentLandmarks = validChange.landmarks; //holds the landmarks of the parent to change to
+			//return (parentLandmarks.length.toString());
+			for(let r = 0; r < parentLandmarks.length; r++){
+				let landmarkOfParent = parentLandmarks[r]; //holds a landmark of the parent
+				let foundInRegion = regionLandmarks.find(landmark => landmark._id.toString() === landmarkOfParent._id.toString()); //checks to see if the landmark is also in the region
+				//return foundInRegion.toString();
+				if(!foundInRegion){
+					updatedParentLandmarks.push(landmarkOfParent); //if the landmark is original to the parent, it still belongs in the parent's landmarks array
+				}
+				else{
+					updatedNewParentLandmarks.push(landmarkOfParent); //if the landmark is not original to the parent (belongs to the region (or its children))
+				}
+			}
+			await Region.updateOne({_id: parentID}, {landmarks: updatedParentLandmarks}); //update the landmarks array of the parent
+			await Region.updateOne({_id: validChange._id}, {landmarks: updatedNewParentLandmarks});
+
+			//remove the region from the parent's subregions array and append to the new parent's subregions array
+			let parentSubregions = oldParent.subregions;
+			let newParentSubregions = validChange.subregions;
+			let updatedParentSubregions = parentSubregions.filter(subregion => subregion._id !== regionID); //filters out the region that's being moved
+			let updatedNewParentSubregions = newParentSubregions.push(regionID); //push the new region into the new parent's subregions array
+			await Region.updateOne({_id: parentID}, {subregions: updatedParentSubregions});
+			await Region.updateOne({_id: validChange._id}, {subregions: updatedNewParentSubregions});
+
+			//change the parent field of the region
+			const updated = await Region.updateOne({_id: regionID}, {parent: validChange._id}); //change the parent of the region being moved
+			if(updated) return "Successfully changed parent";
+			else return "Failed to change parent";
 		}
 	}
 }

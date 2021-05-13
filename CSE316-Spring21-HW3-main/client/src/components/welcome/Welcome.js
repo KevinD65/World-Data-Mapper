@@ -27,7 +27,8 @@ import { UpdateListField_Transaction,
 	SortByColumn_Transaction,
 	EditRegion_Transaction,
 	AddDeleteLandmark_Transaction,
-	EditLandmark_Transaction} 								from '../../utils/jsTPS';
+	EditLandmark_Transaction,
+	ChangeParent_Transaction} 								from '../../utils/jsTPS';
 //import WInput from 'wt-frontend/build/components/winput/WInput';
 import { BrowserRouter, Switch, Route, Redirect, useHistory} from 'react-router-dom';
 
@@ -55,6 +56,7 @@ const Welcome = (props) => {
 	const [AddLandmark]										= useMutation(mutations.ADD_LANDMARK);
 	const [DeleteLandmark]									= useMutation(mutations.DELETE_LANDMARK);
 	const [EditLandmark]									= useMutation(mutations.EDIT_LANDMARK);
+	const [ChangeParent]									= useMutation(mutations.CHANGE_PARENT);
 	const [Logout] 											= useMutation(mutations.LOGOUT);
 
 	let maps = []; //holds all the maps
@@ -348,6 +350,22 @@ const Welcome = (props) => {
 		//console.log(landmark);
 		//create transaction for editing landmark
 		let transaction = new EditLandmark_Transaction(landmarkID, parentID, activeMap._id, newName, prevName, EditLandmark);
+		props.tps.addTransaction(transaction);
+		const myString = await tpsRedo();
+		console.log(myString);
+	}
+
+	const changeParent = async (regionID, newParent, prevParent) => {
+		console.log(regionID);
+		let currentRegion = regions.find(region => region._id === regionID);
+		if(!currentRegion) //the region whose parent we're attempting to change is a map data file
+			 return ("Could not update parent");
+			//console.log("Could not update parent");
+		let parentRegion = regions.find(region => region._id === currentRegion.parent);
+		if(!parentRegion) //the region whose parent we're attempting to change is the direct child of a map data file (shouldn't be able to change parents across map data files)
+			 return ("Could not update parent");
+			//console.log("CHILDREN");
+		let transaction = new ChangeParent_Transaction(currentRegion._id, parentRegion._id, newParent, prevParent, ChangeParent);
 		props.tps.addTransaction(transaction);
 		const myString = await tpsRedo();
 		console.log(myString);
@@ -657,6 +675,7 @@ const Welcome = (props) => {
 									toggleRegionViewerScreen={toggleRegionViewerScreen}
 									undo={tpsUndo} redo={tpsRedo} activeMap={activeMap} activeRegion={activeRegion}
 									addLandmark={addLandmark} deleteLandmark={deleteLandmark} editLandmark={editLandmark}
+									changeParent={changeParent}
 								/>
 								{
 									showUpdate && (<UpdateAccount fetchUser={props.fetchUser} setShowUpdate={setShowUpdate}/>)

@@ -4,6 +4,7 @@ import LandmarkContents from './LandmarkContents';
 
 const RegionViewerScreen = (props) => {
     const [input, setInput] = useState("");
+    const [editingParent, toggleEditingParent] = useState(false);
 
     let RegionName, ParentRegion, RegionCapital, RegionLeader, NumSubregions, parent, locateViewedRegion;
     /*
@@ -47,9 +48,6 @@ const RegionViewerScreen = (props) => {
             RegionLeader = locateViewedRegion.leader;
             NumSubregions = locateViewedRegion.subregions.length;
         }
-    //}
-    //let locateViewedRegion = 
-    
 
     const updateInput = (e) => {
 		//const { landmarkName, value } = e.target;
@@ -61,6 +59,12 @@ const RegionViewerScreen = (props) => {
         let landmarkName = input;
         //console.log(parent);
         props.addLandmark(parent, landmarkName);
+    }
+
+    const handleParentEdit = (e) => {
+        let newParent = e.target.value;
+        //console.log("FAWK MAN");
+        props.changeParent(parent._id, newParent, ParentRegion);
     }
 
     return(
@@ -85,10 +89,20 @@ const RegionViewerScreen = (props) => {
                             </div>
                         </div>
                         <div className = "RegionViewerInfoContainer">
-                            <div className = "RegionViewerInfo">
-                                Parent Region: {ParentRegion}
-                                <i className="material-icons" /*Something here to change parent region*/>edit</i>
-                            </div>
+                            {editingParent || ParentRegion === '' ?
+                            <WInput
+                                className='table-input' onBlur={handleParentEdit}
+                                autoFocus={true} defaultValue={ParentRegion} type='text'
+                                wType="outlined" barAnimation="solid" inputClass="table-input-class"
+                                fillColor="default"
+                            />
+                            : <div className = "RegionViewerInfo">
+                                <div className = "regionViewerParent">
+                                    Parent Region: {ParentRegion}
+                                </div>
+                                <i className="material-icons" onClick = {toggleEditingParent}>edit</i>
+                             </div>
+                            }
                         </div>
                         <div className = "RegionViewerInfoContainer">
                             <div className = "RegionViewerInfo">

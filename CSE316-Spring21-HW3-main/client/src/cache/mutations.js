@@ -115,3 +115,9 @@ export const EDIT_LANDMARK = gql`
 		editLandmark(landmarkID: $landmarkID, parentID: $parentID, activeMapId: $activeMapId, name: $name)
 	}
 `;
+
+export const CHANGE_PARENT = gql`
+	mutation ChangeParent($regionID: String!, $parentID: String!, $newParent: String!){
+		changeParent(regionID: $regionID, parentID: $parentID, newParent: $newParent)
+	}
+`;

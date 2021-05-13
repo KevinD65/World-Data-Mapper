@@ -216,6 +216,27 @@ export class EditLandmark_Transaction extends jsTPS_Transaction {
     }
 }
 
+export class ChangeParent_Transaction extends jsTPS_Transaction {
+    constructor(regionID, parentID, newParentName, prevParentName, changeParentFunction) {
+        super();
+        this.regionID = regionID;
+        this.parentID = parentID;
+        this.newParentName = newParentName;
+        this.prevParentName = prevParentName;
+        this.changeParentFunction = changeParentFunction;
+    }
+
+    async doTransaction() {
+        let data = await this.changeParentFunction({ variables: {regionID: this.regionID, parentID: this.parentID, newParent: this.newParentName}, refetchQueries: [{ query: queries.GET_DB_REGIONS }]});
+        return data;
+    }
+
+    async undoTransaction() {
+        let data = await this.changeParentFunction({ variables: {regionID: this.regionID, parentID: this.parentID, newParent: this.prevParentName}, refetchQueries: [{ query: queries.GET_DB_REGIONS }]});
+        return data;
+    }
+}
+
 
 
 export class jsTPS {
