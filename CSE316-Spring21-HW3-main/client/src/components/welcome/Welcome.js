@@ -371,6 +371,38 @@ const Welcome = (props) => {
 		console.log(myString);
 	}
 
+	const viewPreviousRegion = async() => {
+		let currentViewedRegion = viewedRegion;
+		let currentViewedRegionIndex;
+		for(let t = 0; t < regionsOfParent.length; t++){
+			if(regionsOfParent[t]._id === currentViewedRegion){
+				if(t === 0){
+					return;
+				}
+				currentViewedRegionIndex = t;
+				let previousRegionID = regionsOfParent[currentViewedRegionIndex - 1]._id;
+				setViewedRegion(previousRegionID);
+				break;
+			}
+		}
+	}
+
+	const viewNextRegion = async() => {
+		let currentViewedRegion = viewedRegion;
+		let currentViewedRegionIndex;
+		for(let t = 0; t < regionsOfParent.length; t++){
+			if(regionsOfParent[t]._id === currentViewedRegion){
+				if(t === regionsOfParent.length - 1){
+					return;
+				}
+				currentViewedRegionIndex = t;
+				let previousRegionID = regionsOfParent[currentViewedRegionIndex + 1]._id;
+				setViewedRegion(previousRegionID);
+				break;
+			}
+		}
+	}
+
 	/*
 		Used for toggling modals
 	*/
@@ -647,6 +679,12 @@ const Welcome = (props) => {
 									<ul>
 										<WNavItem onClick={goHome}>
 											<Logo className='logo' />
+										</WNavItem>
+									</ul>
+									<ul>
+										<WNavItem>
+											<i className="material-icons" onClick = {viewPreviousRegion}>west</i>
+											<i className="material-icons" onClick = {viewNextRegion}>east</i>
 										</WNavItem>
 									</ul>
 									<ul>
