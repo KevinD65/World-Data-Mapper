@@ -1,7 +1,10 @@
-import React        from 'react';
+import React, {useState}       from 'react';
 import RegionEntry   from './RegionEntry';
 
 const SpreadsheetContents = (props) => {
+    //let indexToMoveTo, directionToMove, fieldToMoveTo;
+    const[indexToMoveTo, setIndexToMoveTo] = useState(-1);
+    const[fieldToMoveTo, setFieldToMoveTo] = useState(null);
 
     let regionsIDs = [];
     console.log(props.activeRegion);
@@ -20,6 +23,24 @@ const SpreadsheetContents = (props) => {
         console.log(regionsIDs);
         console.log("JAH");
     }
+
+    const handleUpDownArrow = async (direction, field, index) => {
+        if(direction === "up"){
+            if(index !== 0){
+                setIndexToMoveTo(index - 1);
+                setFieldToMoveTo(field);
+                return true;
+            }
+        }
+        else{
+            if(index !== props.regionsOfParent.length - 1){
+                setIndexToMoveTo(index + 1);
+                setFieldToMoveTo(field);
+                return true;
+            }
+        }
+        return false;
+    }
 /*
     let regions = props.regions;
     let myRegions = [];
@@ -36,7 +57,7 @@ const SpreadsheetContents = (props) => {
     console.log(props.regionsOfParent);
     console.log("COMPONENT IS RENDERING");
     return (
-        /*myRegions*/props.regionsOfParent.map((entry, index) => (
+        /*props.regionsOfParent.map((entry, index) => (
             <RegionEntry
                 data={entry} key={entry.id} index={index}
                 deleteRegion={props.deleteRegion} editRegion={props.editRegion} 
@@ -44,8 +65,35 @@ const SpreadsheetContents = (props) => {
                 setShowRegionViewerScreen={props.setShowRegionViewerScreen}
                 toggleRegionViewerScreen={props.toggleRegionViewerScreen}
                 setViewedRegion={props.setViewedRegion}
+                handleUpDownArrow={handleUpDownArrow}
             />
-        ))
+        ))*/
+        props.regionsOfParent.map(function(entry, index){
+            if(index === indexToMoveTo){
+                return <RegionEntry
+                    data={entry} key={entry.id} index={index} listLength={props.regionsOfParent.length}
+                    deleteRegion={props.deleteRegion} editRegion={props.editRegion} 
+                    setShowSpreadsheetScreen={props.setShowSpreadsheetScreen}
+                    setShowRegionViewerScreen={props.setShowRegionViewerScreen}
+                    toggleRegionViewerScreen={props.toggleRegionViewerScreen}
+                    setViewedRegion={props.setViewedRegion}
+                    handleUpDownArrow={handleUpDownArrow}
+                    activeField = {fieldToMoveTo}
+                />
+            }
+            else{
+                return <RegionEntry
+                    data={entry} key={entry.id} index={index} listLength={props.regionsOfParent.length}
+                    deleteRegion={props.deleteRegion} editRegion={props.editRegion} 
+                    setShowSpreadsheetScreen={props.setShowSpreadsheetScreen}
+                    setShowRegionViewerScreen={props.setShowRegionViewerScreen}
+                    toggleRegionViewerScreen={props.toggleRegionViewerScreen}
+                    setViewedRegion={props.setViewedRegion}
+                    handleUpDownArrow={handleUpDownArrow}
+                    activeField = {"None"}
+                />
+            }
+        })
     );
 };
 
