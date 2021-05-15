@@ -155,7 +155,7 @@ export class SortByColumn_Transaction extends jsTPS_Transaction {
     }
 
     async doTransaction() {
-        //console.log(this.parentId);
+        console.log(this.parentID);
         const { data } = await this.sortingFunction({ variables: {parentId: this.parentID, sortCode: this.sortCode}, refetchQueries: [{ query: queries.GET_DB_REGIONS }]});
         return data;
     }

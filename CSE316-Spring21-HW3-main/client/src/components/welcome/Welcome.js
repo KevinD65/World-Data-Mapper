@@ -11,6 +11,7 @@ import Login 												from '../modals/Login';
 import CreateAccount 										from '../modals/CreateAccount';
 import UpdateAccount 										from '../modals/UpdateAccount';
 import DeleteMapModal										from '../modals/DeleteMapModal';
+import DeleteRegionModal									from  '../modals/DeleteRegionModal';
 
 //import queries/mutations
 import * as queries 				    					from '../../cache/queries';
@@ -29,7 +30,6 @@ import { UpdateListField_Transaction,
 	AddDeleteLandmark_Transaction,
 	EditLandmark_Transaction,
 	ChangeParent_Transaction} 								from '../../utils/jsTPS';
-//import WInput from 'wt-frontend/build/components/winput/WInput';
 import { BrowserRouter, Switch, Route, Redirect, useHistory} from 'react-router-dom';
 
 const Welcome = (props) => {
@@ -45,7 +45,6 @@ const Welcome = (props) => {
 	const [home, toggleHome]								= useState(false);
 
 	//define mutations/queries needed
-	//const [GetUser]											= useQuery(queries.GET_DB_USER);
 	const [AddMap] 											= useMutation(mutations.ADD_MAP);
 	const [DeleteMap] 										= useMutation(mutations.DELETE_MAP);
 	const [UpdateMapName]									= useMutation(mutations.UPDATE_MAP_NAME);
@@ -58,46 +57,34 @@ const Welcome = (props) => {
 	const [DeleteLandmark]									= useMutation(mutations.DELETE_LANDMARK);
 	const [EditLandmark]									= useMutation(mutations.EDIT_LANDMARK);
 	const [ChangeParent]									= useMutation(mutations.CHANGE_PARENT);
-	//const [Logout] 											= useMutation(mutations.LOGOUT);
 
 	let maps = []; //holds all the maps
 	let regions = []; //holds all the regions
 	let regionsOfParent = [];
+	const [regionToDelete, toggleRegionToDelete] = useState(null);
+	const [indexOfRegionToDelete, toggleIndexOfRegionToDelete] = useState(null);
+	//let regionToDelete, indexOfRegionToDelete;
 
 	const client = useApolloClient();
     const [activeMap, setActiveMap] = useState(null); //an array holding a singular map object (or none). The map whose spreadsheet screen is being showed
 	const [activeRegion, setActiveRegion] = useState(null); //an array holding a singular region object (or none). The region whose spreadsheet screen is being showed
 	const [viewedRegion, setViewedRegion] = useState(null); //the map/region whose region viewed screen is being showed (should be an _id);
 
-	
-	useEffect(() => {
-		console.log(activeRegion);
-		console.log("useEffect");
-		//refetchRegions(refetch2);
-	}/*, [activeMap]*/);
-
 	const { loading, error, data, refetch } = useQuery(queries.GET_DB_MAPS);
 	const regionQuery = useQuery(queries.GET_DB_REGIONS);
-	//const regionQuery = useQuery(queries.GET_DB_REGIONS);
 	if(loading) { console.log(loading, 'loading'); }
 	if(error) { console.log(error, 'error'); }
-	//if(data) { maps = data.getAllMaps; }
 	if(data) {data.getAllMaps.map(map => maps.push(map));}
 
 	if(regionQuery.loading) { console.log(loading, 'loading'); }
 	if(regionQuery.error) { console.log(error, 'error'); }
-	//if(regionQuery.data) { regions = regionQuery.data.getAllRegions; }
 	if(regionQuery.data) { //used to fill regionsOfParent array with all regions that are subregions of the activeMap/activeRegion
 		let active = null;
-		/*if(activeRegion === null)
-			active = activeMap;*/
 		if(activeRegion === null)
 			active = activeMap;
 		else if(activeRegion !== null)
 			active = activeRegion;
 		if(active !== null){
-			//console.log("FETCHING REGION OF PARENT");
-			//console.log(active);
 			regionQuery.data.getAllRegions.map(region => regions.push(region));
 			regionsOfParent = [];
 			for(let i = 0; i < regions.length; i++){ //simply makes the array of regions associated with this parent
@@ -118,7 +105,6 @@ const Welcome = (props) => {
 			}
 
 		}
-		//console.log(maps);
 	}
 
 	const refetch2 = regionQuery.refetch;
@@ -129,7 +115,6 @@ const Welcome = (props) => {
 		const { loading, error, data } = await refetch();
 		if (data) {
 			maps = data.getAllMaps;
-			console.log(activeMap);
 			if (activeMap !== null) {
 				let tempID = activeMap._id; 
 				let myMap = maps.find(map => map._id === tempID);
@@ -142,7 +127,6 @@ const Welcome = (props) => {
 		const regionRefetch = await refetch();
 		if(regionRefetch) {
 			regions = regionRefetch.data.getAllRegions;
-			console.log(regionRefetch.data);
 		}
 	}
 
@@ -182,16 +166,12 @@ const Welcome = (props) => {
 
 	const handleSetActive = (id) => {
 		const map = maps.find(map => map.id === id || map._id === id);
-		//console.log(map);
 		setActiveMap(map);
-		//console.log(activeMap);
 	};
 
 	const handleSetActiveRegion = async (id) => {
 		const region = await regions.find(region => region.id === id || region._id === id);
-		//console.log(region); //this prints out the correct region to be set as active
 		await setActiveRegion(region);
-		//console.log(activeRegion);
 		await refetchRegions(refetch2);
 	};
 
@@ -211,8 +191,6 @@ const Welcome = (props) => {
 	};
 
 	const editMapName = async (mapID, name) => {
-		//console.log("what is my id: " + (mapID));
-		//console.log(name);
 		await UpdateMapName({ variables: { _id: mapID, value: name }, refetchQueries: [{ query: queries.GET_DB_MAPS }]});
 		await refetchMaps(refetch);
 	}
@@ -220,10 +198,8 @@ const Welcome = (props) => {
 	const deleteMap = async (_id) => { 
 		//deleting a map will delete all of its subregions from the database as well (perhaps everytime a new region is added, it's _id is appended to the root's array of subregions)
 		await DeleteMap({ variables: { _id: _id }, refetchQueries: [{ query: queries.GET_DB_MAPS }] });
-		//await refetchMaps(refetch);
 		setActiveMap(null);
 		setActiveRegion(null);
-		//console.log(activeMap);
 	};
 
 	const addRegion = async (parentID) => {
@@ -237,14 +213,10 @@ const Welcome = (props) => {
 			map = activeRegion;
 			updatedPath = map.path;
 			updatedPath = updatedPath.concat(map._id);
-			//console.log(updatedPath);
 		}
-		//console.log(map);
 		const regions = map.subregions; //regions holds an array of IDs
 		const lastID = regions.length >= 1 ? regions.length : 0;
         const lastPosition = regions.length >= 1 ? regions.length: 0;
-		//console.log(regions);
-		//console.log(parentID);
 
 		const newRegion = {
 			_id: '',
@@ -264,7 +236,6 @@ const Welcome = (props) => {
 		let regionID = newRegion._id;
 		let transaction = new UpdateSpreadsheetItems_Transaction(parentID, regionID, newRegion, opcode, AddRegion, DeleteRegion);
 		props.tps.addTransaction(transaction);
-		//console.log("IS THIS BEFORE RENDER?");
 		await tpsRedo();
 		await refetchMaps(refetch);
 		await refetchRegions(refetch2);
@@ -276,6 +247,12 @@ const Welcome = (props) => {
 		props.tps.addTransaction(transaction);
 		tpsRedo();
 	};
+
+	const deleteRegionHandler = async (region, index) => {
+		toggleRegionToDelete(region);
+		toggleIndexOfRegionToDelete(index);
+		toggleShowDeleteRegion(true);
+	}
 
 	const deleteRegion = async (region, index) => {
 		let opcode = 0; //opcode for deletion
@@ -302,8 +279,8 @@ const Welcome = (props) => {
 
 	const sortByColumn = async (parent, sortCode) => {
 		let prevSubregionsArr = parent.subregions;
+
 		console.log(parent._id);
-		//console.log()
 		let transaction = new SortByColumn_Transaction(parent._id, prevSubregionsArr, sortingFunction, revertingFunction, sortCode);
 		props.tps.addTransaction(transaction);
 		const myString = await tpsRedo();
@@ -418,6 +395,14 @@ const Welcome = (props) => {
 		toggleShowCreate(false);
 		toggleShowLogin(false);
 		toggleShowDeleteMap(!showDeleteMap)
+	}
+
+	const setShowDeleteRegion = () => {
+		toggleShowUpdate(false);
+		toggleShowCreate(false);
+		toggleShowLogin(false);
+		toggleShowDeleteMap(false);
+		toggleShowDeleteRegion(!showDeleteRegion);
 	}
 
 	/*
@@ -628,7 +613,7 @@ const Welcome = (props) => {
 									activeMap={activeMap} activeRegion={activeRegion /*We are sending both activeMap & activeRegion. In RegionEntry, we will check if activeRegion is null 
 									or not and decide there whether to render the activeMap's subregions or the activeRegion's subregions*/}
 									undo={tpsUndo} redo={tpsRedo}
-									addRegion={addRegion} editRegion={editRegion} deleteRegion={deleteRegion}
+									addRegion={addRegion} editRegion={editRegion} deleteRegionHandler={deleteRegionHandler}
 									regions={regions}
 									setShowSpreadsheetScreen={setShowSpreadsheetScreen}
 									setShowRegionViewerScreen={setShowRegionViewerScreen}
@@ -644,7 +629,8 @@ const Welcome = (props) => {
 									showUpdate && (<UpdateAccount fetchUser={props.fetchUser} setShowUpdate={setShowUpdate}/>)
 								}
 								{
-									// showDeleteRegion && <DeleteRegionModal deleteRegion={deleteRegion} setShowDelete/>
+									showDeleteRegion && <DeleteRegionModal deleteRegion={deleteRegion} setShowDeleteRegion={setShowDeleteRegion} regionToDelete={regionToDelete}
+										indexOfRegionToDelete={indexOfRegionToDelete}/>
 								}
 							</WLMain>
 						</WLayout>
@@ -697,7 +683,7 @@ const Welcome = (props) => {
 									toggleRegionViewerScreen={toggleRegionViewerScreen}
 									undo={tpsUndo} redo={tpsRedo} activeMap={activeMap} activeRegion={activeRegion}
 									addLandmark={addLandmark} deleteLandmark={deleteLandmark} editLandmark={editLandmark}
-									changeParent={changeParent}
+									changeParent={changeParent} resetTPSStack={resetTPSStack} setShowSpreadsheetScreen={setShowSpreadsheetScreen}
 								/>
 								{
 									showUpdate && (<UpdateAccount fetchUser={props.fetchUser} setShowUpdate={setShowUpdate}/>)

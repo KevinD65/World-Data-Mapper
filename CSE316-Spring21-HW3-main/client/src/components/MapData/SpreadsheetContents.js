@@ -84,7 +84,7 @@ const SpreadsheetContents = (props) => {
             else{
                 return <RegionEntry
                     data={entry} key={entry.id} index={index} listLength={props.regionsOfParent.length}
-                    deleteRegion={props.deleteRegion} editRegion={props.editRegion} 
+                    deleteRegionHandler={props.deleteRegionHandler} editRegion={props.editRegion} 
                     setShowSpreadsheetScreen={props.setShowSpreadsheetScreen}
                     setShowRegionViewerScreen={props.setShowRegionViewerScreen}
                     toggleRegionViewerScreen={props.toggleRegionViewerScreen}

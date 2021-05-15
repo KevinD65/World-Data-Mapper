@@ -6,16 +6,9 @@ const RegionViewerScreen = (props) => {
     const [input, setInput] = useState("");
     const [editingParent, toggleEditingParent] = useState(false);
 
-    let RegionName, ParentRegion, RegionCapital, RegionLeader, NumSubregions, parent, locateViewedRegion;
-    /*
-    if(props.activeRegion === null){
-        /*
-        parent = props.activeMap;
-        RegionName = props.activeMap.name;
-        ParentRegion = "N/A";
-        RegionCapital = props.activeMap.capital;
-        RegionLeader = props.activeMap.leader;
-        NumSubregions = props.activeMap.subregions.length;
+    let RegionName, ParentRegion, RegionCapital, RegionLeader, NumSubregions, parent, locateViewedRegion, returnToMap;
+    locateViewedRegion = props.regions.find(region => region._id === props.viewedRegion);
+    if(!locateViewedRegion){ //viewed region is the map data file
         locateViewedRegion = props.maps.find(map => map._id === props.viewedRegion);
         parent = locateViewedRegion;
         RegionName = locateViewedRegion.name;
@@ -23,55 +16,69 @@ const RegionViewerScreen = (props) => {
         RegionCapital = "N/A";
         RegionLeader = "N/A";
         NumSubregions = locateViewedRegion.subregions.length;
-    }*/
-    //else{
-        console.log(props.viewedRegion);
-        locateViewedRegion = props.regions.find(region => region._id === props.viewedRegion);
-        if(!locateViewedRegion){ //viewed region is the map data file
-            locateViewedRegion = props.maps.find(map => map._id === props.viewedRegion);
-            parent = locateViewedRegion;
-            RegionName = locateViewedRegion.name;
-            ParentRegion = "N/A";
-            RegionCapital = "N/A";
-            RegionLeader = "N/A";
-            NumSubregions = locateViewedRegion.subregions.length;
+    }
+    else{ //viewed region is a region
+        let locateViewedRegionParent = props.regions.find(region => region._id === locateViewedRegion.parent);
+        returnToMap = false;
+        if(!locateViewedRegionParent){
+            locateViewedRegionParent = props.maps.find(map => map._id === locateViewedRegion.parent);
+            returnToMap = true;
         }
-        else{ //viewed region is a region
-            let locateViewedRegionParent = props.regions.find(region => region._id === locateViewedRegion.parent);
-            if(!locateViewedRegionParent){
-                locateViewedRegionParent = props.maps.find(map => map._id === locateViewedRegion.parent);
-            }
-            parent = locateViewedRegion;
-            RegionName = locateViewedRegion.name;
-            ParentRegion = locateViewedRegionParent.name;
-            RegionCapital = locateViewedRegion.capital;
-            RegionLeader = locateViewedRegion.leader;
-            NumSubregions = locateViewedRegion.subregions.length;
+        parent = locateViewedRegion;
+        RegionName = locateViewedRegion.name;
+        ParentRegion = locateViewedRegionParent.name;
+        RegionCapital = locateViewedRegion.capital;
+        RegionLeader = locateViewedRegion.leader;
+        NumSubregions = locateViewedRegion.subregions.length;
+    }
+
+    let imageName = RegionName.split(" "); //array holding the split name of the region
+    let modifiedImageName = "";
+    for(let s = 0; s < imageName.length; s++){
+        let capitalizeFirstLetter = imageName[s].substring(0, 1).toUpperCase();
+        let modifiedStr = capitalizeFirstLetter += imageName[s].slice(1);
+        modifiedImageName += modifiedStr + " ";
+    }
+    modifiedImageName = modifiedImageName.substring(0, modifiedImageName.length - 1);
+
+    let hasFlag = false;
+    const findFlag = async () => {
+        try{
+            const imgFile = require(`../../Images/The World/${modifiedImageName} Flag.png`); //dynamic import of flag
+            hasFlag = true;
         }
+        catch(err){
+            console.log("No flag available");
+        }
+    }
+    findFlag();
 
     const updateInput = (e) => {
-		//const { landmarkName, value } = e.target;
-		//const updated = { ...input, [landmarkName]: value };
 		setInput(e.target.value);
 	}
 
     const handleAddLandmark = () => {
         let landmarkName = input;
-        //console.log(parent);
         props.addLandmark(parent, landmarkName);
     }
 
     const handleParentEdit = (e) => {
         let newParent = e.target.value;
-        //console.log("FAWK MAN");
         props.changeParent(parent._id, newParent, ParentRegion);
+    }
+
+    const toParentSpreadsheet = () => {
+        props.resetTPSStack();
+        if(returnToMap) //viewed region's parent is a region
+            props.setShowSpreadsheetScreen(parent.parent, false, true);
+        else if(returnToMap !== undefined) //viewed region's parent is a map
+            props.setShowSpreadsheetScreen(parent.parent, true, false);
     }
 
     return(
         <>
             <div className = "regionViewer-header-spacer"></div>
             <WLayout wLayout = "header" className = "regionViewer-body"> 
-            {/* <div className = "regionViewer-header-container"></div> */}
                 <WLHeader>
                     <i className="material-icons undo" onClick = {props.undo}>undo</i>
                     <i className="material-icons redo" onClick = {props.redo}>redo</i>
@@ -79,7 +86,10 @@ const RegionViewerScreen = (props) => {
                 <WLMain>
                     <div className="RegionViewerLeftSide">
                         <div className = "RegionViewerImageContainer">
-                            <div className = "RegionViewerImage">Image Here</div>
+                        { hasFlag ?
+                            <img className = "viewerFlag" src = {require(`../../Images/The World/${modifiedImageName} Flag.png`)} alt = "No Flag"/>
+                        : <div className = "spreadsheet-flags">No Flag</div>
+                        }
                         </div>
                         <div className="modal-spacer">&nbsp;</div>
                         {/* spacing here between image and region information */}
@@ -98,7 +108,10 @@ const RegionViewerScreen = (props) => {
                             />
                             : <div className = "RegionViewerInfo">
                                 <div className = "regionViewerParent">
-                                    Parent Region: {ParentRegion}
+                                    Parent Region:
+                                </div>
+                                <div className = "regionViewerParentName" onClick = {toParentSpreadsheet}>
+                                    { ParentRegion}
                                 </div>
                                 <i className="material-icons" onClick = {toggleEditingParent}>edit</i>
                              </div>

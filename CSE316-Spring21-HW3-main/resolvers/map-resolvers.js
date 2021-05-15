@@ -231,11 +231,10 @@ module.exports = {
 					let indexOfLowest = i;
 					let temp = parentSubregions[i];
 					for(let j = i + 1; j < parentSubregions.length; j++){
+						//return parentSubregions[j];
 						regionHolder1 = await Region.findOne({_id: parentSubregions[j]});
 						regionHolder2 = await Region.findOne({_id: parentSubregions[indexOfLowest]});
 						if(regionHolder1.name.toUpperCase().localeCompare(regionHolder2.name.toUpperCase()) < 0){
-							//parentSubregions[i] = parentSubregions[j];
-							//parentSubregions[j] = temp;
 							indexOfLowest = j;
 							sorted = false; //items were not already sorted
 						}
@@ -540,7 +539,7 @@ module.exports = {
 			//remove the region from the parent's subregions array and append to the new parent's subregions array
 			let parentSubregions = oldParent.subregions;
 			let newParentSubregions = validChange.subregions;
-			let updatedParentSubregions = parentSubregions.filter(subregion => subregion._id !== regionID); //filters out the region that's being moved
+			let updatedParentSubregions = parentSubregions.filter(subregion => subregion !== regionID); //filters out the region that's being moved
 			let updatedNewParentSubregions = newParentSubregions.push(regionID); //push the new region into the new parent's subregions array
 			await Region.updateOne({_id: parentID}, {subregions: updatedParentSubregions});
 			await Region.updateOne({_id: validChange._id}, {subregions: updatedNewParentSubregions});
