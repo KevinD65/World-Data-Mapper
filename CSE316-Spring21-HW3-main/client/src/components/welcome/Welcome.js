@@ -35,6 +35,7 @@ import { BrowserRouter, Switch, Route, Redirect, useHistory} from 'react-router-
 const Welcome = (props) => {
 	//define all screen/modal hooks
 	const [showDeleteMap, toggleShowDeleteMap] 				= useState(false);
+	const [showDeleteRegion, toggleShowDeleteRegion]		= useState(false);
 	const [showLogin, toggleShowLogin] 						= useState(false);
 	const [showCreate, toggleShowCreate] 					= useState(false);
 	const [showUpdate, toggleShowUpdate]					= useState(false);
@@ -57,12 +58,11 @@ const Welcome = (props) => {
 	const [DeleteLandmark]									= useMutation(mutations.DELETE_LANDMARK);
 	const [EditLandmark]									= useMutation(mutations.EDIT_LANDMARK);
 	const [ChangeParent]									= useMutation(mutations.CHANGE_PARENT);
-	const [Logout] 											= useMutation(mutations.LOGOUT);
+	//const [Logout] 											= useMutation(mutations.LOGOUT);
 
 	let maps = []; //holds all the maps
 	let regions = []; //holds all the regions
 	let regionsOfParent = [];
-	//let landmarksOfActive = []; //holds all the landmarks of the activeMap/activeRegion as well as all of its child landmarks
 
 	const client = useApolloClient();
     const [activeMap, setActiveMap] = useState(null); //an array holding a singular map object (or none). The map whose spreadsheet screen is being showed
@@ -96,8 +96,8 @@ const Welcome = (props) => {
 		else if(activeRegion !== null)
 			active = activeRegion;
 		if(active !== null){
-			console.log("FETCHING REGION OF PARENT");
-			console.log(active);
+			//console.log("FETCHING REGION OF PARENT");
+			//console.log(active);
 			regionQuery.data.getAllRegions.map(region => regions.push(region));
 			regionsOfParent = [];
 			for(let i = 0; i < regions.length; i++){ //simply makes the array of regions associated with this parent
@@ -118,7 +118,7 @@ const Welcome = (props) => {
 			}
 
 		}
-		console.log(maps);
+		//console.log(maps);
 	}
 
 	const refetch2 = regionQuery.refetch;
@@ -148,16 +148,6 @@ const Welcome = (props) => {
 
 	const auth = props.user === null ? false : true; //used to check if a user is logged in
 
-	/*
-    const handleLogout = async () => {
-        Logout();
-        const { data } = await props.fetchUser();
-        if (data) {
-            let reset = await client.resetStore();
-            if (reset) toggleMapSelectScreen(false);
-        }
-    };
-	*/
 	const tpsUndo = async () => {
 		const retVal = await props.tps.undoTransaction();
 		refetchMaps(refetch);
@@ -166,10 +156,8 @@ const Welcome = (props) => {
 
 	const tpsRedo = async () => {
 		const retVal = await props.tps.doTransaction();
-		//console.log("WHERE ARE WE?");
 		await refetchMaps(refetch);
 		await refetchRegions(refetch2);
-		//console.log("WE ARE REFETCHING HERE");
 		return retVal;
 	}
 
@@ -192,22 +180,18 @@ const Welcome = (props) => {
 		toggleShowDeleteMap(!showDeleteMap);
 	}
 
-	const setShowDeleteMap = () => {
-		toggleShowDeleteMap(!showDeleteMap);
-	}
-
 	const handleSetActive = (id) => {
 		const map = maps.find(map => map.id === id || map._id === id);
-		console.log(map);
+		//console.log(map);
 		setActiveMap(map);
-		console.log(activeMap);
+		//console.log(activeMap);
 	};
 
 	const handleSetActiveRegion = async (id) => {
 		const region = await regions.find(region => region.id === id || region._id === id);
-		console.log(region); //this prints out the correct region to be set as active
+		//console.log(region); //this prints out the correct region to be set as active
 		await setActiveRegion(region);
-		console.log(activeRegion);
+		//console.log(activeRegion);
 		await refetchRegions(refetch2);
 	};
 
@@ -227,8 +211,8 @@ const Welcome = (props) => {
 	};
 
 	const editMapName = async (mapID, name) => {
-		console.log("what is my id: " + (mapID));
-		console.log(name);
+		//console.log("what is my id: " + (mapID));
+		//console.log(name);
 		await UpdateMapName({ variables: { _id: mapID, value: name }, refetchQueries: [{ query: queries.GET_DB_MAPS }]});
 		await refetchMaps(refetch);
 	}
@@ -429,7 +413,7 @@ const Welcome = (props) => {
 		toggleShowUpdate(!showUpdate);
 	}
 
-	const setShowDelete = () => {
+	const setShowDeleteMap = () => {
 		toggleShowUpdate(false);
 		toggleShowCreate(false);
 		toggleShowLogin(false);
@@ -464,9 +448,7 @@ const Welcome = (props) => {
 			await refetchRegions(refetch2);
 			console.log(parentID);
 		}
-
 		setViewedRegion(parentID);
-		//console.log(viewedRegion);
 	}
 
 	const setShowRegionViewerScreen = async (_id) => {
@@ -485,9 +467,6 @@ const Welcome = (props) => {
 		toggleMapSelectScreen(false);
 		toggleSpreadsheetScreen(true);
 	}
-
-
-	//let history = useHistory();
 
 	const goHome = () =>{
 		props.tps.clearAllTransactions();
@@ -663,6 +642,9 @@ const Welcome = (props) => {
 								/>
 								{
 									showUpdate && (<UpdateAccount fetchUser={props.fetchUser} setShowUpdate={setShowUpdate}/>)
+								}
+								{
+									// showDeleteRegion && <DeleteRegionModal deleteRegion={deleteRegion} setShowDelete/>
 								}
 							</WLMain>
 						</WLayout>

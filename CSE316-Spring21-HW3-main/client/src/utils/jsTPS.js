@@ -104,11 +104,39 @@ export class UpdateSpreadsheetItems_Transaction extends jsTPS_Transaction {
     }
     // Since delete/add are opposites, flip matching opcode
     async undoTransaction() {
+        console.log(this.parentID);
+        console.log(this.region);
+        let fixedLandmarks = [];
+        for(let l = 0; l < this.region.landmarks.length; l++){ //this is to remove the typeName property of the landmarks so mongo can recognize as LandmarkInput
+            let fixedLandmark = {
+                _id: this.region.landmarks[l]._id,
+                id: this.region.landmarks[l].id,
+                name: this.region.landmarks[l].name,
+                ownerRegion: this.region.landmarks[l].ownerRegion,
+            }
+            fixedLandmarks.push(fixedLandmark);
+        }
+
+        let regionToReadd = {
+            _id: this.region._id,
+			id: this.region.id,
+			name: this.region.name,
+			capital: this.region.capital,
+			leader: this.region.leader,
+            flag: this.region.flag,
+            landmarks: fixedLandmarks,
+            position: this.region.position,
+            parent: this.region.parent,
+            subregions: this.region.subregions,
+            path: this.region.path,
+			owner: this.region.owner,
+        }
+
 		let data;
         this.opcode === 1 ? { data } = await this.deleteFunction({
 							variables: {parentId: this.parentID, regionId: this.regionID}, refetchQueries: [{ query: queries.GET_DB_REGIONS }]})
                           : { data } = await this.addFunction({
-							variables: {region: this.region, _id: this.parentID, index: this.index}, refetchQueries: [{ query: queries.GET_DB_REGIONS }]})
+							variables: {region: regionToReadd/*this.region*/, _id: this.parentID, index: this.index}, refetchQueries: [{ query: queries.GET_DB_REGIONS }]})
 		if(this.opcode !== 1) {
             /*this.region._id =*/ this.regionID = data.addRegion;
         }

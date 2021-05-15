@@ -1,20 +1,10 @@
 import React, { useState, useEffect } from 'react';
-//import * as images from '../../Images/The World/Afghanistan Flag.png';
+import test from '../../Images/The World/Afghanistan Flag.png';
 import { WButton, WInput, WRow, WCol } from 'wt-frontend';
 
 const RegionEntry = (props) => {
     const { data } = props;
-    //const images = require.context('../../Images/The World/', true);
-    //const imagePath = (n) => images(n, true);
-
-    function importAll(r) {
-        let images = {};
-        r.keys().map((item, index) => { images[item.replace('./', '')] = r(item); });
-        return images;
-    }
-    const images = importAll(require.context('../../Images/The World', false, /\.(png)$/));
-
-    //const completeStyle = data.completed ? ' complete-task' : ' incomplete-task';
+    const [hasFlag, setHasFlag] = useState(false);
 
     const _id = data._id;
     const name = data.name;
@@ -37,18 +27,26 @@ const RegionEntry = (props) => {
         modifiedImageName += modifiedStr + " ";
     }
     modifiedImageName = modifiedImageName.substring(0, modifiedImageName.length - 1);
-    let imageFile, hasFlag;/*
-    try{
-        imageFile = (imagePath('/' + modifiedImageName + " Flag.png"));
-        hasFlag = true;
+    //let a = "Afghanistan";
+    let imageFile;//, hasFlag;
+    
+    const findFlag = async () => {
+        let found = true;
+        //try{
+            const imgFile = await import(`../../Images/The World/${modifiedImageName} Flag.png`).catch(err => {console.log("FUCK");/*found = false;*/});
+            if(found)
+                setHasFlag(!hasFlag); //catch is not executing so even when import isn't found, this gets set to true
+            console.log(imgFile);
+        //}
+        //catch(err){
+        //    if(err.code === "MODULE_NOT_FOUND")
+        //        throw err;
+        //}
     }
-    catch(err){
-        imageFile = "No Image";
-        hasFlag = false;
-    }*/
-    //console.log(images[""]);
-    //console.log(imagePath('Afghanistan Flag.png'));
 
+    console.log(modifiedImageName + " Flag.png");
+
+    findFlag();
 
     const [editingName, toggleNameEdit] = useState(false);
     const [editingCapital, toggleCapitalEdit] = useState(false);
@@ -57,7 +55,7 @@ const RegionEntry = (props) => {
     useEffect (() => {
         if(props.activeField !== "None"){
             if(props.activeField === "name"){
-                console.log("BUTTS" + name);
+                //console.log("BUTTS" + name);
                 toggleNameEdit(!editingName);
             }
             else if(props.activeField === "capital"){
@@ -73,21 +71,24 @@ const RegionEntry = (props) => {
         toggleNameEdit(false);
         const newName = e.target.value ? e.target.value : 'No Name';
         const prevName = name;
-        props.editRegion(data._id, 'name', newName, prevName);
+        if(newName !== prevName) //simply clicking should not make a transaction (actually needs to change)
+            props.editRegion(data._id, 'name', newName, prevName);
     };
 
     const handleCapitalEdit = (e) => {
         toggleCapitalEdit(false);
         const newCapital = e.target.value ? e.target.value : 'No Capital';
         const prevCapital = capital;
-        props.editRegion(data._id, 'capital', newCapital, prevCapital);
+        if(newCapital !== prevCapital) //simply clicking should not make a transaction (actually needs to change)
+            props.editRegion(data._id, 'capital', newCapital, prevCapital);
     };
 
     const handleLeaderEdit = (e) => {
         toggleLeaderEdit(false);
         const newLeader = e.target.value ? e.target.value : 'No Leader';
         const prevLeader = leader;
-        props.editRegion(data._id, 'leader', newLeader, prevLeader);
+        if(newLeader !== prevLeader) //simply clicking should not make a transaction (actually needs to change)
+            props.editRegion(data._id, 'leader', newLeader, prevLeader);
     };
 
     const handleDeleteRegion = () => {
@@ -227,7 +228,8 @@ const RegionEntry = (props) => {
 
             <WCol size="1" className = "table-entry-column">
                 { hasFlag ?
-                    <div className = "spreadsheet-flags"><img src = {imageFile}/></div>
+                    //<div>DAMMIT</div>
+                    /*<div className = "spreadsheet-flags">*/<img className = "tableFlag" src = {require(`../../Images/The World/${modifiedImageName} Flag.png`)} alt = "No Flag"/*modifiedImageName + " Flag.png"*//>/*</div>*/
                 : <div className = "spreadsheet-flags">No Flag</div>
                 }
             </WCol>
