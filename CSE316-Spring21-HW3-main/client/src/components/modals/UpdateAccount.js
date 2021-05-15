@@ -5,24 +5,29 @@ import { useMutation }    	from '@apollo/client';
 import { WModal, WMHeader, WMMain, WMFooter, WButton, WInput, WRow, WCol } from 'wt-frontend';
 
 const UpdateAccount = (props) => {
-	const [input, setInput] = useState({ email: '', password: '', name: '' });
+	//let myUser = await props.fetchUser();
+	//myUser = myUser.data.getCurrentUser._id;
+	const [input, setInput] = useState({ email: '', password: '', name: ''});
 	const [loading, toggleLoading] = useState(false);
 	const [UpdateAccount] = useMutation(UPDATE);
 
-	
-	const updateInput = (e) => {
+	const updateInput = async (e) => {
 		const { name, value } = e.target;
+		//console.log(name);
 		const updated = { ...input, [name]: value };
+		//console.log(updated);
 		setInput(updated);
 	};
 
 	const handleUpdateAccount = async (e) => {
 		for (let field in input) {
-			if (!input[field]) {
+			if (!input[field] && field !== "userID") {
+				console.log(field);
 				alert('All fields must be filled');
 				return;
 			}
 		}
+
 		const { loading, error, data } = await UpdateAccount({ variables: { ...input } });
 		//console.log("MADE IT OUT");
 		if (loading) { toggleLoading(true) };
@@ -36,7 +41,8 @@ const UpdateAccount = (props) => {
 			else {
 				props.fetchUser();
 			}*/
-			props.fetchUser();
+			let myUser = await props.fetchUser();
+			//console.log(myUser.data.getCurrentUser.name);
 			props.setShowUpdate(false);
 
 		};

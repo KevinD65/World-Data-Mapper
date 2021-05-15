@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import test from '../../Images/The World/Afghanistan Flag.png';
 import { WButton, WInput, WRow, WCol } from 'wt-frontend';
 
 const RegionEntry = (props) => {
     const { data } = props;
-    const [hasFlag, setHasFlag] = useState(false);
 
     const _id = data._id;
     const name = data.name;
@@ -12,7 +10,6 @@ const RegionEntry = (props) => {
     const leader = data.leader;
     const flag = data.flag;
     const landmarksArr = data.landmarks;
-    //console.log(name);
     let landmarks = ""; //string of all the landmarks in a comma separated list for display purposes
     if(landmarksArr !== undefined){
         for(let i = 0; i < landmarksArr.length; i++){
@@ -27,35 +24,26 @@ const RegionEntry = (props) => {
         modifiedImageName += modifiedStr + " ";
     }
     modifiedImageName = modifiedImageName.substring(0, modifiedImageName.length - 1);
-    //let a = "Afghanistan";
-    let imageFile;//, hasFlag;
-    
+
+    let hasFlag = false;
     const findFlag = async () => {
-        let found = true;
-        //try{
-            const imgFile = await import(`../../Images/The World/${modifiedImageName} Flag.png`).catch(err => {console.log("FUCK");/*found = false;*/});
-            if(found)
-                setHasFlag(!hasFlag); //catch is not executing so even when import isn't found, this gets set to true
-            console.log(imgFile);
-        //}
-        //catch(err){
-        //    if(err.code === "MODULE_NOT_FOUND")
-        //        throw err;
-        //}
+        try{
+            const imgFile = require(`../../Images/The World/${modifiedImageName} Flag.png`); //dynamic import of flag
+            hasFlag = true;
+        }
+        catch(err){
+            console.log("No flag available");
+        }
     }
-
-    console.log(modifiedImageName + " Flag.png");
-
     findFlag();
 
     const [editingName, toggleNameEdit] = useState(false);
     const [editingCapital, toggleCapitalEdit] = useState(false);
     const [editingLeader, toggleLeaderEdit] = useState(false);
 
-    useEffect (() => {
+    useEffect (() => { //used for re-focusing after navigation with up/down arrow key
         if(props.activeField !== "None"){
             if(props.activeField === "name"){
-                //console.log("BUTTS" + name);
                 toggleNameEdit(!editingName);
             }
             else if(props.activeField === "capital"){
@@ -98,9 +86,6 @@ const RegionEntry = (props) => {
     const handleGoToViewer = async () => {
         await props.setViewedRegion(data._id); //changed from data to data._id
         props.toggleRegionViewerScreen(true);
-        //props.setShowRegionViewerScreen(data._id);
-        console.log(data);
-        //props.setViewedRegion(data._id); //changed from data to data._id
     }
 
     const navigateSpreadsheet = async (e, field) => {
@@ -228,8 +213,7 @@ const RegionEntry = (props) => {
 
             <WCol size="1" className = "table-entry-column">
                 { hasFlag ?
-                    //<div>DAMMIT</div>
-                    /*<div className = "spreadsheet-flags">*/<img className = "tableFlag" src = {require(`../../Images/The World/${modifiedImageName} Flag.png`)} alt = "No Flag"/*modifiedImageName + " Flag.png"*//>/*</div>*/
+                    <img className = "tableFlag" src = {require(`../../Images/The World/${modifiedImageName} Flag.png`)} alt = "No Flag"/>
                 : <div className = "spreadsheet-flags">No Flag</div>
                 }
             </WCol>
