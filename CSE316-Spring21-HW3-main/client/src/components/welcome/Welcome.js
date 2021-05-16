@@ -65,7 +65,7 @@ const Welcome = (props) => {
 	const [indexOfRegionToDelete, toggleIndexOfRegionToDelete] = useState(null);
 	//let regionToDelete, indexOfRegionToDelete;
 
-	const client = useApolloClient();
+	//const client = useApolloClient();
     const [activeMap, setActiveMap] = useState(null); //an array holding a singular map object (or none). The map whose spreadsheet screen is being showed
 	const [activeRegion, setActiveRegion] = useState(null); //an array holding a singular region object (or none). The region whose spreadsheet screen is being showed
 	const [viewedRegion, setViewedRegion] = useState(null); //the map/region whose region viewed screen is being showed (should be an _id);
@@ -86,9 +86,11 @@ const Welcome = (props) => {
 			active = activeRegion;
 		if(active !== null){
 			regionQuery.data.getAllRegions.map(region => regions.push(region));
+			console.log(regionsOfParent);
 			regionsOfParent = [];
 			for(let i = 0; i < regions.length; i++){ //simply makes the array of regions associated with this parent
 				if(regions[i].parent === active._id){
+					console.log(regions[i]);
 					regionsOfParent.push(regions[i]);
 				}
 			}
@@ -103,7 +105,7 @@ const Welcome = (props) => {
 					}
 				}
 			}
-
+			//console.log(regionsOfParent)
 		}
 	}
 
@@ -414,18 +416,21 @@ const Welcome = (props) => {
 		toggleRegionViewerScreen(false);
 		toggleSpreadsheetScreen(true);
 		
-		console.log(mapSelectScreen);
-		console.log(regionViewerScreen);
-		console.log(spreadsheetScreenOn);
+		//console.log(mapSelectScreen);
+		//console.log(regionViewerScreen);
+		//console.log(spreadsheetScreenOn);
 
 		if(resetActiveRegion){ //decides whether to reset the active region (Ex: returning from a subregion's spreadsheet to the map data file's spreadsheet)
 			//setViewedRegion(null);
 			setActiveRegion(null);
 			//console.log("this happened");
 		}
-			
+		
 		if(!setCode){ //conditional used to set up activeRegion/activeMap so spreadsheets open properly
-			handleSetActive(parentID);
+			await handleSetActive(parentID);
+			//await setActiveRegion(null);
+			//console.log(activeRegion);
+			await refetchRegions(refetch2);
 		}
 		else{
 			await handleSetActiveRegion(parentID);
@@ -684,6 +689,7 @@ const Welcome = (props) => {
 									undo={tpsUndo} redo={tpsRedo} activeMap={activeMap} activeRegion={activeRegion}
 									addLandmark={addLandmark} deleteLandmark={deleteLandmark} editLandmark={editLandmark}
 									changeParent={changeParent} resetTPSStack={resetTPSStack} setShowSpreadsheetScreen={setShowSpreadsheetScreen}
+									tpsHasUndo={tpsHasUndo} tpsHasRedo={tpsHasRedo}
 								/>
 								{
 									showUpdate && (<UpdateAccount fetchUser={props.fetchUser} setShowUpdate={setShowUpdate}/>)

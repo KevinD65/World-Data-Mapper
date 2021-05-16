@@ -64,6 +64,7 @@ const RegionViewerScreen = (props) => {
 
     const handleParentEdit = (e) => {
         let newParent = e.target.value;
+        toggleEditingParent(false);
         props.changeParent(parent._id, newParent, ParentRegion);
     }
 
@@ -80,15 +81,21 @@ const RegionViewerScreen = (props) => {
             <div className = "regionViewer-header-spacer"></div>
             <WLayout wLayout = "header" className = "regionViewer-body"> 
                 <WLHeader>
-                    <i className="material-icons undo" onClick = {props.undo}>undo</i>
-                    <i className="material-icons redo" onClick = {props.redo}>redo</i>
+                    {props.tpsHasUndo() ?
+                        <i className="material-icons undo" onClick = {props.undo}>undo</i>
+                    : <i className="material-icons disabledUndo">undo</i>
+                    }
+                    {props.tpsHasRedo() ?
+                        <i className="material-icons redo" onClick = {props.redo}>redo</i>
+                    : <i className="material-icons disabledRedo">redo</i>
+                    }
                 </WLHeader>
                 <WLMain>
                     <div className="RegionViewerLeftSide">
                         <div className = "RegionViewerImageContainer">
                         { hasFlag ?
                             <img className = "viewerFlag" src = {require(`../../Images/The World/${modifiedImageName} Flag.png`)} alt = "No Flag"/>
-                        : <div className = "spreadsheet-flags">No Flag</div>
+                        : <div className = "NoFlag">No Flag</div>
                         }
                         </div>
                         <div className="modal-spacer">&nbsp;</div>

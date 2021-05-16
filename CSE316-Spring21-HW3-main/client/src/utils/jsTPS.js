@@ -89,6 +89,7 @@ export class UpdateSpreadsheetItems_Transaction extends jsTPS_Transaction {
 
     
     async doTransaction() {
+        console.log(this.index + "BIGBOIBIGBOI");
 		let data;
         console.log(this.region);
         this.opcode === 0 ? { data } = await this.deleteFunction({

@@ -39,6 +39,7 @@ const LoggedIn = (props) => {
             parent = props.activeMap.name;
             parentIDForNav = props.activeMap._id; //we are viewing a map data file's spreadsheet. Clicking the name of the map will simply bring them to this same spreadsheet page
             ParentIsMap = false;
+            //ParentIsMap = false;
             if(props.viewedRegion === undefined){ //landmark view of the map data file itself (blue name was clicked) CHECK THIS AND MAKE SURE IT IS WORKING
                 regionName = parent;
                 parent = "";
@@ -64,7 +65,7 @@ const LoggedIn = (props) => {
             parentIDForNav = parent._id;
             //console.log(parent);
             if(parent !== undefined/* !== undefined*/){ //this is vacuously true since it just got set
-                console.log(parent);
+                console.log("HAHAHAHAHA");
                 parent = parent.name;
                 console.log(props.viewedRegion);
                 console.log(props.activeRegion);
@@ -103,6 +104,9 @@ const LoggedIn = (props) => {
 */
     const toParentSpreadsheet = () => {
         props.resetTPSStack();
+        console.log(parentIDForNav);
+        console.log(ParentIsMap);
+        console.log(resetVR);
         props.setShowSpreadsheetScreen(parentIDForNav, ParentIsMap, resetVR);
     }
 

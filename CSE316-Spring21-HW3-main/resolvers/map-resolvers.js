@@ -524,8 +524,9 @@ module.exports = {
 			//remove the region from the parent's subregions array and append to the new parent's subregions array
 			let parentSubregions = oldParent.subregions;
 			let newParentSubregions = validChange.subregions;
+			//return regionID;
 			let updatedParentSubregions = parentSubregions.filter(subregion => subregion !== regionID); //filters out the region that's being moved
-			let updatedNewParentSubregions = newParentSubregions.push(regionID); //push the new region into the new parent's subregions array
+			let updatedNewParentSubregions = newParentSubregions.concat(regionID); //concatenates the new region into the new parent's subregions array
 			await Region.updateOne({_id: parentID}, {subregions: updatedParentSubregions});
 			await Region.updateOne({_id: validChange._id}, {subregions: updatedNewParentSubregions});
 
