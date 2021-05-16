@@ -33,7 +33,7 @@ return(
             data={entry} index={index} key={entry.id}
             activeMap={props.activeMap} activeRegion={props.activeRegion}
             editLandmark={props.editLandmark} viewedRegion={props.viewedRegion}
-            deleteLandmark={props.deleteLandmark}
+            deleteLandmark={props.deleteLandmark} regions={props.regions} maps={props.maps}
         />
     ))
 );

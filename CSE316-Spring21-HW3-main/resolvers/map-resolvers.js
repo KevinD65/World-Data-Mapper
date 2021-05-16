@@ -284,7 +284,7 @@ module.exports = {
 					}
 				}
 			}
-			else if(sortCode === 2){ //sort by capital
+			else if(sortCode === 2){ //sort by leader
 				let regionHolder1, regionHolder2;
 				let sorted = true; //flag used to determine if items are already sorted so reverse can be done
 				for(let i = 0; i < parentSubregions.length - 1; i++){ //selection sort algorithm
@@ -293,7 +293,7 @@ module.exports = {
 					for(let j = i + 1; j < parentSubregions.length; j++){
 						regionHolder1 = await Region.findOne({_id: parentSubregions[j]});
 						regionHolder2 = await Region.findOne({_id: parentSubregions[indexOfLowest]});
-						if(regionHolder1.capital.toUpperCase().localeCompare(regionHolder2.capital.toUpperCase()) < 0){
+						if(regionHolder1.leader.toUpperCase().localeCompare(regionHolder2.leader.toUpperCase()) < 0){
 							//parentSubregions[i] = parentSubregions[j];
 							//parentSubregions[j] = temp;
 							indexOfLowest = j;
@@ -433,13 +433,6 @@ module.exports = {
 
 		editLandmark: async (_, args) => {
 			const { landmarkID, parentID, name, activeMapId } = args;
-			/*
-			let updatedLandmark = {
-				_id: landmark._id,
-				id: landmark.id,
-				name: landmark.name,
-				ownerRegion: landmark.ownerRegion,
-			}*/
 			let holder = await Map.findOne({_id: parentID});
 			let reachedMap = true;
 			if(!holder){ //if the landmark is being edited from a region, not a map
@@ -448,21 +441,13 @@ module.exports = {
 			}
 			while(reachedMap === false){ //while the map data file hasn't been reached yet
 				let landmarks = holder.landmarks;
-				//await updatedLandmarks.filter(landmark => landmark._id !== landmarkToDeleteId); //filter out the landmark to be removed
-				/*let updatedLandmarks = landmarks.filter(function(landmark) {
-					return landmark._id != landmarkToDeleteId;
-				});*/
 				let indexOfLandmarkToEdit;
 				for(let i = 0; i < landmarks.length; i++){
-					//return landmarks[1]._id.toString() + "SPACE" + landmarkID;
-					//return (landmarks[1]._id.toString() === landmarkID).toString();
 					if(landmarks[i]._id.toString() === landmarkID){
 						indexOfLandmarkToEdit = i;
-						//return indexOfLandmarkToEdit.toString();
 						break;
 					}
 				}
-				//return "hi";
 				let updatedLandmark = {
 					_id: landmarkID,
 					id: landmarks[indexOfLandmarkToEdit].id,

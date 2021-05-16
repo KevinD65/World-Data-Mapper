@@ -8,8 +8,11 @@ const LandmarkEntry = (props) => {
     const landmarkOwnerRegion = data.ownerRegion;
     const[editingLandmark, toggleEditing] = useState(false);
 
-    console.log(props.activeMap._id);
-    console.log(landmarkOwnerRegion);
+    let findParentName = props.regions.find(region => region._id === landmarkOwnerRegion);
+    if(!findParentName)
+        findParentName = props.maps.find(map => map._id === landmarkOwnerRegion);
+    findParentName = findParentName.name;
+    
     let isDirectLandmark = false;
     if(props.activeRegion === null){
         if(landmarkOwnerRegion === props.viewedRegion){
@@ -35,7 +38,7 @@ const LandmarkEntry = (props) => {
         props.editLandmark(props.data._id, parentID, newLandmarkName, previousLandmarkName);
     }
 
-    console.log(data.name);
+    //console.log(data.name);
     return(
         <WRow>
             <WCol>
@@ -44,14 +47,14 @@ const LandmarkEntry = (props) => {
                 : <></>
                 }
             </WCol>
-            <WCol>
+            <WCol size = "11">
                 {editingLandmark ? <WInput
                     className='table-input' onBlur={handleLandmarkEdit}
                     autoFocus={true} defaultValue={landmarkName} type='text'
                     wType="outlined" barAnimation="solid" inputClass="table-input-class"
                     fillColor="default"
                 />
-                : <div className = "landmark-entry" onClick = {toggleEditing}>{landmarkName}</div>
+                : <div className = "landmark-entry" onClick = {toggleEditing}>{landmarkName + " - " + findParentName}</div>
                 }
             </WCol>
         </WRow>
