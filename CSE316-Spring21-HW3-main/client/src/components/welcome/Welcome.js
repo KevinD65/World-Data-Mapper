@@ -217,6 +217,7 @@ const Welcome = (props) => {
 			updatedPath = updatedPath.concat(map._id);
 		}
 		const regions = map.subregions; //regions holds an array of IDs
+		console.log(regions);
 		const lastID = regions.length >= 1 ? regions.length : 0;
         const lastPosition = regions.length >= 1 ? regions.length: 0;
 
@@ -467,6 +468,15 @@ const Welcome = (props) => {
 		setActiveRegion(null); //reset the activeRegion
 	}
 
+	const controlZcontrolY = (event) => {
+		if(event.ctrlKey && event.keyCode === 90 && tpsHasUndo()){
+			tpsUndo();
+		}
+		else if(event.ctrlKey && event.keyCode === 89 && tpsHasRedo()){
+			tpsRedo();
+		}
+	}
+
 	return (
 		<>
 		<BrowserRouter>
@@ -588,7 +598,7 @@ const Welcome = (props) => {
 					{auth ?
 					 !mapSelectScreen ?
 						!regionViewerScreen ?
-						<WLayout wLayout = "header">
+						<WLayout wLayout = "header" onKeyDown={controlZcontrolY} tabIndex={0}>
 							<WLHeader>
 								<WNavbar color="colored">
 									<ul>
@@ -625,9 +635,11 @@ const Welcome = (props) => {
 									toggleRegionViewerScreen={toggleRegionViewerScreen}
 									refetch2={refetch2}
 									setViewedRegion={setViewedRegion}
+									resetTPSStack={resetTPSStack}
 
 									regionsOfParent={regionsOfParent}
 									sortByColumn={sortByColumn}
+									tpsClea
 									tpsHasUndo={tpsHasUndo} tpsHasRedo={tpsHasRedo}
 								/>
 								{

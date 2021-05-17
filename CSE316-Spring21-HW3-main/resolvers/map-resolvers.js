@@ -57,7 +57,7 @@ module.exports = {
 			if(!found) { //instead, check regions for the parent (greater depth than 1)
 				found = await Region.findOne({_id: mapId});
 			}
-			if(region._id === '') region._id = objectId;
+			if(region._id === '') {region._id = objectId;}
 			let mapRegions = found.subregions;
 		        if(index < 0) mapRegions.push(region._id);
 			else mapRegions.splice(index, 0, region._id);
@@ -223,6 +223,7 @@ module.exports = {
 				isMap = true;
 				findParent = await Map.findOne({_id: parentID});
 			}
+			//return findParent.toString();
 			let parentSubregions = findParent.subregions;
 			if(sortCode === 0){ //sort by name
 				let regionHolder1, regionHolder2;

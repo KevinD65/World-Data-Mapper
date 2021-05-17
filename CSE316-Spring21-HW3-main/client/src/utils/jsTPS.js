@@ -63,6 +63,7 @@ export class EditRegion_Transaction extends jsTPS_Transaction {
 	}	
 
 	async doTransaction() {
+        console.log("REGIONID FROM REDO: " + this.regionId);
 		const { data } = await this.updateFunction({variables:{ regionId: this.regionId, field: this.field, value: this.update}, refetchQueries: [{ query: queries.GET_DB_REGIONS }]});
 		return data;
     }
@@ -89,7 +90,7 @@ export class UpdateSpreadsheetItems_Transaction extends jsTPS_Transaction {
 
     
     async doTransaction() {
-        console.log(this.index + "BIGBOIBIGBOI");
+        console.log("READD" + this.regionID);
 		let data;
         console.log(this.region);
         this.opcode === 0 ? { data } = await this.deleteFunction({
@@ -106,7 +107,7 @@ export class UpdateSpreadsheetItems_Transaction extends jsTPS_Transaction {
     // Since delete/add are opposites, flip matching opcode
     async undoTransaction() {
         console.log(this.parentID);
-        console.log(this.region);
+        console.log("UNDO DELETE ID HERE: " + this.regionID); //this regionID is correct
         let fixedLandmarks = [];
         for(let l = 0; l < this.region.landmarks.length; l++){ //this is to remove the typeName property of the landmarks so mongo can recognize as LandmarkInput
             let fixedLandmark = {
@@ -119,7 +120,7 @@ export class UpdateSpreadsheetItems_Transaction extends jsTPS_Transaction {
         }
 
         let regionToReadd = {
-            _id: this.region._id,
+            _id: this.regionID, //can't use this.region._id because at the time of adding the region, it wasn't given an _id yet
 			id: this.region.id,
 			name: this.region.name,
 			capital: this.region.capital,
@@ -132,14 +133,18 @@ export class UpdateSpreadsheetItems_Transaction extends jsTPS_Transaction {
             path: this.region.path,
 			owner: this.region.owner,
         }
-
+        console.log(regionToReadd._id); //why is the mutation still generating a new _id?
 		let data;
         this.opcode === 1 ? { data } = await this.deleteFunction({
 							variables: {parentId: this.parentID, regionId: this.regionID}, refetchQueries: [{ query: queries.GET_DB_REGIONS }]})
                           : { data } = await this.addFunction({
 							variables: {region: regionToReadd/*this.region*/, _id: this.parentID, index: this.index}, refetchQueries: [{ query: queries.GET_DB_REGIONS }]})
+        //console.log("THIS IS MY REGION: " + data);
 		if(this.opcode !== 1) {
             /*this.region._id =*/ this.regionID = data.addRegion;
+        }
+        else{
+            this.region = regionToReadd;
         }
 		return data;
     }

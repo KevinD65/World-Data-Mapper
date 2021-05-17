@@ -84,8 +84,14 @@ const RegionEntry = (props) => {
     }
 
     const handleGoToViewer = async () => {
+        await props.resetTPSStack();
         await props.setViewedRegion(data._id); //changed from data to data._id
         props.toggleRegionViewerScreen(true);
+    }
+
+    const enterRegionSpreadsheet = async () => {
+        await props.resetTPSStack();
+        props.setShowSpreadsheetScreen(data._id, true, false);
     }
 
     const navigateSpreadsheet = async (e, field) => {
@@ -173,7 +179,7 @@ const RegionEntry = (props) => {
                         />
                         : <div>
                             <div className="table-text regionName"
-                                onClick={() => props.setShowSpreadsheetScreen(data._id, true, false)/*toggleNameEdit(!editingName)*/}
+                                onClick={enterRegionSpreadsheet/*() => props.setShowSpreadsheetScreen(data._id, true, false)/*toggleNameEdit(!editingName)*/}
                             >{name}
                             </div>
                             <i className="material-icons regionNameEdit" onClick={toggleNameEdit}>edit</i>

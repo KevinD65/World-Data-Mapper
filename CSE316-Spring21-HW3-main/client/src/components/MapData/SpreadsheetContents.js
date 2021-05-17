@@ -79,6 +79,7 @@ const SpreadsheetContents = (props) => {
                     setViewedRegion={props.setViewedRegion}
                     handleUpDownArrow={handleUpDownArrow}
                     activeField = {fieldToMoveTo}
+                    resetTPSStack={props.resetTPSStack}
                 />
             }
             else{
@@ -91,6 +92,7 @@ const SpreadsheetContents = (props) => {
                     setViewedRegion={props.setViewedRegion}
                     handleUpDownArrow={handleUpDownArrow}
                     activeField = {"None"}
+                    resetTPSStack={props.resetTPSStack}
                 />
             }
         })

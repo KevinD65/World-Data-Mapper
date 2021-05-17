@@ -27,7 +27,7 @@ const SpreadsheetScreen = (props) => {
 								toggleRegionViewerScreen={props.toggleRegionViewerScreen}
 								setViewedRegion={props.setViewedRegion}
 								refetch2={props.refetch2}
-
+								resetTPSStack={props.resetTPSStack}
 								regionsOfParent={props.regionsOfParent}
 							/>    
 						</div>

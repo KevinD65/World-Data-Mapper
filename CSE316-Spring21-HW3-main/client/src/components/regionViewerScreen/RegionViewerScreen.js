@@ -76,10 +76,19 @@ const RegionViewerScreen = (props) => {
             props.setShowSpreadsheetScreen(parent.parent, true, false);
     }
 
+    const controlZcontrolY = (event) => {
+		if(event.ctrlKey && event.keyCode === 90 && props.tpsHasUndo()){
+			props.undo();
+		}
+		else if(event.ctrlKey && event.keyCode === 89 && props.tpsHasRedo()){
+			props.redo();
+		}
+	}
+
     return(
         <>
             <div className = "regionViewer-header-spacer"></div>
-            <WLayout wLayout = "header" className = "regionViewer-body"> 
+            <WLayout wLayout = "header" className = "regionViewer-body" onKeyDown={controlZcontrolY} tabIndex={0}> 
                 <WLHeader>
                     {props.tpsHasUndo() ?
                         <i className="material-icons undo" onClick = {props.undo}>undo</i>

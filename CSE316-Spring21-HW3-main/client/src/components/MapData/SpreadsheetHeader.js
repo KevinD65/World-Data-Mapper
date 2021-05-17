@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { WLHeader, WButton, WRow, WCol } from 'wt-frontend';
 
 const SpreadsheetHeader = (props) => {
@@ -23,14 +23,7 @@ const SpreadsheetHeader = (props) => {
     const handleAddRegion = async () => {
         await props.addRegion(parent._id);
     }
-/*
-    const handleSortByColumn = async (sortCode) => {
-        console.log("HELLO I AM HERE");
-        props.sortByColumn(parent, sortCode);
-    }
-*/
 
-    //console.log(props.tpsHasUndo());
     return (
         <div className = "">
             <div className = "spreadsheet-header">
